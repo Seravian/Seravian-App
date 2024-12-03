@@ -14,12 +14,12 @@ val localProperties = Properties().apply {
 
 android {
     namespace = "com.seravian.seravianapp"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.seravian.seravianapp"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
