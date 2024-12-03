@@ -71,6 +71,8 @@ dependencies {
     implementation(libs.bundles.image.loading)
     implementation(libs.bundles.dependency.injection)
     implementation(libs.bundles.data.persistence)
+    implementation(project(":domain"))
+    implementation(project(":data"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

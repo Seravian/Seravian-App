@@ -1,4 +1,4 @@
-package com.seravian.seravianapp.core.data.networking
+package com.example.data.networking
 
 import com.seravian.seravianapp.BuildConfig
 

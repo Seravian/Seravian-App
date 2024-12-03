@@ -1,4 +1,4 @@
-package com.seravian.seravianapp.core.domain.util
+package com.example.domain.util
 
 typealias DomainError = Error
 

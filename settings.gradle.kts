@@ -21,3 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Seravian"
 include(":app")
+include(":domain")
+include(":data")

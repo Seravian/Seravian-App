@@ -1,12 +1,12 @@
 [versions]
 agp = "8.7.2"
 kotlin = "2.1.0"
-coreKtx = "1.15.0"
+coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.7"
-activityCompose = "1.10.0-beta01"
+activityCompose = "1.9.3"
 composeBom = "2024.11.00"
 composeNavigation = "2.8.4"
 koin = "4.0.0"
@@ -15,6 +15,8 @@ coil = "2.7.0"
 datastore = "1.1.1"
 material3-adaptive = "1.0.0"
 compose-material-icons-extended = "1.7.5"
+appcompat = "1.6.1"
+material = "1.10.0"
 
 [libraries]
 # Android Core
@@ -61,12 +63,15 @@ androidx-datastore = { group = "androidx.datastore", name = "datastore-preferenc
 
 # Image Loading with Coil
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 
 [bundles]
 networking = [
