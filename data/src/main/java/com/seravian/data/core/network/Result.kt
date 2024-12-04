@@ -1,4 +1,6 @@
-package com.seravian.domain.util
+package com.seravian.data.core.network
+
+import com.seravian.domain.core.network.Error
 
 typealias DomainError = Error
 

@@ -1,4 +1,4 @@
-package com.seravian.seravianapp.theme
+package com.seravian.seravianapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

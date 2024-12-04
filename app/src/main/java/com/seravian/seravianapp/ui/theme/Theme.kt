@@ -1,4 +1,4 @@
-package com.seravian.seravianapp.theme
+package com.seravian.seravianapp.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

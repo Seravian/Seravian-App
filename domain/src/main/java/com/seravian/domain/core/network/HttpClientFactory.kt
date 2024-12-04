@@ -1,4 +1,4 @@
-package com.seravian.data.network
+package com.seravian.domain.core.network
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine

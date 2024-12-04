@@ -1,6 +1,6 @@
-package com.seravian.data.network
+package com.seravian.domain.core.network
 
-import com.seravian.data.BuildConfig
+import com.seravian.domain.BuildConfig
 
 fun constructUrl(url: String): String {
     return when {

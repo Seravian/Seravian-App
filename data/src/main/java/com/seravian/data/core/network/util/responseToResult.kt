@@ -1,7 +1,7 @@
-package com.seravian.domain.network
+package com.seravian.data.core.network.util
 
-import com.seravian.domain.util.Result
-import com.seravian.domain.util.NetworkError
+import com.seravian.data.core.network.NetworkError
+import com.seravian.data.core.network.Result
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.call.body
