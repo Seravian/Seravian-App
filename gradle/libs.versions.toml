@@ -17,8 +17,14 @@ material3-adaptive = "1.0.0"
 compose-material-icons-extended = "1.7.5"
 appcompat = "1.6.1"
 material = "1.10.0"
+hiltAndroid = "2.51.1"
+
 
 [libraries]
+
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
+
 # Android Core
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 
