@@ -1,16 +1,12 @@
-package com.example.chatapp.screens.registers
+package com.seravian.seravianapp.features.auth.presentation.register
 
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.viewModelScope
-import com.example.chatapp.base.BaseViewModel
+import com.seravian.seravianapp.core.presentation.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RegisterViewModel @Inject constructor(
-
-) : BaseViewModel() {
+class RegisterViewModel @Inject constructor() : BaseViewModel() {
     val emailState = mutableStateOf("")
     val passwordState = mutableStateOf("")
     val emailErrorState = mutableStateOf("")

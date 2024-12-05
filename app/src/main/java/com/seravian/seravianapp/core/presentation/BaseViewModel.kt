@@ -1,10 +1,9 @@
-package com.example.chatapp.base
+package com.seravian.seravianapp.core.presentation
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 
 open class BaseViewModel: ViewModel() {
-
     val loadingState = mutableStateOf(false)
     val dialogState = mutableStateOf("")
 

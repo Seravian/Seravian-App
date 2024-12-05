@@ -1,4 +1,4 @@
-package com.seravian.seravianapp.composable
+package com.seravian.seravianapp.common.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -16,7 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.seravian.seravianapp.R
@@ -37,7 +37,7 @@ fun LoadingDialog(showLoadingState: MutableState<Boolean>, modifier: Modifier = 
     }
 }
 
-@Preview(showBackground = true,)
+@PreviewLightDark
 @Composable
 private fun LoadingDialogPreview() {
     val showLoading = remember {
@@ -48,16 +48,20 @@ private fun LoadingDialogPreview() {
 
 @Composable
 fun ErrorDialog(errorMessage:MutableState<String>,modifier: Modifier = Modifier) {
-    if(errorMessage.value.isNotEmpty())
-        AlertDialog(onDismissRequest = { errorMessage.value = "" }, confirmButton = { TextButton(
-            onClick = { errorMessage.value = "" }) {
-            Text(text = stringResource(id = R.string.ok), color = bluePrimary)
-        } }, text = {
-            Text(text = errorMessage.value)
-        })
+    if(errorMessage.value.isNotEmpty()) {
+        AlertDialog(
+            onDismissRequest = { errorMessage.value = "" },
+            confirmButton = {
+                TextButton(onClick = { errorMessage.value = "" }) {
+                    Text(text = stringResource(id = R.string.ok), color = bluePrimary)
+                }
+            },
+            text = { Text(text = errorMessage.value) }
+        )
+    }
 }
 
-@Preview(showBackground = true,)
+@PreviewLightDark
 @Composable
 private fun ErrorDialogPreview() {
     val errorState = remember {

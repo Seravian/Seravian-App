@@ -4,7 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed interface AppDestinations {
-
     @Serializable
     data object Splash : AppDestinations
 
@@ -16,6 +15,4 @@ sealed interface AppDestinations {
 
     @Serializable
     data object Home : AppDestinations
-
-
 }

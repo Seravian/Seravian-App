@@ -1,4 +1,4 @@
-package com.example.chatapp.screens.registers
+package com.seravian.seravianapp.features.auth.presentation.register
 
 sealed interface RegisterNavigation {
     data object Home: RegisterNavigation

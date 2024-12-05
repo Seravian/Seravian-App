@@ -8,7 +8,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
-    id("kotlinx-serialization")
 }
 
 val localProperties = Properties().apply {
@@ -79,7 +78,6 @@ dependencies {
 
     implementation(libs.androidx.compose.navigation)
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
 

@@ -1,7 +1,8 @@
 package com.seravian.seravianapp.features.auth.presentation.login
 
 import androidx.compose.runtime.mutableStateOf
-import com.example.chatapp.base.BaseViewModel
+import com.seravian.seravianapp.core.presentation.BaseViewModel
+
 
 class LoginViewModel(): BaseViewModel() {
     val emailState = mutableStateOf("")
