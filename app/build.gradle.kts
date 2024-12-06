@@ -6,8 +6,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
 }
 
 val localProperties = Properties().apply {
@@ -75,11 +73,8 @@ dependencies {
     implementation(libs.bundles.data.persistence)
     implementation(project(":domain"))
     implementation(project(":data"))
-
     implementation(libs.androidx.compose.navigation)
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
+    implementation(libs.kotlinx.serialization.json)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

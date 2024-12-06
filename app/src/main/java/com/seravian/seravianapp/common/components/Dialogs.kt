@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -21,11 +22,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.seravian.seravianapp.R
 import com.seravian.seravianapp.ui.theme.bluePrimary
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
-fun LoadingDialog(showLoadingState: MutableState<Boolean>, modifier: Modifier = Modifier) {
+fun LoadingDialog(
+    showLoadingState: State<Boolean>,
+    dismissAction: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     if (showLoadingState.value) {
-        Dialog(onDismissRequest = { showLoadingState.value = false }) {
+        Dialog(onDismissRequest = dismissAction) {
             Box(modifier = Modifier
                 .size(100.dp)
                 .background(Color.White, RoundedCornerShape(20.dp)),
@@ -43,17 +49,27 @@ private fun LoadingDialogPreview() {
     val showLoading = remember {
         mutableStateOf(true)
     }
-    LoadingDialog(showLoadingState = showLoading)
+    LoadingDialog(
+        showLoadingState = showLoading,
+        dismissAction = {  }
+    )
 }
 
 @Composable
-fun ErrorDialog(errorMessage:MutableState<String>,modifier: Modifier = Modifier) {
+fun ErrorDialog(
+    errorMessage:State<String>,
+    dismissAction: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     if(errorMessage.value.isNotEmpty()) {
         AlertDialog(
-            onDismissRequest = { errorMessage.value = "" },
+            onDismissRequest = dismissAction,
             confirmButton = {
-                TextButton(onClick = { errorMessage.value = "" }) {
-                    Text(text = stringResource(id = R.string.ok), color = bluePrimary)
+                TextButton(onClick = dismissAction) {
+                    Text(
+                        text = stringResource(id = R.string.ok),
+                        color = bluePrimary
+                    )
                 }
             },
             text = { Text(text = errorMessage.value) }
@@ -67,5 +83,8 @@ private fun ErrorDialogPreview() {
     val errorState = remember {
         mutableStateOf("Something went wrong")
     }
-    ErrorDialog(errorMessage = errorState)
+    ErrorDialog(
+        errorMessage = errorState,
+        dismissAction = {  }
+    )
 }
