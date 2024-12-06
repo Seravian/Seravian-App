@@ -1,23 +1,26 @@
 package com.seravian.seravianapp.core.navigation
 
-import androidx.compose.runtime.Composable
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.seravian.seravianapp.features.auth.authNavGraph
-import com.seravian.seravianapp.splash.presentation.SplashScreen
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 
-@Composable
-fun AppNavigator() {
-    val navController = rememberNavController()
+class AppNavigator(private val navController: NavHostController) {
+    fun navigateTo(destination: AppDestination) {
+        navController.navigate(destination)
+    }
 
-    NavHost(
-        navController = navController,
-        startDestination = AppDestination.Splash
-    ) {
-        composable<AppDestination.Splash> {
-            SplashScreen()
+    fun navigateBack() {
+        navController.popBackStack()
+    }
+
+    fun navigateAndClearBackStack(destination: AppDestination) {
+        navController.navigate(destination) {
+            popUpTo(navController.graph.findStartDestination().id) {
+                inclusive = true
+            }
         }
-        authNavGraph()
+    }
+
+    fun hasBackStack(): Boolean {
+        return navController.previousBackStackEntry != null
     }
 }
