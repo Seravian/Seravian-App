@@ -9,8 +9,8 @@ open class BaseScreenViewModel: ViewModel() {
     private val _loadingState = MutableStateFlow(false)
     val loadingState: StateFlow<Boolean> = _loadingState.asStateFlow()
 
-    private val _dialogMessage = MutableStateFlow<String>("")
-    val dialogMessage: StateFlow<String> = _dialogMessage.asStateFlow()
+    private val _errorMessage = MutableStateFlow<String>("")
+    val errorMessage: StateFlow<String> = _errorMessage.asStateFlow()
 
     fun showLoading() {
         _loadingState.value = true
@@ -21,10 +21,10 @@ open class BaseScreenViewModel: ViewModel() {
     }
 
     fun showErrorMessage(errorMessage: String) {
-        _dialogMessage.value = errorMessage
+        _errorMessage.value = errorMessage
     }
 
     fun hideErrorMessage() {
-        _dialogMessage.value = ""
+        _errorMessage.value = ""
     }
 }
