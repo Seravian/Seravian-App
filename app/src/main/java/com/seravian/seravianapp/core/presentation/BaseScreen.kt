@@ -11,13 +11,12 @@ inline fun<reified VM: BaseScreenViewModel> BaseScreen(
     content: @Composable (viewModel: VM) -> Unit,
 ) {
     val viewModel: VM = koinViewModel()
-    val showLoadingIndicator = viewModel.loadingState.collectAsState()
+    val showLoadingDialog = viewModel.loadingState.collectAsState()
     val errorMessage = viewModel.errorMessage.collectAsState()
 
     content(viewModel)
     LoadingDialog(
-        showLoadingIndicator = showLoadingIndicator,
-        dismissAction = viewModel::hideLoading
+        showLoadingDialog = showLoadingDialog
     )
     ErrorDialog(
         errorMessage = errorMessage,

@@ -2,6 +2,9 @@ package com.seravian.seravianapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+val transparentBlack = Color(0x80000000)
+val bluePrimary = Color(0XFF3598DB)
+
 val primaryLight = Color(0xFF3912BB)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFF5D47DF)
@@ -73,8 +76,6 @@ val surfaceContainerLowLightMediumContrast = Color(0xFFF7F3F2)
 val surfaceContainerLightMediumContrast = Color(0xFFF1EDEC)
 val surfaceContainerHighLightMediumContrast = Color(0xFFEBE7E7)
 val surfaceContainerHighestLightMediumContrast = Color(0xFFE5E2E1)
-
-val bluePrimary = Color(0XFF3598DB)
 
 val primaryLightHighContrast = Color(0xFF1E0077)
 val onPrimaryLightHighContrast = Color(0xFFFFFFFF)

@@ -2,8 +2,7 @@ package com.seravian.seravianapp.common.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
@@ -12,37 +11,39 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.seravian.seravianapp.R
 import com.seravian.seravianapp.ui.theme.SeravianTheme
 import com.seravian.seravianapp.ui.theme.bluePrimary
+import com.seravian.seravianapp.ui.theme.transparentBlack
 
 @Composable
 fun LoadingDialog(
-    showLoadingIndicator: State<Boolean>,
-    dismissAction: () -> Unit,
+    showLoadingDialog: State<Boolean>,
     modifier: Modifier = Modifier
 ) {
-    if (showLoadingIndicator.value) {
-        Dialog(onDismissRequest = dismissAction) {
-            Box(modifier = Modifier
-                .size(100.dp)
-                .background(Color.White, RoundedCornerShape(20.dp)),
-                contentAlignment = Alignment.Center
-            ){
+    if (showLoadingDialog.value) {
+        Box(
+            modifier = modifier
+                .background(color = transparentBlack)
+                .fillMaxSize()
+        ) {
+            Dialog(
+                onDismissRequest = {  },
+                properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+            ) {
                 CircularProgressIndicator(color = bluePrimary)
             }
         }
     }
 }
 
-@PreviewLightDark
+@Preview(showSystemUi = true)
 @Composable
 private fun LoadingDialogPreview() {
     val showLoading = remember {
@@ -50,8 +51,7 @@ private fun LoadingDialogPreview() {
     }
     SeravianTheme {
         LoadingDialog(
-            showLoadingIndicator = showLoading,
-            dismissAction = {  }
+            showLoadingDialog = showLoading
         )
     }
 }
