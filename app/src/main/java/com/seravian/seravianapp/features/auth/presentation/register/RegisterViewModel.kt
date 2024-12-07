@@ -3,32 +3,33 @@ package com.seravian.seravianapp.features.auth.presentation.register
 import androidx.lifecycle.viewModelScope
 import com.seravian.data.auth.usecase.ValidateInput
 import com.seravian.seravianapp.core.presentation.BaseViewModel
+import com.seravian.seravianapp.features.auth.presentation.login.LoginInputState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class RegisterViewModel(): BaseViewModel() {
-    var state = MutableStateFlow(RegisterInputState())
-        private set
+    private var _state = MutableStateFlow(RegisterInputState())
+    val state = _state.value
 
     fun onAction(action: RegisterAction) {
         when(action) {
             is RegisterAction.ValidateUsername -> {
-                state.value = state.value.copy(
+                _state.value = _state.value.copy(
                     usernameValidity = ValidateInput.validateUsername(action.username)
                 )
             }
             is RegisterAction.ValidateEmail -> {
-                state.value = state.value.copy(
+                _state.value = _state.value.copy(
                     emailValidity = ValidateInput.validateEmail(action.email)
                 )
             }
             is RegisterAction.ValidatePassword -> {
-                state.value = state.value.copy(
+                _state.value = _state.value.copy(
                     passwordValidity = ValidateInput.validatePassword(action.password)
                 )
             }
             is RegisterAction.ValidatePasswordConfirmation -> {
-                state.value = state.value.copy(
+                _state.value = _state.value.copy(
                     confirmPasswordValidity = ValidateInput.validatePasswordConfirmation(
                         password = action.password,
                         confirmPassword = action.confirmPassword

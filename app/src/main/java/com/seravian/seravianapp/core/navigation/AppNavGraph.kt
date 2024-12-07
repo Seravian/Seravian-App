@@ -5,11 +5,12 @@ import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.seravian.seravianapp.features.auth.authNavGraph
+import com.seravian.seravianapp.features.auth.presentation.login.LoginScreen
+import com.seravian.seravianapp.features.auth.presentation.register.RegisterScreen
 import com.seravian.seravianapp.splash.presentation.SplashScreen
 
 @Composable
-private fun AppNavGraph() {
+fun AppNavGraph() {
     val navController = rememberNavController()
     val appNavigator = remember(navController) {
         AppNavigator(navController)
@@ -22,6 +23,14 @@ private fun AppNavGraph() {
         composable<AppDestination.Splash> {
             SplashScreen(appNavigator)
         }
-        authNavGraph(appNavigator)
+        composable<AppDestination.Login> {
+            LoginScreen(appNavigator)
+        }
+        composable<AppDestination.Register> {
+            RegisterScreen(appNavigator)
+        }
+        composable<AppDestination.Home> {
+
+        }
     }
 }

@@ -2,12 +2,11 @@ package com.seravian.seravianapp.features.auth.presentation.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
@@ -23,26 +22,37 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.rememberNavController
 import com.seravian.seravianapp.R
+import com.seravian.seravianapp.core.navigation.AppDestination
 import com.seravian.seravianapp.core.navigation.AppNavigator
 import com.seravian.seravianapp.core.presentation.BaseScreen
 import com.seravian.seravianapp.ui.theme.AuthBlackColor
 import com.seravian.seravianapp.ui.theme.SeravianTheme
 import com.seravian.seravianapp.ui.theme.bluePrimary
-import com.seravian.seravianapp.ui.theme.transparentBlack
 
 @Composable
 fun LoginScreen(
-    appNavigator: AppNavigator,
+    appNavigator: AppNavigator?,
     modifier: Modifier = Modifier
 ) {
     BaseScreen<LoginViewModel> { viewModel ->
-        LoginContents()
+        val state = viewModel.state
+        LoginContents(
+            appNavigator = appNavigator,
+            state = state,
+            action = viewModel::onAction
+        )
     }
 }
 
 @Composable
-fun LoginContents(modifier: Modifier = Modifier) {
+fun LoginContents(
+    appNavigator: AppNavigator?,
+    state: LoginInputState,
+    action: (LoginAction) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = Modifier
             .background(color = AuthBlackColor)
@@ -77,6 +87,7 @@ fun LoginContents(modifier: Modifier = Modifier) {
             Text(
                 text = stringResource(R.string.don_t_have_an_account),
                 color = colorResource(R.color.white),
+
             )
             Text(
                 text = stringResource(R.string.sign_up),
@@ -84,16 +95,29 @@ fun LoginContents(modifier: Modifier = Modifier) {
                 style = MaterialTheme.typography.bodyLarge.copy(
                     textDecoration = TextDecoration.Underline
                 ),
-                modifier = Modifier.padding(start = 3.dp)
+                modifier = Modifier
+                    .padding(start = 3.dp)
+                    .clickable(enabled = true) {
+                        appNavigator?.navigateTo(AppDestination.Register)
+                    }
             )
         }
     }
 }
 
+val mockState = LoginInputState(
+    emailValidity = null,
+    passwordValidity = null
+)
+
 @Preview(showSystemUi = true)
 @Composable
 private fun LoginContentsPreview() {
     SeravianTheme {
-        LoginContents()
+        LoginContents(
+            appNavigator = null,
+            state = mockState,
+            action = {  }
+        )
     }
 }

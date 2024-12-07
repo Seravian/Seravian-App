@@ -37,6 +37,14 @@ object ValidateInput {
         }
     }
 
+    fun validateLoginPassword(password: String): CredentialState {
+        return when {
+            password.isEmpty() -> CredentialState.InValid("Password cannot be empty")
+
+            else -> CredentialState.Valid
+        }
+    }
+
     fun validatePasswordConfirmation(
         password: String,
         confirmPassword: String

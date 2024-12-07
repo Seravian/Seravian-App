@@ -9,7 +9,7 @@ import com.seravian.seravianapp.ui.theme.SeravianTheme
 
 @Composable
 fun RegisterScreen(
-    appNavigator: AppNavigator,
+    appNavigator: AppNavigator?,
     modifier: Modifier = Modifier
 ) {
     BaseScreen<RegisterViewModel> { viewModel ->
