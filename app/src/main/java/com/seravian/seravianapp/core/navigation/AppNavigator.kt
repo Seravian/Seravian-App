@@ -1,11 +1,9 @@
 package com.seravian.seravianapp.core.navigation
 
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.seravian.seravianapp.core.navigation.mappers.fromRoute
+import com.seravian.seravianapp.core.navigation.mappers.toRoute
 
 class AppNavigator(private val navController: NavHostController) {
     fun navigateTo(destination: AppDestination) {

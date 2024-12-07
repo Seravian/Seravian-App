@@ -100,25 +100,6 @@ fun RegisterContents(
                     color = colorResource(R.color.white),
                     modifier = Modifier.padding(top = 30.dp, start = 5.dp)
                 )
-                Row(modifier = Modifier.padding(top = 20.dp)) {
-                    Text(
-                        text = stringResource(R.string.already_have_an_account),
-                        color = colorResource(R.color.white),
-
-                        )
-                    Text(
-                        text = stringResource(R.string.sign_in),
-                        color = bluePrimary,
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            textDecoration = TextDecoration.Underline
-                        ),
-                        modifier = Modifier
-                            .padding(start = 3.dp)
-                            .clickable(enabled = true) {
-                                appNavigator?.navigateTo(AppDestination.Login)
-                            }
-                    )
-                }
             }
         }
         Column() {

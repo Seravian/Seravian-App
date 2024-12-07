@@ -18,7 +18,7 @@ fun SplashScreen(
         SplashContents()
         Log.d("test", appNavigator.getCurrentDestination().toString())
 
-        appNavigator.navigateTo(AppDestination.Login)
+        appNavigator.navigateAndClearBackStack(AppDestination.Login)
     }
 }
 
