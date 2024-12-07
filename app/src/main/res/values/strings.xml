@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Seravian</string>
     <string name="ok">Ok</string>
+    <string name="logo_image">Logo Image</string>
+    <string name="seravian">Seravian</string>
+    <string name="sign_in_into_your_account">Sign in into your\nAccount</string>
+    <string name="don_t_have_an_account">Don\'t have an account? </string>
+    <string name="sign_up">Sign Up</string>
 </resources>
