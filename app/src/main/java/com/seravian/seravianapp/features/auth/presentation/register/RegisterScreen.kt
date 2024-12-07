@@ -2,11 +2,9 @@ package com.seravian.seravianapp.features.auth.presentation.register
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,17 +23,14 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.seravian.seravianapp.R
-import com.seravian.seravianapp.core.navigation.AppDestination
 import com.seravian.seravianapp.core.navigation.AppNavigator
 import com.seravian.seravianapp.core.presentation.BaseScreen
 import com.seravian.seravianapp.ui.theme.AuthBlackColor
 import com.seravian.seravianapp.ui.theme.SeravianTheme
-import com.seravian.seravianapp.ui.theme.bluePrimary
 
 @Composable
 fun RegisterScreen(
@@ -47,7 +42,7 @@ fun RegisterScreen(
         RegisterContents(
             appNavigator = appNavigator,
             state = state,
-            action = viewModel::onAction
+            action = viewModel::registerAction
         )
     }
 }

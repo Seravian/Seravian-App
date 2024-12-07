@@ -1,6 +1,5 @@
 package com.seravian.seravianapp.splash.presentation
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -16,8 +15,6 @@ fun SplashScreen(
 ) {
     BaseScreen<SplashViewModel> { viewModel ->
         SplashContents()
-        Log.d("test", appNavigator.getCurrentDestination().toString())
-
         appNavigator.navigateAndClearBackStack(AppDestination.Login)
     }
 }

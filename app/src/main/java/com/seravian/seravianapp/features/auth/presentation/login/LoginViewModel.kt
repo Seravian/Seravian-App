@@ -11,7 +11,7 @@ class LoginViewModel(): BaseViewModel() {
     private var _state = MutableStateFlow(LoginInputState())
     val state = _state.value
 
-    fun onAction(action: LoginAction) {
+    fun loginAction(action: LoginAction) {
         when(action) {
 
             is LoginAction.ValidateEmail -> {
