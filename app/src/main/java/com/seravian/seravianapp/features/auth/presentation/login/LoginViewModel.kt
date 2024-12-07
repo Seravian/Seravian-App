@@ -1,5 +1,6 @@
 package com.seravian.seravianapp.features.auth.presentation.login
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.seravian.data.auth.usecase.ValidateInput
 import com.seravian.seravianapp.core.presentation.BaseViewModel
@@ -8,6 +9,11 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(): BaseViewModel() {
 
+    val emailState = mutableStateOf("")
+    val passwordState = mutableStateOf("")
+    val emailErrorState = mutableStateOf("")
+    val passwordErrorState = mutableStateOf("")
+    val isLoading = mutableStateOf(false)
     private var _state = MutableStateFlow(LoginInputState())
     val state = _state.value
 

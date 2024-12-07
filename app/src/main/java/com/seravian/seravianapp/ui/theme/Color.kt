@@ -222,6 +222,7 @@ val surfaceContainerHighDarkHighContrast = Color(0xFF2A2A2A)
 val surfaceContainerHighestDarkHighContrast = Color(0xFF353434)
 
 val AuthBlackColor = Color(0XFF0D0D1B)
+val AuthBlueButtonColor = Color(0XFF1D61E7)
 
 
 
