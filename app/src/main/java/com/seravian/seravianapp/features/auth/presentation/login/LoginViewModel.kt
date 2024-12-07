@@ -1,7 +1,7 @@
 package com.seravian.seravianapp.features.auth.presentation.login
 
-import com.seravian.seravianapp.core.presentation.BaseScreenViewModel
+import com.seravian.seravianapp.core.presentation.BaseViewModel
 
-class LoginViewModel(): BaseScreenViewModel() {
+class LoginViewModel(): BaseViewModel() {
 
 }

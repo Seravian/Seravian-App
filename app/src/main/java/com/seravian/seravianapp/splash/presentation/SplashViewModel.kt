@@ -1,8 +1,7 @@
 package com.seravian.seravianapp.splash.presentation
 
-import com.seravian.seravianapp.core.navigation.AppNavigator
-import com.seravian.seravianapp.core.presentation.BaseScreenViewModel
+import com.seravian.seravianapp.core.presentation.BaseViewModel
 
-class SplashViewModel(): BaseScreenViewModel() {
+class SplashViewModel(): BaseViewModel() {
 
 }

@@ -48,18 +48,4 @@ object ValidateInput {
             else -> CredentialState.Valid
         }
     }
-
-    fun validateCredentials(
-        username: String,
-        email: String,
-        password: String,
-        confirmPassword: String
-    ): Map<CredentialType, CredentialState> {
-        val validationStates = mutableMapOf<CredentialType, CredentialState>()
-        validationStates[CredentialType.USERNAME] = validateUsername(username)
-        validationStates[CredentialType.EMAIL] = validateEmail(email)
-        validationStates[CredentialType.PASSWORD] = validatePassword(password)
-        validationStates[CredentialType.CONFIRM_PASSWORD] = validatePasswordConfirmation(password, confirmPassword)
-        return validationStates
-    }
 }

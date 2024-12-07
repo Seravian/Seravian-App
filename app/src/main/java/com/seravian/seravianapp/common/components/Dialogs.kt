@@ -8,9 +8,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,16 +15,18 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.seravian.seravianapp.R
+import com.seravian.seravianapp.core.presentation.BaseAction
+import com.seravian.seravianapp.core.presentation.BaseState
 import com.seravian.seravianapp.ui.theme.SeravianTheme
 import com.seravian.seravianapp.ui.theme.bluePrimary
 import com.seravian.seravianapp.ui.theme.transparentBlack
 
 @Composable
 fun LoadingDialog(
-    showLoadingDialog: State<Boolean>,
+    state: BaseState,
     modifier: Modifier = Modifier
 ) {
-    if (showLoadingDialog.value) {
+    if (state.isLoading) {
         Box(
             modifier = modifier
                 .background(color = transparentBlack)
@@ -43,37 +42,42 @@ fun LoadingDialog(
     }
 }
 
-@Preview(showSystemUi = true)
-@Composable
-private fun LoadingDialogPreview() {
-    val showLoading = remember {
-        mutableStateOf(true)
-    }
-    SeravianTheme {
-        LoadingDialog(
-            showLoadingDialog = showLoading
-        )
-    }
-}
-
 @Composable
 fun ErrorDialog(
-    errorMessage:State<String>,
-    dismissAction: () -> Unit,
+    state: BaseState,
+    onAction: (BaseAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    if(errorMessage.value.isNotEmpty()) {
+    if(state.errorMessage.isNotEmpty()) {
         AlertDialog(
-            onDismissRequest = dismissAction,
+            onDismissRequest = {
+                onAction(BaseAction.HideErrorMessage)
+            },
             confirmButton = {
-                TextButton(onClick = dismissAction) {
+                TextButton(
+                    onClick = {
+                        onAction(BaseAction.HideErrorMessage)
+                    }
+                ) {
                     Text(
                         text = stringResource(id = R.string.ok),
                         color = bluePrimary
                     )
                 }
             },
-            text = { Text(text = errorMessage.value) }
+            text = { Text(text = state.errorMessage) }
+        )
+    }
+}
+
+val mockState = BaseState(isLoading = true, errorMessage = "Something went wrong")
+
+@Preview(showSystemUi = true)
+@Composable
+private fun LoadingDialogPreview() {
+    SeravianTheme {
+        LoadingDialog(
+            state = mockState
         )
     }
 }
@@ -81,13 +85,10 @@ fun ErrorDialog(
 @PreviewLightDark
 @Composable
 private fun ErrorDialogPreview() {
-    val errorState = remember {
-        mutableStateOf("Something went wrong")
-    }
     SeravianTheme {
         ErrorDialog(
-            errorMessage = errorState,
-            dismissAction = {  }
+            state = mockState,
+            onAction = {  }
         )
     }
 }
