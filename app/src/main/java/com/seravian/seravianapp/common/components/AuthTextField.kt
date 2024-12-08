@@ -11,33 +11,36 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 
 @Composable
 fun AuthTextField(
-    state: String,
+    value: String,
     onValueChange: (String) -> Unit,
     label: String,
     error: String,
     isPasswordField: Boolean = false,
-    passwordVisible: Boolean = false,
-    onPasswordVisibilityChange: (Boolean) -> Unit = {}
 ) {
+    var passwordVisible by remember { mutableStateOf(false) }
+
     Column {
         OutlinedTextField(
-            value = state,
+            value = value,
             onValueChange = onValueChange,
             label = { Text(text = label) },
-            placeholder = { Text(text = "Enter your $label", color = Color.Gray) },
+            placeholder = { Text(text = "Enter your $label") },
             singleLine = true,
             visualTransformation = if (isPasswordField && !passwordVisible) PasswordVisualTransformation() else VisualTransformation.None,
             trailingIcon = if (isPasswordField) {
@@ -45,7 +48,7 @@ fun AuthTextField(
                     Icon(
                         imageVector = if (passwordVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
                         contentDescription = if (passwordVisible) "Hide password" else "Show password",
-                        modifier = Modifier.clickable { onPasswordVisibilityChange(!passwordVisible) }
+                        modifier = Modifier.clickable { passwordVisible = !passwordVisible }
                     )
                 }
             } else null,
@@ -53,10 +56,10 @@ fun AuthTextField(
                 .fillMaxWidth(),
             isError = error.isNotEmpty(),
             shape = RoundedCornerShape(15.dp),
-            colors = OutlinedTextFieldDefaults.colors(
-                unfocusedContainerColor = Color.White,
-                focusedContainerColor = Color.White
-            )
+//            colors = OutlinedTextFieldDefaults.colors(
+//                unfocusedContainerColor = Color.White,
+//                focusedContainerColor = Color.White
+//            )
         )
         if (error.isNotEmpty()) {
             Text(text = error, color = Color.Red, fontSize = 12.sp)
@@ -64,15 +67,14 @@ fun AuthTextField(
     }
 }
 
-@Preview(showSystemUi = true)
+@PreviewLightDark
 @Composable
 fun CustomTextFieldPreview() {
     AuthTextField(
-        state = "",
-        onValueChange = {}, // Provide a dummy onValueChange
+        value = "",
+        onValueChange = {},
         label = "Password",
         error = "",
         isPasswordField = true,
-        passwordVisible = false
     )
 }

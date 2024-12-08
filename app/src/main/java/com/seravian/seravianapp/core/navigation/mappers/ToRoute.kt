@@ -8,5 +8,6 @@ fun AppDestination.toRoute(): String {
         is AppDestination.Login -> "login"
         is AppDestination.Register -> "register"
         is AppDestination.Splash -> "splash"
+        is AppDestination.ForgotPassword -> "forgot_password"
     }
 }

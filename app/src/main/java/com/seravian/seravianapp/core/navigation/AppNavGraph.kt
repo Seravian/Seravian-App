@@ -29,6 +29,9 @@ fun AppNavGraph() {
         composable<AppDestination.Register> {
             RegisterScreen(appNavigator)
         }
+        composable<AppDestination.ForgotPassword> {
+
+        }
         composable<AppDestination.Home> {
 
         }
