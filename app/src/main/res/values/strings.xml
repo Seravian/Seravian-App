@@ -15,4 +15,8 @@
     <string name="enter_your_password">Enter Your Password</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="log_in">Log In</string>
+    <string name="confirmPassword">Confirm Password</string>
+    <string name="confirmYourPassword">Confirm Your Password</string>
+    <string name="userName">UserName</string>
+    <string name="enter_your_username">Enter your Username</string>
 </resources>

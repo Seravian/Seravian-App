@@ -3,25 +3,13 @@ package com.seravian.seravianapp.features.auth.presentation.login
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,7 +20,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.seravian.domain.auth.CredentialState
@@ -52,11 +39,9 @@ fun LoginScreen(
     modifier: Modifier = Modifier
 ) {
     BaseScreen<LoginViewModel> { viewModel ->
-        val state = viewModel.state
-
         LoginContents(
             appNavigator = appNavigator,
-            state = state,
+            state = viewModel.state,
             action = viewModel::loginAction
         )
     }
@@ -69,18 +54,18 @@ fun LoginContents(
     action: (LoginAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-
+    val email by remember { mutableStateOf("") }
+    val password by remember { mutableStateOf("") }
     Column(
         modifier = modifier
             .fillMaxSize()
     ) {
+        // Header Section
         Box(
             modifier = Modifier
                 .background(color = AuthBlackColor)
                 .fillMaxWidth()
-                .fillMaxHeight(0.34f)
+                .fillMaxHeight(0.3f)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.star),
@@ -125,8 +110,7 @@ fun LoginContents(
                     Text(
                         text = stringResource(R.string.don_t_have_an_account),
                         color = colorResource(R.color.white),
-
-                        )
+                    )
                     Text(
                         text = stringResource(R.string.sign_up),
                         color = bluePrimary,
@@ -142,33 +126,34 @@ fun LoginContents(
                 }
             }
         }
+        // Input Fields Section
         Column(
-            modifier = Modifier.padding(18.dp)
+            modifier = Modifier.padding(18.dp),
+            verticalArrangement = Arrangement.spacedBy(13.dp) // Adds spacing between items
         ) {
+            //email field
             Text(stringResource(R.string.email))
             AuthTextField(
                 value = email,
                 onValueChange = {
-                    email = it
-                    action(LoginAction.ValidateEmail(email))
+                    action(LoginAction.ValidateEmail(it))
                 },
                 label = stringResource(R.string.enter_your_email),
                 error = if (state.emailValidity is CredentialState.InValid) state.emailValidity.message else "",
                 isPasswordField = false
             )
-            Spacer(Modifier.padding(13.dp))
+            //password field
             Text(stringResource(R.string.Password))
             AuthTextField(
                 value = password,
                 onValueChange = {
-                    password = it
-                    action(LoginAction.ValidatePassword(password))
+                    action(LoginAction.ValidatePassword(it))
                 },
                 label = stringResource(R.string.enter_your_password),
                 error = if (state.passwordValidity is CredentialState.InValid) state.passwordValidity.message else "",
                 isPasswordField = true
             )
-            Spacer(Modifier.padding(13.dp))
+            //forgot field
             Text(
                 stringResource(R.string.forgot_password),
                 color = bluePrimary,
@@ -180,22 +165,21 @@ fun LoginContents(
             )
             AuthCustomButton(
                 text = stringResource(R.string.log_in),
-                onClick = { action(LoginAction.Login(email, password)) }
+                onClick = {
+                    action(LoginAction.Login(email, password))
+                }
             )
         }
     }
 }
 
-val mockState = LoginInputState()
-
-@PreviewLightDark()
 @Preview(showSystemUi = true)
 @Composable
 private fun LoginContentsPreview() {
     SeravianTheme {
         LoginContents(
             appNavigator = null,
-            state = mockState,
+            state = LoginInputState(),
             action = { }
         )
     }
