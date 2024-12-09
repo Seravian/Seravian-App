@@ -7,7 +7,7 @@ import com.seravian.seravianapp.core.navigation.mappers.toRoute
 
 class AppNavigator(private val navController: NavHostController) {
     fun navigateTo(destination: AppDestination) {
-        navController.navigate(destination)
+        navController.navigate(destination) { launchSingleTop = true }
     }
 
     fun navigateBack(): AppDestination? {
@@ -17,9 +17,10 @@ class AppNavigator(private val navController: NavHostController) {
 
     fun navigateAndClearBackStack(destination: AppDestination) {
         navController.navigate(destination) {
-            popUpTo(navController.graph.findStartDestination().id) {
+            popUpTo(0) {
                 inclusive = true
             }
+            launchSingleTop = true
         }
     }
 

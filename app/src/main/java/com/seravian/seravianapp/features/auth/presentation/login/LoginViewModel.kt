@@ -1,9 +1,5 @@
 package com.seravian.seravianapp.features.auth.presentation.login
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.seravian.data.auth.usecase.ValidateInput
 import com.seravian.seravianapp.core.presentation.BaseViewModel
@@ -12,22 +8,21 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(): BaseViewModel() {
 
-    private val _state = MutableStateFlow(LoginInputState())
-    val state = _state.value
+     var state = MutableStateFlow(LoginInputState())
+        private set
 
     fun loginAction(action: LoginAction) {
         when(action) {
             is LoginAction.ValidateEmail -> {
-                _state.value = _state.value.copy(
+                state.value = state.value.copy(
                     emailValidity = ValidateInput.validateEmail(action.email)
                 )
             }
             is LoginAction.ValidatePassword -> {
-                _state.value = _state.value.copy(
+                state.value = state.value.copy(
                     passwordValidity = ValidateInput.validateLoginPassword(action.password)
                 )
             }
-
             is LoginAction.Login -> loginAccount(
                 email = action.email,
                 password = action.password
@@ -41,6 +36,7 @@ class LoginViewModel(): BaseViewModel() {
         password: String,
     ) {
         viewModelScope.launch {
+            showLoading()
             // Network Call Login Suspend Function
         }
     }

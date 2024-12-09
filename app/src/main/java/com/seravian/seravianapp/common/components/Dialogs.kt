@@ -23,10 +23,10 @@ import com.seravian.seravianapp.ui.theme.transparentBlack
 
 @Composable
 fun LoadingDialog(
-    state: BaseState,
+    isLoading: Boolean,
     modifier: Modifier = Modifier
 ) {
-    if (state.isLoading) {
+    if (isLoading) {
         Box(
             modifier = modifier
                 .background(color = transparentBlack)
@@ -44,19 +44,19 @@ fun LoadingDialog(
 
 @Composable
 fun ErrorDialog(
-    state: BaseState,
-    onAction: (BaseAction) -> Unit,
+    errorMessage: String,
+    dismissAction: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    if(state.errorMessage.isNotEmpty()) {
+    if(errorMessage.isNotEmpty()) {
         AlertDialog(
             onDismissRequest = {
-                onAction(BaseAction.HideErrorMessage)
+                dismissAction()
             },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        onAction(BaseAction.HideErrorMessage)
+                        dismissAction()
                     }
                 ) {
                     Text(
@@ -65,19 +65,18 @@ fun ErrorDialog(
                     )
                 }
             },
-            text = { Text(text = state.errorMessage) }
+            text = { Text(text = errorMessage) }
         )
     }
 }
 
-val mockState = BaseState(isLoading = true, errorMessage = "Something went wrong")
 
 @Preview(showSystemUi = true)
 @Composable
 private fun LoadingDialogPreview() {
     SeravianTheme {
         LoadingDialog(
-            state = mockState
+            isLoading = true
         )
     }
 }
@@ -87,8 +86,8 @@ private fun LoadingDialogPreview() {
 private fun ErrorDialogPreview() {
     SeravianTheme {
         ErrorDialog(
-            state = mockState,
-            onAction = {  }
+            errorMessage = "Something wrong happened",
+            dismissAction = {  }
         )
     }
 }

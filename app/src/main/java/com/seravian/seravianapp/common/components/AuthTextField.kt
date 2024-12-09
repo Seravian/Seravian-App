@@ -23,6 +23,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.seravian.seravianapp.ui.theme.onSurfaceDark
+import com.seravian.seravianapp.ui.theme.onSurfaceLight
 
 
 @Composable
@@ -39,8 +41,8 @@ fun AuthTextField(
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
-            label = { Text(text = label) },
-            placeholder = { Text(text = "Enter your $label") },
+            label = { Text(text = label, color = onSurfaceLight) },
+            placeholder = { Text(text = "Enter your $label", color = onSurfaceLight) },
             singleLine = true,
             visualTransformation = if (isPasswordField && !passwordVisible) PasswordVisualTransformation() else VisualTransformation.None,
             trailingIcon = if (isPasswordField) {
@@ -48,6 +50,7 @@ fun AuthTextField(
                     Icon(
                         imageVector = if (passwordVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
                         contentDescription = if (passwordVisible) "Hide password" else "Show password",
+                        tint = onSurfaceLight,
                         modifier = Modifier.clickable { passwordVisible = !passwordVisible }
                     )
                 }
@@ -56,10 +59,10 @@ fun AuthTextField(
                 .fillMaxWidth(),
             isError = error.isNotEmpty(),
             shape = RoundedCornerShape(15.dp),
-//            colors = OutlinedTextFieldDefaults.colors(
-//                unfocusedContainerColor = Color.White,
-//                focusedContainerColor = Color.White
-//            )
+            colors = OutlinedTextFieldDefaults.colors(
+                unfocusedContainerColor = Color.White,
+                focusedContainerColor = Color.White
+            )
         )
         if (error.isNotEmpty()) {
             Text(text = error, color = Color.Red, fontSize = 12.sp)
