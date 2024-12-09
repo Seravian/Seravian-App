@@ -1,7 +1,6 @@
 package com.seravian.data.auth.usecase
 
 import android.util.Patterns
-import com.seravian.data.auth.CredentialType
 import com.seravian.domain.auth.CredentialState
 
 object ValidateInput {

@@ -1,6 +1,7 @@
 package com.seravian.data.core.network
 
 import com.seravian.data.core.network.util.responseToResult
+import com.seravian.domain.core.network.Result
 import io.ktor.client.statement.HttpResponse
 import io.ktor.util.network.UnresolvedAddressException
 import kotlinx.coroutines.ensureActive

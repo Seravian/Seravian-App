@@ -1,4 +1,4 @@
-package com.seravian.data.core.network.util
+package com.seravian.domain.core.util
 
 import android.content.Context
 import android.net.ConnectivityManager
