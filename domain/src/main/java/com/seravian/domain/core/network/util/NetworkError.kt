@@ -1,6 +1,4 @@
-package com.seravian.data.core.network
-
-import com.seravian.domain.core.network.Error
+package com.seravian.domain.core.network.util
 
 enum class NetworkError: Error {
     REQUEST_TIMEOUT,

@@ -1,8 +1,8 @@
-package com.seravian.data.core.network.util
+package com.seravian.seravianapp.common.util
 
 import android.content.Context
-import com.seravian.data.core.network.NetworkError
-import com.seravian.data.R
+import com.seravian.domain.core.network.util.NetworkError
+import com.seravian.seravianapp.R
 
 fun NetworkError.toString(context: Context): String {
     val resId = when (this) {

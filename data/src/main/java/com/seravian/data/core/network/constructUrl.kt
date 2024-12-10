@@ -1,4 +1,4 @@
-package com.seravian.domain.core.network
+package com.seravian.data.core.network
 
 import com.seravian.domain.BuildConfig
 

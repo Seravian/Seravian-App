@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="error_request_timeout">The request time out.</string>
-    <string name="error_too_many_requests">Your qouta has been exceeded.</string>
-    <string name="error_no_internet">Please check your internet connectrion.</string>
-    <string name="error_serialization">Couldn\'t serialize the data.</string>
-    <string name="error_server">Couldn\'t contact the server.</string>
-    <string name="error_unknown">Unknown error happened.</string>
-</resources>
