@@ -76,6 +76,11 @@ dependencies {
     implementation(libs.androidx.compose.navigation)
     implementation(libs.kotlinx.serialization.json)
 
+    //splash api
+    implementation(libs.androidx.core.splashscreen)
+    implementation (libs.material.v1120) // Use the latest version
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

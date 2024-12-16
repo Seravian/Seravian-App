@@ -20,7 +20,7 @@
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Seravian">
+            android:theme="@style/Theme.MyApp.MySplash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

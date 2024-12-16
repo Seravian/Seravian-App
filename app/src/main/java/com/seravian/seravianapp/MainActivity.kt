@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.seravian.seravianapp.common.components.AuthCustomButton
 import com.seravian.seravianapp.core.navigation.AppNavHost
 import com.seravian.seravianapp.ui.theme.SeravianTheme
@@ -15,6 +16,7 @@ import com.seravian.seravianapp.ui.theme.SeravianTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen()
         enableEdgeToEdge()
         setContent {
             SeravianTheme {

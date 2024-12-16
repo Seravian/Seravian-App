@@ -2,4 +2,10 @@
 <resources>
 
     <style name="Theme.Seravian" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.CompTest" parent="Theme.Material3.DayNight">
+        <item name="colorPrimary">#3700B3</item>
+        <item name="colorSecondary">#018786</item>
+        <item name="android:colorBackground">#FFFFFF</item>
+        <item name="colorOnBackground">#000000</item>
+    </style>
 </resources>
