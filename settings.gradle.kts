@@ -23,3 +23,5 @@ rootProject.name = "Seravian"
 include(":app")
 include(":domain")
 include(":data")
+include(":feature:auth")
+include(":ui")

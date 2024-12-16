@@ -1,0 +1,19 @@
+package com.seravian.auth.util
+
+import com.seravian.domain.network.util.Error
+
+enum class ValidationError: Error {
+    EMPTY_USER_NAME,
+    EMPTY_EMAIL,
+    EMPTY_PASSWORD,
+    EMPTY_PASSWORD_CONFIRMATION,
+    PASSWORDS_MISMATCH,
+    INVALID_EMAIL,
+    INVALID_OTP,
+    MINIMUM_6_CHARACTERS,
+    MINIMUM_8_CHARACTERS,
+    MINIMUM_1_NUMBER,
+    MINIMUM_1_LOWERCASE_LETTER,
+    MINIMUM_1_UPPERCASE_LETTER,
+    MINIMUM_1_SPECIAL_CHARACTER,
+}

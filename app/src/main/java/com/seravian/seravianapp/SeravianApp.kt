@@ -2,7 +2,7 @@ package com.seravian.seravianapp
 
 import android.app.Application
 import com.seravian.seravianapp.di.appModule
-import com.seravian.seravianapp.features.auth.di.authenticationModule
+import com.seravian.auth.di.authenticationModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin

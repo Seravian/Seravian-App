@@ -1,31 +1,3 @@
 <resources>
     <string name="app_name">Seravian</string>
-
-    # Error Messages
-    <string name="error_request_timeout">The request time out.</string>
-    <string name="error_too_many_requests">Your qouta has been exceeded.</string>
-    <string name="error_no_internet">Please check your internet connectrion.</string>
-    <string name="error_serialization">Couldn\'t serialize the data.</string>
-    <string name="error_server">Couldn\'t contact the server.</string>
-    <string name="error_unknown">Unknown error happened.</string>
-
-    <string name="ok">Ok</string>
-    <string name="logo_image">Logo Image</string>
-    <string name="seravian">Seravian</string>
-    <string name="sign_in_into_your_account">Sign in into your\nAccount</string>
-    <string name="don_t_have_an_account">Don\'t have an account? </string>
-    <string name="sign_up">Sign Up</string>
-    <string name="register">Register</string>
-    <string name="already_have_an_account">Already have an account? </string>
-    <string name="sign_in">Sign In</string>
-    <string name="enter_your_email">Enter Your Email</string>
-    <string name="email">Email</string>
-    <string name="Password">Password</string>
-    <string name="enter_your_password">Enter Your Password</string>
-    <string name="forgot_password">Forgot Password?</string>
-    <string name="log_in">Log In</string>
-    <string name="confirmPassword">Confirm Password</string>
-    <string name="confirmYourPassword">Confirm Your Password</string>
-    <string name="userName">UserName</string>
-    <string name="enter_your_username">Enter your Username</string>
 </resources>

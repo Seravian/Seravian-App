@@ -1,31 +1,22 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
-    namespace = "com.seravian.seravianapp"
+    namespace = "com.seravian.auth"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.seravian.seravianapp"
         minSdk = 24
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
-        debug {
-            applicationIdSuffix = ".debug"
-            isMinifyEnabled = false
-        }
         release {
-            applicationIdSuffix = ".release"
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -37,16 +28,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlin {
-        compilerOptions {
-            freeCompilerArgs.add("-Xwhen-guards")
-        }
-    }
     kotlinOptions {
         jvmTarget = "11"
     }
     buildFeatures {
-        buildConfig = true
         compose = true
     }
 }
@@ -54,21 +39,15 @@ android {
 dependencies {
 
     implementation(libs.androidx.core.ktx)
-    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
     implementation(libs.bundles.compose)
+    implementation(libs.bundles.image.loading)
     implementation(libs.bundles.dependency.injection)
     implementation(libs.bundles.data.persistence)
-    implementation(libs.androidx.compose.navigation)
-    implementation(libs.kotlinx.serialization.json)
-
-    //splash api
-    implementation(libs.androidx.core.splashscreen)
-    implementation(libs.material.v1120)
+    implementation(project(":ui"))
     implementation(project(":domain"))
     implementation(project(":data"))
-    implementation(project(":ui"))
-    implementation(project(":feature:auth"))
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

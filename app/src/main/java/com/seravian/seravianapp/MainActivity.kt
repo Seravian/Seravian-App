@@ -9,9 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.seravian.seravianapp.common.components.AuthCustomButton
-import com.seravian.seravianapp.core.navigation.AppNavHost
-import com.seravian.seravianapp.ui.theme.SeravianTheme
+import com.seravian.ui.components.AuthCustomButton
+import com.seravian.seravianapp.navigation.AppNavHost
+import com.seravian.ui.theme.SeravianTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
