@@ -1,7 +1,7 @@
 package com.seravian.auth.util
 
 import android.util.Patterns
-import com.seravian.domain.network.util.Result
+import com.seravian.domain.network.Result
 
 object ValidateInput {
     fun validateUsername(username: String): Result<Unit, ValidationError> {

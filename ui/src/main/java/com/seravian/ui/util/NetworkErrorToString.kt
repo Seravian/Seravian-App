@@ -1,7 +1,7 @@
 package com.seravian.ui.util
 
 import android.content.Context
-import com.seravian.domain.network.util.NetworkError
+import com.seravian.domain.network.NetworkError
 import com.seravian.ui.R
 
 fun NetworkError.toString(context: Context): String {

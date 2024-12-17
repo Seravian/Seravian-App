@@ -35,8 +35,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.seravian.auth.util.toString
-import com.seravian.domain.network.util.Result
-import com.seravian.domain.network.util.onSuccess
+import com.seravian.domain.network.Result
+import com.seravian.domain.network.onSuccess
 import com.seravian.auth.R
 import com.seravian.ui.components.AuthCustomButton
 import com.seravian.ui.components.AuthTextField

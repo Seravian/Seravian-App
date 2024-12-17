@@ -2,15 +2,18 @@ package com.seravian.auth.presentation.register
 
 import androidx.lifecycle.viewModelScope
 import com.seravian.auth.data.AuthError
+import com.seravian.auth.domain.repository.RegisterRepository
 import com.seravian.auth.util.ValidateInput
-import com.seravian.domain.network.util.Result
-import com.seravian.domain.network.util.onError
+import com.seravian.domain.network.Result
+import com.seravian.domain.network.onError
 import com.seravian.ui.presentation.BaseViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-class RegisterViewModel(): BaseViewModel() {
+class RegisterViewModel(
+    private val registerRepository: RegisterRepository
+): BaseViewModel() {
     var registerState = MutableStateFlow(RegisterInputState())
         private set
 
@@ -63,9 +66,8 @@ class RegisterViewModel(): BaseViewModel() {
         password: String,
     ) {
         showLoading()
-
         viewModelScope.launch(_registerExceptionHandler) {
-            // Network Call
+            registerRepository.registerUser(username, email, password)
         }.invokeOnCompletion { hideLoading() }
     }
 

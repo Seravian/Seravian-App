@@ -2,15 +2,18 @@ package com.seravian.auth.presentation.login
 
 import androidx.lifecycle.viewModelScope
 import com.seravian.auth.data.AuthError
+import com.seravian.auth.domain.repository.LoginRepository
 import com.seravian.auth.util.ValidateInput
-import com.seravian.domain.network.util.Result
-import com.seravian.domain.network.util.onError
+import com.seravian.domain.network.Result
+import com.seravian.domain.network.onError
 import com.seravian.ui.presentation.BaseViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-class LoginViewModel(): BaseViewModel() {
+class LoginViewModel(
+    private val loginRepository: LoginRepository
+): BaseViewModel() {
 
     var loginState = MutableStateFlow(LoginInputState())
         private set
@@ -49,9 +52,8 @@ class LoginViewModel(): BaseViewModel() {
         password: String,
     ) {
         showLoading()
-
         viewModelScope.launch(_loginExceptionHandler) {
-            // Network Call
+            loginRepository.loginUser(email, password)
         }.invokeOnCompletion { hideLoading() }
     }
 

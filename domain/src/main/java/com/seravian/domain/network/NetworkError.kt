@@ -1,4 +1,4 @@
-package com.seravian.domain.network.util
+package com.seravian.domain.network
 
 enum class NetworkError: Error {
     REQUEST_TIMEOUT,

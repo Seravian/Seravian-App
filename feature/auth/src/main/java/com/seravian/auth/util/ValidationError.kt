@@ -1,6 +1,6 @@
 package com.seravian.auth.util
 
-import com.seravian.domain.network.util.Error
+import com.seravian.domain.network.Error
 
 enum class ValidationError: Error {
     EMPTY_USER_NAME,
