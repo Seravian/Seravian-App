@@ -2,14 +2,17 @@ package com.seravian.seravianapp.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.seravian.auth.presentation.login.LoginScreen
+import com.seravian.auth.presentation.otp.screen.OtpScreen
 import com.seravian.auth.presentation.register.RegisterScreen
+import com.seravian.home.presentation.HomeScreen
 
 @Composable
-fun AppNavHost() {
+fun AppNavHost(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
     val appNavigator = remember(navController) {
         AppNavigator(navController)
@@ -17,7 +20,8 @@ fun AppNavHost() {
 
     NavHost(
         navController = navController,
-        startDestination = AppDestination.Login
+        startDestination = AppDestination.Login,
+        modifier = modifier
     ) {
         composable<AppDestination.Login> {
             LoginScreen(
@@ -35,13 +39,15 @@ fun AppNavHost() {
 
         }
         composable<AppDestination.OTP> {
-
+            OtpScreen(
+                navigate = {  }
+            )
         }
         composable<AppDestination.ResetPassword> {
 
         }
         composable<AppDestination.Home> {
-
+            HomeScreen()
         }
     }
 }

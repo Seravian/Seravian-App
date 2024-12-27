@@ -43,24 +43,22 @@ fun LoginScreen(
     navigateToRegister: () -> Unit,
     navigateToEmailVerification: () -> Unit,
     navigateToHome: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     BaseScreen<LoginViewModel> { viewModel ->
         val state = viewModel.loginState.collectAsState()
 
-        LoginContents(
+        LoginContent(
             navigateToRegister = navigateToRegister,
             navigateToEmailVerification = navigateToEmailVerification,
             navigateToHome = navigateToHome,
             state = state.value,
             action = viewModel::loginAction,
-            modifier = modifier
         )
     }
 }
 
 @Composable
-fun LoginContents(
+private fun LoginContent(
     state: LoginInputState,
     action: (LoginAction) -> Unit,
     navigateToRegister: () -> Unit,
@@ -210,7 +208,7 @@ fun LoginContents(
 @Composable
 private fun LoginContentsPreview() {
     SeravianTheme {
-        LoginContents(
+        LoginContent(
             state = LoginInputState(),
             action = { },
             navigateToRegister = { },

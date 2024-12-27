@@ -1,7 +1,7 @@
 package com.seravian.ui.presentation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.seravian.ui.components.ErrorDialog
 import com.seravian.ui.components.LoadingDialog
 import org.koin.androidx.compose.koinViewModel
@@ -11,14 +11,14 @@ inline fun<reified VM: BaseViewModel> BaseScreen(
     content: @Composable (viewModel: VM) -> Unit,
 ) {
     val viewModel: VM = koinViewModel()
-    val state = viewModel.baseState.collectAsState()
+    val baseState = viewModel.baseState.collectAsStateWithLifecycle()
 
     content(viewModel)
     LoadingDialog(
-        isLoading = state.value.isLoading
+        isLoading = baseState.value.isLoading
     )
     ErrorDialog(
-        errorMessage = state.value.errorMessage,
+        errorMessage = baseState.value.errorMessage,
         dismissAction = viewModel::hideErrorMessage
     )
 }

@@ -39,7 +39,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun HomeContent(modifier: Modifier = Modifier) {
+private fun HomeContent(modifier: Modifier = Modifier) {
     val colorScheme = MaterialTheme.colorScheme
 
     Column(

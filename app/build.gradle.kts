@@ -68,6 +68,7 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":ui"))
     implementation(project(":feature:auth"))
+    implementation(project(":feature:home"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

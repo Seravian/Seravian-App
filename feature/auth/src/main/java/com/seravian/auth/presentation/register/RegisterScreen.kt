@@ -53,7 +53,7 @@ fun RegisterScreen(
     BaseScreen<RegisterViewModel> { viewModel ->
         val state = viewModel.registerState.collectAsState()
 
-        RegisterContents(
+        RegisterContent(
             state = state.value,
             action = viewModel::registerAction,
             navigateBackToLogin = navigateBackToLogin
@@ -62,7 +62,7 @@ fun RegisterScreen(
 }
 
 @Composable
-fun RegisterContents(
+private fun RegisterContent(
     state: RegisterInputState,
     action: (RegisterAction) -> Unit,
     navigateBackToLogin: () -> Unit,
@@ -220,7 +220,7 @@ val mockState = RegisterInputState(
 @Composable
 private fun RegisterContentsPreview() {
     SeravianTheme {
-        RegisterContents(
+        RegisterContent(
             state = mockState,
             action = { },
             navigateBackToLogin = { }
