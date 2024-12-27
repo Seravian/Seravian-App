@@ -30,6 +30,7 @@ import com.seravian.auth.util.toString
 import com.seravian.domain.network.Result
 import com.seravian.domain.network.onSuccess
 import com.seravian.auth.R
+import com.seravian.auth.component.AuthHeader
 import com.seravian.ui.components.AuthCustomButton
 import com.seravian.ui.components.AuthTextField
 import com.seravian.ui.presentation.BaseScreen
@@ -80,74 +81,11 @@ private fun LoginContent(
             .background(color = backgroundLight)
     ) {
         // Header Section
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.3f)
-                .background(color = MaterialTheme.colorScheme.background)
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.stars),
-                contentDescription = "Stars",
-                contentScale = ContentScale.Crop,
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
-                modifier = Modifier
-                    .fillMaxSize()
-            )
-            Column(
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    .padding(horizontal = 20.dp)
-                    .padding(WindowInsets.systemBars.asPaddingValues())
-            ) {
-                Row(
-                    modifier = Modifier.padding(top = 20.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.logo),
-                        contentDescription = stringResource(R.string.logo_image),
-                        modifier = Modifier.padding(5.dp)
-                    )
-                    Text(
-                        text = stringResource(R.string.seravian),
-                        color = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier.padding(5.dp)
-                    )
-                }
-                Text(
-                    text = stringResource(R.string.sign_in_into_your_account),
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        fontSize = 30.sp,
-                        lineHeight = 40.sp,
-                        fontWeight = FontWeight.Bold
-                    ),
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.padding(top = 30.dp, start = 5.dp)
-                )
-
-                Row(modifier = Modifier.padding(top = 20.dp)) {
-                    Text(
-                        text = stringResource(R.string.don_t_have_an_account),
-                        color = MaterialTheme.colorScheme.onBackground,
-                    )
-                    Text(
-                        text = stringResource(R.string.sign_up),
-                        color = bluePrimary,
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            textDecoration = TextDecoration.Underline
-                        ),
-                        modifier = Modifier
-                            .padding(start = 3.dp)
-                            .clickable(enabled = true) {
-                                navigateToRegister()
-                            }
-                    )
-                }
-            }
-        }
+        AuthHeader(
+            title = stringResource(R.string.sign_in_to_your_account),
+            isLoginScreen = true,
+            navigateToRegister = navigateToRegister
+        )
         // Input Fields Section
         Column(
             modifier = Modifier

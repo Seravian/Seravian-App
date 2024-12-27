@@ -1,22 +1,12 @@
 package com.seravian.auth.presentation.register
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -25,19 +15,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.seravian.auth.util.toString
 import com.seravian.domain.network.Result
 import com.seravian.domain.network.onSuccess
 import com.seravian.auth.R
+import com.seravian.auth.component.AuthHeader
 import com.seravian.ui.components.AuthCustomButton
 import com.seravian.ui.components.AuthTextField
 import com.seravian.ui.presentation.BaseScreen
@@ -47,7 +33,7 @@ import com.seravian.ui.theme.onBackgroundLight
 
 @Composable
 fun RegisterScreen(
-    navigateBackToLogin: () -> Unit,
+    navigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     BaseScreen<RegisterViewModel> { viewModel ->
@@ -56,7 +42,7 @@ fun RegisterScreen(
         RegisterContent(
             state = state.value,
             action = viewModel::registerAction,
-            navigateBackToLogin = navigateBackToLogin
+            navigateBack = navigateBack
         )
     }
 }
@@ -65,7 +51,7 @@ fun RegisterScreen(
 private fun RegisterContent(
     state: RegisterInputState,
     action: (RegisterAction) -> Unit,
-    navigateBackToLogin: () -> Unit,
+    navigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -75,7 +61,7 @@ private fun RegisterContent(
     var confirmPassword by rememberSaveable { mutableStateOf("") }
     state.registrationResult?.onSuccess {
         action(RegisterAction.ResetRegisterState)
-        navigateBackToLogin()
+        navigateBack()
     }
 
     Column(
@@ -83,48 +69,13 @@ private fun RegisterContent(
             .fillMaxSize()
             .background(color = backgroundLight)
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.3f)
-                .background(MaterialTheme.colorScheme.background)
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.stars),
-                contentDescription = "Stars",
-                contentScale = ContentScale.Crop,
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
-                modifier = Modifier
-                    .fillMaxSize()
-            )
-            Column(
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    .padding(horizontal = 20.dp)
-                    .padding(WindowInsets.systemBars.asPaddingValues())
-            ) {
-                IconButton(onClick = { navigateBackToLogin() }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.white_arrow_back),
-                        contentDescription = "Back Button",
-                        tint = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
-                Text(
-                    text = stringResource(R.string.register),
-                    color = MaterialTheme.colorScheme.onBackground,
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        fontSize = 50.sp,
-                        lineHeight = 40.sp,
-                        fontWeight = FontWeight.Bold
-                    ),
-                    modifier = Modifier.padding(top = 30.dp, start = 5.dp)
-                )
-            }
-        }
+        // Header Section
+        AuthHeader(
+            title = stringResource(R.string.register),
+            isLoginScreen = false,
+            navigateBack = navigateBack
+        )
+        // Input Fields Section
         Column(
             verticalArrangement = Arrangement.spacedBy(13.dp), // Adds spacing between items
             modifier = Modifier
@@ -223,7 +174,7 @@ private fun RegisterContentsPreview() {
         RegisterContent(
             state = mockState,
             action = { },
-            navigateBackToLogin = { }
+            navigateBack = { }
         )
     }
 }

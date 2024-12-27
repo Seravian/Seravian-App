@@ -21,7 +21,6 @@ fun AppNavHost(modifier: Modifier = Modifier) {
     NavHost(
         navController = navController,
         startDestination = AppDestination.Login,
-        modifier = modifier
     ) {
         composable<AppDestination.Login> {
             LoginScreen(
@@ -32,7 +31,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         }
         composable<AppDestination.Register> {
             RegisterScreen(
-                navigateBackToLogin = { appNavigator.navigateBack() },
+                navigateBack = { appNavigator.navigateBack() },
             )
         }
         composable<AppDestination.VerifyEmail> {
@@ -40,7 +39,8 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         }
         composable<AppDestination.OTP> {
             OtpScreen(
-                navigate = {  }
+                navigateTo = { appNavigator.navigateAndClearBackStack(AppDestination.Login) },
+                navigateBack = { appNavigator.navigateBack() }
             )
         }
         composable<AppDestination.ResetPassword> {

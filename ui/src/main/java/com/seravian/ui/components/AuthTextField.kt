@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -42,6 +43,7 @@ fun AuthTextField(
             onValueChange = onValueChange,
             label = { Text(text = label, color = onSurfaceLight) },
             placeholder = { Text(text = "Enter your $label", color = onSurfaceLight) },
+            textStyle = LocalTextStyle.current.copy(color = Color.Black),
             singleLine = true,
             visualTransformation = if (isPasswordField && !passwordVisible) PasswordVisualTransformation() else VisualTransformation.None,
             trailingIcon = if (isPasswordField) {
