@@ -25,6 +25,8 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.seravian.ui.theme.onSurfaceLight
+import com.seravian.ui.theme.outlineLight
+import com.seravian.ui.theme.outlineVariantLight
 
 
 @Composable
@@ -62,7 +64,9 @@ fun AuthTextField(
             shape = RoundedCornerShape(15.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedContainerColor = Color.White,
-                focusedContainerColor = Color.White
+                focusedContainerColor = Color.White,
+                focusedBorderColor = outlineVariantLight,
+                unfocusedBorderColor = outlineLight
             )
         )
         if (error.isNotEmpty()) {

@@ -20,7 +20,7 @@ sealed interface AppDestination {
     data object OTP: AppDestination
 
     @Serializable
-    data object ResetPassword: AppDestination
+    data object NewPassword: AppDestination
 
     @Serializable
     data object Home: AppDestination

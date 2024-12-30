@@ -2,7 +2,8 @@ package com.seravian.auth.presentation.otp.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.seravian.auth.data.AuthError
-import com.seravian.auth.domain.repository.AccountRepository
+import com.seravian.auth.data.repository.AuthStateRepository
+import com.seravian.auth.domain.repository.OtpRepository
 import com.seravian.auth.presentation.otp.OtpAction
 import com.seravian.auth.presentation.otp.OtpState
 import com.seravian.domain.network.Result
@@ -14,9 +15,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class OtpViewModel(
-    private val accountRepository: AccountRepository
+    private val authStateRepository: AuthStateRepository,
+    private val otpRepository: OtpRepository
 ): BaseViewModel() {
-
     var otpState = MutableStateFlow(OtpState())
         private set
 
@@ -38,6 +39,7 @@ class OtpViewModel(
             is OtpAction.OnEnterNumber -> {
                 enterNumber(action.number, action.index)
             }
+
             is OtpAction.OnKeyboardBack -> {
                 val previousIndex = getPreviousFocusedIndex(otpState.value.focusedIndex)
                 otpState.update { it.copy(
@@ -59,7 +61,7 @@ class OtpViewModel(
 
     private fun verifyOtp(email: String, otp: String) {
         viewModelScope.launch(_otpExceptionHandler) {
-            accountRepository.verifyOtp(email, otp)
+            otpRepository.verifyOtp(email, otp)
         }.invokeOnCompletion { otpState.update { it.copy(otpResult = Result.Success(Unit)) } }
     }
 
@@ -85,7 +87,7 @@ class OtpViewModel(
         ) }
         if (newCode.all { it != null }) {
             val otp = newCode.joinToString("") { it.toString() }
-            otpState.value.email?.let { verifyOtp(it, otp) }
+            authStateRepository.authState.value.email?.let { verifyOtp(it, otp) }
         }
     }
 

@@ -35,6 +35,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
 import com.seravian.ui.theme.SeravianTheme
+import com.seravian.ui.theme.onPrimaryContainerLight
+import com.seravian.ui.theme.outlineLight
+import com.seravian.ui.theme.primaryContainerLight
 
 @Composable
 fun OtpInputField(
@@ -63,9 +66,9 @@ fun OtpInputField(
         modifier = modifier
             .border(
                 width = 1.dp,
-                color = MaterialTheme.colorScheme.outline
+                color = outlineLight
             )
-            .background(MaterialTheme.colorScheme.primaryContainer),
+            .background(primaryContainerLight),
         contentAlignment = Alignment.Center
     ) {
         BasicTextField(
@@ -76,7 +79,7 @@ fun OtpInputField(
                     onNumberChanged(newNumber.toIntOrNull())
                 }
             },
-            cursorBrush = SolidColor(MaterialTheme.colorScheme.onPrimaryContainer),
+            cursorBrush = SolidColor(onPrimaryContainerLight),
             singleLine = true,
             textStyle = TextStyle(
                 textAlign = TextAlign.Center,

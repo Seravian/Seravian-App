@@ -3,7 +3,9 @@ package com.seravian.auth.presentation.register
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -85,7 +87,7 @@ private fun RegisterContent(
         ) {
             // Username Field
             Text(
-                text = stringResource(R.string.userName),
+                text = stringResource(R.string.user_name),
                 color = onBackgroundLight
             )
             AuthTextField(
@@ -130,7 +132,7 @@ private fun RegisterContent(
             )
             // Confirm Password Field
             Text(
-                text = stringResource(R.string.confirmPassword),
+                text = stringResource(R.string.confirm_password),
                 color = onBackgroundLight
                 )
             AuthTextField(
@@ -139,10 +141,11 @@ private fun RegisterContent(
                     confirmPassword = it
                     action(RegisterAction.ValidatePasswordConfirmation(password, confirmPassword))
                 },
-                label = stringResource(R.string.confirmYourPassword),
+                label = stringResource(R.string.confirm_your_password),
                 error = if (state.confirmPasswordValidity is Result.Error) state.confirmPasswordValidity.error.toString(context) else "",
                 isPasswordField = true
             )
+            Spacer(modifier = Modifier.height(20.dp))
             // Register Button
             AuthCustomButton(
                 text = stringResource(R.string.register),

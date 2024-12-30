@@ -15,28 +15,32 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.seravian.ui.theme.SeravianTheme
 import com.seravian.ui.theme.onPrimaryContainerLight
+import com.seravian.ui.theme.primaryContainerLightHighContrast
 import com.seravian.ui.theme.primaryLight
+import com.seravian.ui.theme.surfaceVariantLightHighContrast
 
 @Composable
 fun AuthCustomButton(
     text: String,
     onClick: () -> Unit,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier
     ) {
     Button(
         onClick = onClick,
+        enabled = enabled,
         shape = RoundedCornerShape(10.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = primaryLight
+            containerColor = primaryContainerLightHighContrast,
+            disabledContainerColor = surfaceVariantLightHighContrast
         ),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 30.dp)
-            .padding(8.dp),
+            .padding(8.dp)
     ) {
         Text(
             text = text,
-            fontSize = 20.sp,
+            fontSize = 19.sp,
             textAlign = TextAlign.Center,
             color = onPrimaryContainerLight,
             modifier = Modifier.padding(6.dp)

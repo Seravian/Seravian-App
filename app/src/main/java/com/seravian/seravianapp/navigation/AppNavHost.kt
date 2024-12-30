@@ -9,6 +9,8 @@ import androidx.navigation.compose.rememberNavController
 import com.seravian.auth.presentation.login.LoginScreen
 import com.seravian.auth.presentation.otp.screen.OtpScreen
 import com.seravian.auth.presentation.register.RegisterScreen
+import com.seravian.auth.presentation.reset_password.screen.NewPasswordScreen
+import com.seravian.auth.presentation.reset_password.screen.VerifyEmailScreen
 import com.seravian.home.presentation.HomeScreen
 
 @Composable
@@ -25,7 +27,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         composable<AppDestination.Login> {
             LoginScreen(
                 navigateToRegister = { appNavigator.navigateTo(AppDestination.Register) },
-                navigateToEmailVerification = { appNavigator.navigateTo(AppDestination.ResetPassword) },
+                navigateToEmailVerification = { appNavigator.navigateTo(AppDestination.VerifyEmail) },
                 navigateToHome = { appNavigator.navigateAndClearBackStack(AppDestination.Home) }
             )
         }
@@ -35,16 +37,22 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             )
         }
         composable<AppDestination.VerifyEmail> {
-
+            VerifyEmailScreen(
+                navigateBack = { appNavigator.navigateBack() },
+                navigateToOtpScreen = { appNavigator.navigateTo(AppDestination.OTP) }
+            )
         }
         composable<AppDestination.OTP> {
             OtpScreen(
-                navigateTo = { appNavigator.navigateAndClearBackStack(AppDestination.Login) },
+                navigateTo = { appNavigator.navigateAndClearBackStack(AppDestination.NewPassword) },
                 navigateBack = { appNavigator.navigateBack() }
             )
         }
-        composable<AppDestination.ResetPassword> {
-
+        composable<AppDestination.NewPassword> {
+            NewPasswordScreen(
+                navigateBack = { appNavigator.navigateBack() },
+                navigateToLoginScreen = { appNavigator.navigateTo(AppDestination.Login) }
+            )
         }
         composable<AppDestination.Home> {
             HomeScreen()

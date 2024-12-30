@@ -12,7 +12,7 @@ fun NavBackStackEntry?.fromRoute(): AppDestination? {
                 AppDestination.Register::class.simpleName -> return AppDestination.Register
                 AppDestination.VerifyEmail::class.simpleName -> return AppDestination.VerifyEmail
                 AppDestination.OTP::class.simpleName -> return AppDestination.OTP
-                AppDestination.ResetPassword::class.simpleName -> return AppDestination.ResetPassword
+                AppDestination.NewPassword::class.simpleName -> return AppDestination.NewPassword
                 AppDestination.Home::class.simpleName -> return AppDestination.Home
                 else -> null
             }

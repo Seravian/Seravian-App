@@ -134,6 +134,7 @@ private fun LoginContent(
                         navigateToEmailVerification()
                     }
             )
+            Spacer(modifier = Modifier.height(20.dp))
             AuthCustomButton(
                 text = stringResource(R.string.log_in),
                 onClick = { action(LoginAction.Login(email, password)) }

@@ -1,6 +1,5 @@
 package com.seravian.auth.domain.repository
 
-interface AccountRepository {
+interface OtpRepository {
     suspend fun verifyOtp(email: String, otp: String)
-    suspend fun logoutUser()
 }

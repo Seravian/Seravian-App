@@ -14,7 +14,6 @@ import kotlinx.coroutines.launch
 class LoginViewModel(
     private val loginRepository: LoginRepository
 ): BaseViewModel() {
-
     var loginState = MutableStateFlow(LoginInputState())
         private set
 
