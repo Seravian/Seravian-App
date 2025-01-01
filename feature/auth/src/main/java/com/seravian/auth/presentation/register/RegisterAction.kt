@@ -13,5 +13,5 @@ sealed interface RegisterAction {
         val email: String,
         val password: String,
     ): RegisterAction
-    data object ResetRegisterState: RegisterAction
+    data object ResetState: RegisterAction
 }

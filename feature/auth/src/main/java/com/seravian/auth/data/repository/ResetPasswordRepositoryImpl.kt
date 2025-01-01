@@ -7,6 +7,6 @@ class ResetPasswordRepositoryImpl(
     private val remoteDataSource: RemoteDataSource
 ): ResetPasswordRepository {
     override suspend fun resetPassword(email: String, newPassword: String) {
-        TODO("Not yet implemented")
+        remoteDataSource.resetPassword(email, newPassword)
     }
 }

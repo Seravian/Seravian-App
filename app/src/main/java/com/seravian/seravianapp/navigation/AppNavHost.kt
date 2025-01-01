@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.seravian.auth.presentation.login.LoginScreen
-import com.seravian.auth.presentation.otp.screen.OtpScreen
+import com.seravian.auth.presentation.otp.OtpScreen
 import com.seravian.auth.presentation.register.RegisterScreen
 import com.seravian.auth.presentation.reset_password.screen.NewPasswordScreen
 import com.seravian.auth.presentation.reset_password.screen.VerifyEmailScreen
@@ -26,14 +26,15 @@ fun AppNavHost(modifier: Modifier = Modifier) {
     ) {
         composable<AppDestination.Login> {
             LoginScreen(
-                navigateToRegister = { appNavigator.navigateTo(AppDestination.Register) },
-                navigateToEmailVerification = { appNavigator.navigateTo(AppDestination.VerifyEmail) },
-                navigateToHome = { appNavigator.navigateAndClearBackStack(AppDestination.Home) }
+                navigateToRegisterScreen = { appNavigator.navigateTo(AppDestination.Register) },
+                navigateToEmailVerificationScreen = { appNavigator.navigateTo(AppDestination.VerifyEmail) },
+                navigateToHomeScreen = { appNavigator.navigateAndClearBackStack(AppDestination.Home) }
             )
         }
         composable<AppDestination.Register> {
             RegisterScreen(
                 navigateBack = { appNavigator.navigateBack() },
+                navigateToLoginScreen = { appNavigator.navigateAndClearBackStack(AppDestination.Login) }
             )
         }
         composable<AppDestination.VerifyEmail> {
@@ -44,7 +45,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         }
         composable<AppDestination.OTP> {
             OtpScreen(
-                navigateTo = { appNavigator.navigateAndClearBackStack(AppDestination.NewPassword) },
+                navigateToNewPasswordScreen = { appNavigator.navigateAndClearBackStack(AppDestination.NewPassword) },
                 navigateBack = { appNavigator.navigateBack() }
             )
         }

@@ -12,7 +12,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.seravian.auth.util.toString
 import com.seravian.domain.network.Result
 import com.seravian.domain.network.onSuccess
@@ -37,24 +37,26 @@ import com.seravian.ui.theme.onBackgroundLight
 @Composable
 fun RegisterScreen(
     navigateBack: () -> Unit,
-    modifier: Modifier = Modifier
+    navigateToLoginScreen: () -> Unit,
 ) {
     BaseScreen<RegisterViewModel> { viewModel ->
-        val state = viewModel.registerState.collectAsState()
+        val state by viewModel.registerState.collectAsStateWithLifecycle()
 
         RegisterContent(
-            state = state.value,
+            state = state,
             action = viewModel::registerAction,
-            navigateBack = navigateBack
+            navigateBack = navigateBack,
+            navigateToLoginScreen = navigateToLoginScreen
         )
     }
 }
 
 @Composable
 private fun RegisterContent(
-    state: RegisterInputState,
+    state: RegisterState,
     action: (RegisterAction) -> Unit,
     navigateBack: () -> Unit,
+    navigateToLoginScreen: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -62,10 +64,11 @@ private fun RegisterContent(
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var confirmPassword by rememberSaveable { mutableStateOf("") }
+
     LaunchedEffect(state.registrationResult) {
         state.registrationResult?.onSuccess {
-            action(RegisterAction.ResetRegisterState)
-            navigateBack()
+            action(RegisterAction.ResetState)
+            navigateToLoginScreen()
         }
     }
 
@@ -82,7 +85,7 @@ private fun RegisterContent(
         )
         // Input Fields Section
         Column(
-            verticalArrangement = Arrangement.spacedBy(13.dp), // Adds spacing between items
+            verticalArrangement = Arrangement.spacedBy(13.dp),
             modifier = Modifier
                 .padding(18.dp)
                 .fillMaxSize()
@@ -160,27 +163,25 @@ private fun RegisterContent(
                             password,
                         )
                     )
-                }
+                },
+                enabled = state.usernameValidity is Result.Success &&
+                        state.emailValidity is Result.Success &&
+                        state.passwordValidity is Result.Success &&
+                        state.confirmPasswordValidity is Result.Success
             )
         }
     }
 }
-
-val mockState = RegisterInputState(
-    usernameValidity = null,
-    emailValidity = null,
-    passwordValidity = null,
-    confirmPasswordValidity = null
-)
 
 @Preview(showSystemUi = true)
 @Composable
 private fun RegisterContentsPreview() {
     SeravianTheme {
         RegisterContent(
-            state = mockState,
+            state = RegisterState(),
             action = { },
-            navigateBack = { }
+            navigateBack = { },
+            navigateToLoginScreen = { }
         )
     }
 }

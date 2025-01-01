@@ -10,7 +10,7 @@ import com.seravian.auth.domain.repository.LoginRepository
 import com.seravian.auth.domain.repository.RegisterRepository
 import com.seravian.auth.domain.repository.ResetPasswordRepository
 import com.seravian.auth.presentation.login.LoginViewModel
-import com.seravian.auth.presentation.otp.viewmodel.OtpViewModel
+import com.seravian.auth.presentation.otp.OtpViewModel
 import com.seravian.auth.presentation.register.RegisterViewModel
 import com.seravian.auth.presentation.reset_password.ResetPasswordViewModel
 import org.koin.core.module.dsl.viewModel

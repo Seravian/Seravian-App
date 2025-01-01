@@ -13,7 +13,11 @@ class SeravianDataSource(): RemoteDataSource {
     }
 
     override suspend fun verifyOtp(email: String, otp: String) {
-        Log.d("SeravianDS", "Verification")
+        Log.d("SeravianDS", "OTP Verification")
+    }
+
+    override suspend fun resetPassword(email: String, newPassword: String) {
+        Log.d("SeravianDS", "New Password")
     }
 
     override suspend fun logoutUser() {

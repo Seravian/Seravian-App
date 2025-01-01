@@ -6,7 +6,7 @@ import com.seravian.auth.util.ValidationError
 import com.seravian.domain.network.Result
 
 @Immutable
-data class RegisterInputState(
+data class RegisterState(
     val emailValidity: Result<Unit, ValidationError>? = null,
     val usernameValidity: Result<Unit, ValidationError>? = null,
     val passwordValidity: Result<Unit, ValidationError>? = null,

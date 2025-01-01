@@ -4,8 +4,6 @@ import androidx.lifecycle.viewModelScope
 import com.seravian.auth.data.AuthError
 import com.seravian.auth.data.repository.AuthStateRepository
 import com.seravian.auth.domain.repository.ResetPasswordRepository
-import com.seravian.auth.presentation.login.LoginInputState
-import com.seravian.auth.presentation.register.RegisterAction
 import com.seravian.auth.util.ValidateInput
 import com.seravian.domain.network.Result
 import com.seravian.domain.network.onError
@@ -13,6 +11,7 @@ import com.seravian.domain.network.onSuccess
 import com.seravian.ui.presentation.BaseViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ResetPasswordViewModel(
@@ -56,6 +55,7 @@ class ResetPasswordViewModel(
                     )
                 }
             }
+            is ResetPasswordAction.ResetState -> resetState()
         }
     }
 
@@ -72,6 +72,13 @@ class ResetPasswordViewModel(
         showLoading()
         viewModelScope.launch(_resetPasswordExceptionHandler) {
             resetPasswordRepository.resetPassword(email, newPassword)
-        }.invokeOnCompletion { hideLoading() }
+        }.invokeOnCompletion {
+            resetPasswordState.update { it.copy(resetPasswordResult = Result.Success(Unit)) }
+            hideLoading()
+        }
+    }
+
+    private fun resetState() {
+        resetPasswordState.value = ResetPasswordState()
     }
 }

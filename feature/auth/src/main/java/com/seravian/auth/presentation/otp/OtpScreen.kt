@@ -1,10 +1,9 @@
-package com.seravian.auth.presentation.otp.screen
+package com.seravian.auth.presentation.otp
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,10 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.seravian.auth.R
 import com.seravian.auth.component.AuthHeader
-import com.seravian.auth.presentation.otp.OtpAction
-import com.seravian.auth.presentation.otp.OtpState
 import com.seravian.auth.presentation.otp.component.OtpInputField
-import com.seravian.auth.presentation.otp.viewmodel.OtpViewModel
 import com.seravian.domain.network.onSuccess
 import com.seravian.ui.presentation.BaseScreen
 import com.seravian.ui.theme.SeravianTheme
@@ -35,8 +31,7 @@ import com.seravian.ui.theme.backgroundLight
 
 @Composable
 fun OtpScreen(
-    modifier: Modifier = Modifier,
-    navigateTo: () -> Unit,
+    navigateToNewPasswordScreen: () -> Unit,
     navigateBack: () -> Unit
     ) {
     BaseScreen<OtpViewModel> { viewModel ->
@@ -78,9 +73,8 @@ fun OtpScreen(
                 }
                 viewModel.otpAction(action)
             },
-            navigateTo = navigateTo,
+            navigateToNewPasswordScreen = navigateToNewPasswordScreen,
             navigateBack = navigateBack,
-            modifier = modifier
         )
     }
 }
@@ -90,14 +84,14 @@ private fun OtpContent(
     state: OtpState,
     focusRequesters: List<FocusRequester>,
     action: (OtpAction) -> Unit,
-    navigateTo: () -> Unit,
+    navigateToNewPasswordScreen: () -> Unit,
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     LaunchedEffect(state.otpResult) {
         state.otpResult?.onSuccess {
-            action(OtpAction.OnSuccess)
-            navigateTo()
+            action(OtpAction.ResetState)
+            navigateToNewPasswordScreen()
         }
     }
 
@@ -153,7 +147,7 @@ private fun OtpScreenPreview() {
             state = OtpState(),
             focusRequesters = List(4) { FocusRequester() },
             action = {},
-            navigateTo = {},
+            navigateToNewPasswordScreen = {},
             navigateBack = {}
         )
     }

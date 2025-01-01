@@ -11,6 +11,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -30,6 +31,7 @@ import com.seravian.auth.util.toString
 import com.seravian.domain.network.Result
 import com.seravian.auth.component.AuthCustomButton
 import com.seravian.auth.component.AuthTextField
+import com.seravian.domain.network.onSuccess
 import com.seravian.ui.presentation.BaseScreen
 import com.seravian.ui.theme.SeravianTheme
 import com.seravian.ui.theme.backgroundLight
@@ -62,6 +64,13 @@ private fun NewPasswordContent(
     val context = LocalContext.current
     var password by rememberSaveable { mutableStateOf("") }
     var confirmPassword by rememberSaveable { mutableStateOf("") }
+
+    LaunchedEffect(state.resetPasswordResult) {
+        state.resetPasswordResult?.onSuccess {
+            action(ResetPasswordAction.ResetState)
+            navigateToLoginScreen()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -113,9 +122,7 @@ private fun NewPasswordContent(
             AuthCustomButton(
                 text = stringResource(R.string.next),
                 enabled = state.passwordValidity is Result.Success && state.confirmPasswordValidity is Result.Success,
-                onClick = {
-                    navigateToLoginScreen()
-                }
+                onClick = { action(ResetPasswordAction.ResetPassword(password)) }
             )
         }
     }

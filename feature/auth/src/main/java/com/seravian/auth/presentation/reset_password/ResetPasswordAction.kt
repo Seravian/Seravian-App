@@ -1,7 +1,5 @@
 package com.seravian.auth.presentation.reset_password
 
-import com.seravian.auth.presentation.register.RegisterAction
-
 interface ResetPasswordAction {
     data class UpdateEmail(val email: String): ResetPasswordAction
     data class ValidatePassword(val password: String): ResetPasswordAction
@@ -10,4 +8,5 @@ interface ResetPasswordAction {
         val confirmPassword: String
     ): ResetPasswordAction
     data class ResetPassword(val newPassword: String): ResetPasswordAction
+    data object ResetState: ResetPasswordAction
 }

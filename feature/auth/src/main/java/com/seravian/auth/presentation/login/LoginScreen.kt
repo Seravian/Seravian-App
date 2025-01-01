@@ -8,7 +8,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -19,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.seravian.auth.util.toString
 import com.seravian.domain.network.Result
 import com.seravian.domain.network.onSuccess
@@ -34,18 +34,18 @@ import com.seravian.ui.theme.onBackgroundLight
 
 @Composable
 fun LoginScreen(
-    navigateToRegister: () -> Unit,
-    navigateToEmailVerification: () -> Unit,
-    navigateToHome: () -> Unit,
+    navigateToRegisterScreen: () -> Unit,
+    navigateToEmailVerificationScreen: () -> Unit,
+    navigateToHomeScreen: () -> Unit,
 ) {
     BaseScreen<LoginViewModel> { viewModel ->
-        val state = viewModel.loginState.collectAsState()
+        val state by viewModel.loginState.collectAsStateWithLifecycle()
 
         LoginContent(
-            navigateToRegister = navigateToRegister,
-            navigateToEmailVerification = navigateToEmailVerification,
-            navigateToHome = navigateToHome,
-            state = state.value,
+            navigateToRegisterScreen = navigateToRegisterScreen,
+            navigateToEmailVerificationScreen = navigateToEmailVerificationScreen,
+            navigateToHomeScreen = navigateToHomeScreen,
+            state = state,
             action = viewModel::loginAction,
         )
     }
@@ -53,20 +53,21 @@ fun LoginScreen(
 
 @Composable
 private fun LoginContent(
-    state: LoginInputState,
+    state: LoginState,
     action: (LoginAction) -> Unit,
-    navigateToRegister: () -> Unit,
-    navigateToEmailVerification: () -> Unit,
-    navigateToHome: () -> Unit,
+    navigateToRegisterScreen: () -> Unit,
+    navigateToEmailVerificationScreen: () -> Unit,
+    navigateToHomeScreen: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
+
     LaunchedEffect(state.loginResult) {
         state.loginResult?.onSuccess {
-            action(LoginAction.ResetLoginState)
-            navigateToHome()
+            action(LoginAction.ResetState)
+            navigateToHomeScreen()
         }
     }
 
@@ -79,7 +80,7 @@ private fun LoginContent(
         AuthHeader(
             title = stringResource(R.string.sign_in_to_your_account),
             isLoginScreen = true,
-            navigateToRegister = navigateToRegister
+            navigateToRegister = navigateToRegisterScreen
         )
         // Input Fields Section
         Column(
@@ -126,13 +127,14 @@ private fun LoginContent(
                 modifier = Modifier
                     .align(Alignment.End)
                     .clickable(enabled = true) {
-                        navigateToEmailVerification()
+                        navigateToEmailVerificationScreen()
                     }
             )
             Spacer(modifier = Modifier.height(20.dp))
             AuthCustomButton(
                 text = stringResource(R.string.log_in),
-                onClick = { action(LoginAction.Login(email, password)) }
+                onClick = { action(LoginAction.Login(email, password)) },
+                enabled = state.emailValidity is Result.Success && state.passwordValidity is Result.Success
             )
         }
     }
@@ -143,11 +145,11 @@ private fun LoginContent(
 private fun LoginContentsPreview() {
     SeravianTheme {
         LoginContent(
-            state = LoginInputState(),
+            state = LoginState(),
             action = { },
-            navigateToRegister = { },
-            navigateToEmailVerification = { },
-            navigateToHome = { }
+            navigateToRegisterScreen = { },
+            navigateToEmailVerificationScreen = { },
+            navigateToHomeScreen = { }
         )
     }
 }

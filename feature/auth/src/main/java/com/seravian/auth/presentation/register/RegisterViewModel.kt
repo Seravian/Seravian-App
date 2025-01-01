@@ -9,12 +9,13 @@ import com.seravian.domain.network.onError
 import com.seravian.ui.presentation.BaseViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class RegisterViewModel(
     private val registerRepository: RegisterRepository
 ): BaseViewModel() {
-    var registerState = MutableStateFlow(RegisterInputState())
+    var registerState = MutableStateFlow(RegisterState())
         private set
 
     private val _registerExceptionHandler = CoroutineExceptionHandler { _, exception ->
@@ -55,8 +56,7 @@ class RegisterViewModel(
                 email = action.email,
                 password = action.password,
             )
-            is RegisterAction.ResetRegisterState -> resetState()
-            else -> Unit
+            is RegisterAction.ResetState -> resetState()
         }
     }
 
@@ -68,10 +68,13 @@ class RegisterViewModel(
         showLoading()
         viewModelScope.launch(_registerExceptionHandler) {
             registerRepository.registerUser(username, email, password)
-        }.invokeOnCompletion { hideLoading() }
+        }.invokeOnCompletion {
+            registerState.update { it.copy(registrationResult = Result.Success(Unit)) }
+            hideLoading()
+        }
     }
 
     private fun resetState() {
-        registerState.value = RegisterInputState()
+        registerState.value = RegisterState()
     }
 }

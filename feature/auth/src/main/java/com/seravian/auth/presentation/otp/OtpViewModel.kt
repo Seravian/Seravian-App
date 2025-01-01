@@ -1,11 +1,9 @@
-package com.seravian.auth.presentation.otp.viewmodel
+package com.seravian.auth.presentation.otp
 
 import androidx.lifecycle.viewModelScope
 import com.seravian.auth.data.AuthError
 import com.seravian.auth.data.repository.AuthStateRepository
 import com.seravian.auth.domain.repository.OtpRepository
-import com.seravian.auth.presentation.otp.OtpAction
-import com.seravian.auth.presentation.otp.OtpState
 import com.seravian.domain.network.Result
 import com.seravian.domain.network.onError
 import com.seravian.ui.presentation.BaseViewModel
@@ -53,16 +51,20 @@ class OtpViewModel(
                     focusedIndex = previousIndex
                 ) }
             }
-            is OtpAction.OnSuccess -> {
+            is OtpAction.ResetState -> {
                 resetOtpState()
             }
         }
     }
 
     private fun verifyOtp(email: String, otp: String) {
+        showLoading()
         viewModelScope.launch(_otpExceptionHandler) {
             otpRepository.verifyOtp(email, otp)
-        }.invokeOnCompletion { otpState.update { it.copy(otpResult = Result.Success(Unit)) } }
+        }.invokeOnCompletion {
+            otpState.update { it.copy(otpResult = Result.Success(Unit)) }
+            hideLoading()
+        }
     }
 
     private fun enterNumber(number: Int?, index: Int) {
@@ -129,6 +131,6 @@ class OtpViewModel(
     }
 
     private fun resetOtpState() {
-        otpState.update { OtpState() }
+        otpState.value = OtpState()
     }
 }
