@@ -1,4 +1,4 @@
-package com.seravian.ui.components
+package com.seravian.auth.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -24,7 +24,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.seravian.ui.theme.errorLight
 import com.seravian.ui.theme.onSurfaceLight
+import com.seravian.ui.theme.onSurfaceVariantLight
 import com.seravian.ui.theme.outlineLight
 import com.seravian.ui.theme.outlineVariantLight
 
@@ -44,8 +46,7 @@ fun AuthTextField(
             value = value,
             onValueChange = onValueChange,
             label = { Text(text = label, color = onSurfaceLight) },
-            placeholder = { Text(text = "Enter your $label", color = onSurfaceLight) },
-            textStyle = LocalTextStyle.current.copy(color = Color.Black),
+            textStyle = LocalTextStyle.current.copy(color = onSurfaceLight),
             singleLine = true,
             visualTransformation = if (isPasswordField && !passwordVisible) PasswordVisualTransformation() else VisualTransformation.None,
             trailingIcon = if (isPasswordField) {
@@ -66,7 +67,12 @@ fun AuthTextField(
                 unfocusedContainerColor = Color.White,
                 focusedContainerColor = Color.White,
                 focusedBorderColor = outlineVariantLight,
-                unfocusedBorderColor = outlineLight
+                unfocusedBorderColor = outlineLight,
+                focusedTextColor = onSurfaceLight,
+                unfocusedTextColor = onSurfaceLight,
+                cursorColor = outlineLight,
+                errorCursorColor = errorLight,
+                errorBorderColor = errorLight
             )
         )
         if (error.isNotEmpty()) {

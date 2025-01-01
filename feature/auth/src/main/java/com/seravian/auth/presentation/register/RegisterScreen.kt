@@ -27,8 +27,8 @@ import com.seravian.domain.network.Result
 import com.seravian.domain.network.onSuccess
 import com.seravian.auth.R
 import com.seravian.auth.component.AuthHeader
-import com.seravian.ui.components.AuthCustomButton
-import com.seravian.ui.components.AuthTextField
+import com.seravian.auth.component.AuthCustomButton
+import com.seravian.auth.component.AuthTextField
 import com.seravian.ui.presentation.BaseScreen
 import com.seravian.ui.theme.SeravianTheme
 import com.seravian.ui.theme.backgroundLight

@@ -1,4 +1,4 @@
-package com.seravian.ui.components
+package com.seravian.auth.component
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.sp
 import com.seravian.ui.theme.SeravianTheme
 import com.seravian.ui.theme.onPrimaryContainerLight
 import com.seravian.ui.theme.primaryContainerLightHighContrast
-import com.seravian.ui.theme.primaryLight
 import com.seravian.ui.theme.surfaceVariantLightHighContrast
 
 @Composable

@@ -29,8 +29,8 @@ import com.seravian.auth.presentation.reset_password.ResetPasswordAction
 import com.seravian.auth.presentation.reset_password.ResetPasswordViewModel
 import com.seravian.auth.util.toString
 import com.seravian.domain.network.Result
-import com.seravian.ui.components.AuthCustomButton
-import com.seravian.ui.components.AuthTextField
+import com.seravian.auth.component.AuthCustomButton
+import com.seravian.auth.component.AuthTextField
 import com.seravian.ui.theme.SeravianTheme
 import com.seravian.ui.theme.backgroundLight
 import com.seravian.ui.theme.onBackgroundLight
