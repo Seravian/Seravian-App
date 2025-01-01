@@ -11,6 +11,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -61,9 +62,11 @@ private fun RegisterContent(
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var confirmPassword by rememberSaveable { mutableStateOf("") }
-    state.registrationResult?.onSuccess {
-        action(RegisterAction.ResetRegisterState)
-        navigateBack()
+    LaunchedEffect(state.registrationResult) {
+        state.registrationResult?.onSuccess {
+            action(RegisterAction.ResetRegisterState)
+            navigateBack()
+        }
     }
 
     Column(

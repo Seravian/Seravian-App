@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,7 +40,7 @@ fun OtpScreen(
     navigateBack: () -> Unit
     ) {
     BaseScreen<OtpViewModel> { viewModel ->
-        val otpState = viewModel.otpState.collectAsStateWithLifecycle().value
+        val otpState by viewModel.otpState.collectAsStateWithLifecycle()
         val focusRequesters = remember {
             List(4) { FocusRequester() }
         }
@@ -93,9 +94,11 @@ private fun OtpContent(
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    state.otpResult?.onSuccess {
-        action(OtpAction.OnSuccess)
-        navigateTo()
+    LaunchedEffect(state.otpResult) {
+        state.otpResult?.onSuccess {
+            action(OtpAction.OnSuccess)
+            navigateTo()
+        }
     }
 
     Column(
