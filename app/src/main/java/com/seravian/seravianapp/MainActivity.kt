@@ -28,9 +28,7 @@ class MainActivity : ComponentActivity() {
                                 .fillMaxSize()
                                 .padding(innerPadding) // Apply padding from the Scaffold
                         ) {
-                            AppNavHost(
-                                modifier = Modifier.padding(innerPadding)
-                            )
+                            AppNavHost()
                         }
                     }
                 )
