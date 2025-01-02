@@ -1,4 +1,4 @@
-package com.seravian.home.presentation.survey
+package com.seravian.auth.presentation.details_form
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,13 +14,12 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.ui.Alignment
@@ -32,13 +31,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.runtime.setValue
+import com.seravian.ui.theme.SeravianTheme
 import com.seravian.ui.theme.inversePrimaryDarkMediumContrast
 import com.seravian.ui.theme.outlineVariantDarkMediumContrast
 
-
 @Composable
 fun GetUserType(modifier: Modifier = Modifier, navigateToGetUserData: () -> Unit) {
-
     var selectedOption by remember { mutableStateOf("") }
     var showError by remember { mutableStateOf(false) } // To track error state
 
@@ -58,10 +56,10 @@ fun GetUserType(modifier: Modifier = Modifier, navigateToGetUserData: () -> Unit
         Spacer(modifier = Modifier.height(8.dp))
 
         LinearProgressIndicator(
-            progress = 0.0f,
+            progress = { 0.0f },
             modifier = Modifier.fillMaxWidth(),
+            color = inversePrimaryDarkMediumContrast,
             trackColor = outlineVariantDarkMediumContrast,
-            color = inversePrimaryDarkMediumContrast
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -151,15 +149,10 @@ fun GetUserType(modifier: Modifier = Modifier, navigateToGetUserData: () -> Unit
     }
 }
 
-
-
-
-
-
-
-
 @Preview(showSystemUi = true)
 @Composable
 fun GetUserTypePreview() {
+    SeravianTheme {
         GetUserType(navigateToGetUserData = { })
+    }
 }

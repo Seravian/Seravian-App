@@ -12,8 +12,8 @@ import com.seravian.auth.presentation.register.RegisterScreen
 import com.seravian.auth.presentation.reset_password.screen.NewPasswordScreen
 import com.seravian.auth.presentation.reset_password.screen.VerifyEmailScreen
 import com.seravian.home.presentation.home.HomeScreen
-import com.seravian.home.presentation.survey.GetUserData
-import com.seravian.home.presentation.survey.GetUserType
+import com.seravian.auth.presentation.details_form.GetUserData
+import com.seravian.auth.presentation.details_form.GetUserType
 
 @Composable
 fun AppNavHost(modifier: Modifier = Modifier) {
