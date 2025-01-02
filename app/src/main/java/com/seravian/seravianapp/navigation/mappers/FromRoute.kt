@@ -14,6 +14,8 @@ fun NavBackStackEntry?.fromRoute(): AppDestination? {
                 AppDestination.OTP::class.simpleName -> return AppDestination.OTP
                 AppDestination.NewPassword::class.simpleName -> return AppDestination.NewPassword
                 AppDestination.Home::class.simpleName -> return AppDestination.Home
+                AppDestination.GetUserType::class.simpleName -> AppDestination.GetUserType
+                AppDestination.GetUserData::class.simpleName ->AppDestination.GetUserData
                 else -> null
             }
         }

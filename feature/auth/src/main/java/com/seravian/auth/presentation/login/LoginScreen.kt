@@ -36,6 +36,7 @@ import com.seravian.ui.theme.onBackgroundLight
 fun LoginScreen(
     navigateToRegisterScreen: () -> Unit,
     navigateToEmailVerificationScreen: () -> Unit,
+    navigateToSurvey:()->Unit,
     navigateToHomeScreen: () -> Unit,
 ) {
     BaseScreen<LoginViewModel> { viewModel ->
@@ -45,6 +46,7 @@ fun LoginScreen(
             navigateToRegisterScreen = navigateToRegisterScreen,
             navigateToEmailVerificationScreen = navigateToEmailVerificationScreen,
             navigateToHomeScreen = navigateToHomeScreen,
+            navigateToSurvey = navigateToSurvey,
             state = state,
             action = viewModel::loginAction,
         )
@@ -58,6 +60,7 @@ private fun LoginContent(
     navigateToRegisterScreen: () -> Unit,
     navigateToEmailVerificationScreen: () -> Unit,
     navigateToHomeScreen: () -> Unit,
+    navigateToSurvey: ()-> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -67,7 +70,8 @@ private fun LoginContent(
     LaunchedEffect(state.loginResult) {
         state.loginResult?.onSuccess {
             action(LoginAction.ResetState)
-            navigateToHomeScreen()
+            //have to be handled when using api
+            navigateToSurvey()
         }
     }
 
@@ -149,7 +153,8 @@ private fun LoginContentsPreview() {
             action = { },
             navigateToRegisterScreen = { },
             navigateToEmailVerificationScreen = { },
-            navigateToHomeScreen = { }
+            navigateToHomeScreen = { },
+            navigateToSurvey = {},
         )
     }
 }

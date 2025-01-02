@@ -11,5 +11,7 @@ fun AppDestination.toRoute(): String {
         is AppDestination.OTP -> "otp"
         is AppDestination.NewPassword -> "new_password"
         is AppDestination.Home -> "home"
+        is AppDestination.GetUserType -> "get_user_type"
+        is AppDestination.GetUserData -> "get_user_data"
     }
 }

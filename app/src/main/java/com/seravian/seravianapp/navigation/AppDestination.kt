@@ -24,4 +24,10 @@ sealed interface AppDestination {
 
     @Serializable
     data object Home: AppDestination
+
+    @Serializable
+    data object GetUserType: AppDestination
+
+    @Serializable
+    data object GetUserData: AppDestination
 }

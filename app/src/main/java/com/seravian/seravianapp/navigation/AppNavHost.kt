@@ -11,7 +11,9 @@ import com.seravian.auth.presentation.otp.OtpScreen
 import com.seravian.auth.presentation.register.RegisterScreen
 import com.seravian.auth.presentation.reset_password.screen.NewPasswordScreen
 import com.seravian.auth.presentation.reset_password.screen.VerifyEmailScreen
-import com.seravian.home.presentation.HomeScreen
+import com.seravian.home.presentation.home.HomeScreen
+import com.seravian.home.presentation.survey.GetUserData
+import com.seravian.home.presentation.survey.GetUserType
 
 @Composable
 fun AppNavHost(modifier: Modifier = Modifier) {
@@ -28,7 +30,8 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             LoginScreen(
                 navigateToRegisterScreen = { appNavigator.navigateTo(AppDestination.Register) },
                 navigateToEmailVerificationScreen = { appNavigator.navigateTo(AppDestination.VerifyEmail) },
-                navigateToHomeScreen = { appNavigator.navigateAndClearBackStack(AppDestination.Home) }
+                navigateToHomeScreen = { appNavigator.navigateAndClearBackStack(AppDestination.Home) },
+                navigateToSurvey = {appNavigator.navigateAndClearBackStack(AppDestination.GetUserType)}
             )
         }
         composable<AppDestination.Register> {
@@ -58,5 +61,18 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         composable<AppDestination.Home> {
             HomeScreen()
         }
+
+        composable<AppDestination.GetUserType> {
+            GetUserType(
+                navigateToGetUserData = {appNavigator.navigateTo(AppDestination.GetUserData)}
+            )
+        }
+
+        composable<AppDestination.GetUserData> {
+            GetUserData(
+                navigateToHome = {appNavigator.navigateTo(AppDestination.Home)}
+            )
+        }
     }
 }
+
