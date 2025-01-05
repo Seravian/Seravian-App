@@ -46,6 +46,7 @@ dependencies {
     implementation(libs.bundles.image.loading)
     implementation(libs.bundles.dependency.injection)
     implementation(libs.bundles.data.persistence)
+    implementation(libs.country.picker)
     implementation(project(":ui"))
     implementation(project(":domain"))
     implementation(project(":data"))

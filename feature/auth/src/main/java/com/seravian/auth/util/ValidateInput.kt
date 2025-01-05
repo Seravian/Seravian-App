@@ -55,4 +55,20 @@ object ValidateInput {
             else -> Result.Success(Unit)
         }
     }
+
+    fun validateFullName(name: String): Result<Unit, ValidationError> {
+        val trimmedName = name.trim()
+
+        return when {
+            trimmedName.isEmpty() -> Result.Error(ValidationError.EMPTY_NAME)
+
+            !trimmedName.all { it.isLetter() || it.isWhitespace() || it in setOf('-', '\'', '.') } ->
+                Result.Error(ValidationError.INVALID_CHARACTERS)
+
+            trimmedName.split(" ").filter { it.isNotBlank() }.size < 2 ->
+                Result.Error(ValidationError.INSUFFICIENT_PARTS)
+
+            else -> Result.Success(Unit)
+        }
+    }
 }

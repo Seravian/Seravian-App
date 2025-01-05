@@ -18,6 +18,10 @@ fun ValidationError.toString(context: Context): String {
         ValidationError.MINIMUM_1_LOWERCASE_LETTER -> R.string.at_least_one_lowercase_letter_error
         ValidationError.MINIMUM_1_UPPERCASE_LETTER -> R.string.at_least_one_uppercase_letter_error
         ValidationError.MINIMUM_1_SPECIAL_CHARACTER -> R.string.at_least_one_special_character_error
+        ValidationError.EMPTY_NAME -> R.string.name_cannot_be_empty
+        ValidationError.INVALID_CHARACTERS -> R.string.name_contains_invalid_characters
+        ValidationError.INSUFFICIENT_PARTS -> R.string.name_contains_insufficient_parts
+        ValidationError.INVALID_PHONE_NUMBER -> R.string.invalid_phone_number
     }
     return context.getString(resId)
 }

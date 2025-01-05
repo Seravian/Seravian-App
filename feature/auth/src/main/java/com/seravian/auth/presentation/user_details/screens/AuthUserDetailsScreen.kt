@@ -1,5 +1,6 @@
 package com.seravian.auth.presentation.user_details.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,6 +20,7 @@ import com.seravian.auth.presentation.user_details.AuthUserDetailsAction
 import com.seravian.auth.presentation.user_details.AuthUserDetailsState
 import com.seravian.auth.presentation.user_details.AuthUserDetailsViewModel
 import com.seravian.auth.presentation.user_details.components.SectionedProgressIndicator
+import com.seravian.domain.network.onSuccess
 import com.seravian.ui.presentation.BaseScreen
 import com.seravian.ui.theme.SeravianTheme
 
@@ -43,6 +46,18 @@ private fun AuthUserDetailsContent(
     navigateToHomeScreen: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    LaunchedEffect(state.isDetailsFull) {
+        action(AuthUserDetailsAction.UploadDetailsAuth)
+        state.uploadingDetailsResult?.onSuccess {
+            navigateToHomeScreen()
+            action(AuthUserDetailsAction.ResetState)
+        }
+    }
+
+    BackHandler(enabled = state.currentStep != 1) {
+        action(AuthUserDetailsAction.NavigateForm(false))
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -84,8 +99,20 @@ private fun AuthUserDetailsContent(
                 ),
                 modifier = Modifier.fillMaxHeight(0.8f)
             )
-            else -> UserDataContent(
-                navigateToHome = navigateToHomeScreen
+            else -> AuthUserDataContent(
+                mobileNumberValidationResult = state.mobileNumberValidationResult,
+                fullNameValidationResult = state.fullNameValidationResult,
+                validateFullName = {  action(AuthUserDetailsAction.ValidateFullName(it)) },
+                validatePhoneNumber = { mobileNumber, countryCode ->
+                    action(AuthUserDetailsAction.ValidatePhoneNumber(mobileNumber, countryCode))
+                },
+                onSubmitClicked = {
+                    action(AuthUserDetailsAction.UpdateAuthUserDetails(
+                        fullName = state.userDetails.fullName ?: "",
+                        birthDate = state.userDetails.birthDate ?: "",
+                    ))
+                },
+                modifier = Modifier.fillMaxHeight(0.9f)
             )
         }
     }

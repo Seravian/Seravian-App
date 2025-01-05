@@ -1,10 +1,9 @@
 package com.seravian.auth.presentation.user_details.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -12,155 +11,96 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.seravian.auth.component.DatePicker
+import androidx.compose.ui.unit.sp
+import com.seravian.auth.util.ValidationError
+import com.seravian.auth.util.toString
+import com.seravian.domain.network.Result
+import com.seravian.ui.components.DatePickerField
+import com.seravian.ui.components.PhoneNumberField
 import com.seravian.ui.theme.SeravianTheme
 
 @Composable
-fun UserDataContent(modifier: Modifier = Modifier, navigateToHome: () -> Unit) {
-    var fullName by remember { mutableStateOf("") }
-    var phoneNumber by remember { mutableStateOf("") }
-    var birthDate by remember { mutableStateOf("") }
-    var gender by remember { mutableStateOf("Male") } // Default gender selection
-    var showError by remember { mutableStateOf(false) }
-    var errorMessage by remember { mutableStateOf("") }
+fun AuthUserDataContent(
+    mobileNumberValidationResult: Result<Unit, ValidationError>?,
+    fullNameValidationResult: Result<Unit, ValidationError>?,
+    validateFullName: (String) -> Unit,
+    validatePhoneNumber: (String, String) -> Unit,
+    onSubmitClicked: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    var fullName by rememberSaveable { mutableStateOf<String?>(null) }
+    var birthDate by rememberSaveable { mutableStateOf<String?>(null) }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .background(color = MaterialTheme.colorScheme.background)
     ) {
-        Text("Enter Your Details", style = MaterialTheme.typography.titleLarge)
-        Spacer(modifier = Modifier.height(16.dp))
-
-        TextField(
-            value = fullName,
+        OutlinedTextField(
+            value = fullName ?: "",
             onValueChange = {
                 fullName = it
-                showError = false
+                validateFullName(it)
             },
             label = { Text("Full Name") },
             modifier = Modifier.fillMaxWidth(),
-            isError = !isFullNameValid(fullName)
+            isError = fullNameValidationResult is Result.Error,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
         )
-        if (!isFullNameValid(fullName)) {
-            Text(
-                text = "Full Name must contain only letters",
-                color = Color.Red,
-                style = MaterialTheme.typography.bodySmall
-            )
+        if (fullNameValidationResult is Result.Error) {
+            val error = fullNameValidationResult.error
+            Text(text = error.toString(context), color = Color.Red, fontSize = 12.sp)
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(22.dp))
 
-        // Gender selection
-        Text("Select Gender", style = MaterialTheme.typography.bodyLarge)
-        Spacer(modifier = Modifier.height(8.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                RadioButton(
-                    selected = gender == "Male",
-                    onClick = { gender = "Male" }
-                )
-                Text("Male", style = MaterialTheme.typography.bodyMedium)
+        PhoneNumberField(
+            isMobileNumberValid = fullNameValidationResult is Result.Success,
+            retrievePhoneNumber = { mobileNumber, code ->
+                validatePhoneNumber(mobileNumber, code)
             }
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                RadioButton(
-                    selected = gender == "Female",
-                    onClick = { gender = "Female" }
-                )
-                Text("Female", style = MaterialTheme.typography.bodyMedium)
-            }
-        }
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        TextField(
-            value = phoneNumber,
-            onValueChange = {
-                phoneNumber = it.filter { char -> char.isDigit() } // Allow only digits
-                showError = false
-            },
-            label = { Text("Phone Number") },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number), // Numeric keyboard
-            modifier = Modifier.fillMaxWidth(),
-            isError = !isPhoneNumberValid(phoneNumber)
         )
-        if (!isPhoneNumberValid(phoneNumber)) {
-            Text(
-                text = "Phone Number must be 11 digits\nand start with 012, 011, 010, or 015",
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                color = Color.Red,
-                style = MaterialTheme.typography.bodySmall
-            )
+        if (mobileNumberValidationResult is Result.Error) {
+            val error = mobileNumberValidationResult.error
+            Text(text = error.toString(context), color = Color.Red, fontSize = 12.sp)
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(22.dp))
 
-        // Using the DatePicker
-        DatePicker(
-            label = "Select your birth date",
+        DatePickerField(
+            label = "Date of Birth",
             onDateSelected = { date ->
                 birthDate = date
-                showError = false
             }
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text("Selected Date: $birthDate", style = MaterialTheme.typography.bodyMedium)
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        if (showError) {
-            Text(
-                text = errorMessage,
-                color = Color.Red,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
+        Spacer(modifier = Modifier.height(90.dp))
 
         Button(
-            onClick = {
-                when {
-                    fullName.isBlank() || !isFullNameValid(fullName) -> {
-                        showError = true
-                        errorMessage = "Please enter a valid Full Name."
-                    }
-                    phoneNumber.isBlank() || !isPhoneNumberValid(phoneNumber) -> {
-                        showError = true
-                        errorMessage = "Please enter a valid Phone Number."
-                    }
-                    birthDate.isBlank() -> {
-                        showError = true
-                        errorMessage = "Please select a birth date."
-                    }
-                    else -> navigateToHome()
-                }
-            },
+            onClick = { onSubmitClicked() },
+            enabled = mobileNumberValidationResult is Result.Success &&
+                    fullNameValidationResult is Result.Success &&
+                    !birthDate.isNullOrBlank(),
+            shape = RoundedCornerShape(8.dp),
             modifier = Modifier
                 .padding(20.dp)
                 .fillMaxWidth(),
-            shape = RoundedCornerShape(8.dp)
         ) {
             Text(text = "Submit")
         }
@@ -169,15 +109,14 @@ fun UserDataContent(modifier: Modifier = Modifier, navigateToHome: () -> Unit) {
 
 @Preview(showSystemUi = true)
 @Composable
-private fun UserDataContentPreview() {
+private fun AuthUserDataContentPreview() {
     SeravianTheme {
-        UserDataContent(navigateToHome = {})
+        AuthUserDataContent(
+            mobileNumberValidationResult = Result.Success(Unit),
+            fullNameValidationResult = Result.Error(ValidationError.EMPTY_NAME),
+            validateFullName = {},
+            validatePhoneNumber = { _, _ -> },
+            onSubmitClicked = {}
+        )
     }
 }
-
-fun isPhoneNumberValid(number: String): Boolean {
-    val validPrefixes = listOf("012", "011", "010", "015")
-    return number.length == 11 && number.all { it.isDigit() } && validPrefixes.any { number.startsWith(it) }
-}
-
-fun isFullNameValid(name: String): Boolean = name.all { it.isLetter() || it.isWhitespace() }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -19,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -34,10 +36,11 @@ import com.seravian.ui.theme.outlineVariantLight
 @Composable
 fun AuthTextField(
     value: String,
-    onValueChange: (String) -> Unit,
     label: String,
     error: String,
     isPasswordField: Boolean = false,
+    onValueChange: (String) -> Unit,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
 
@@ -73,7 +76,8 @@ fun AuthTextField(
                 cursorColor = outlineLight,
                 errorCursorColor = errorLight,
                 errorBorderColor = errorLight
-            )
+            ),
+            keyboardOptions = keyboardOptions
         )
         if (error.isNotEmpty()) {
             Text(text = error, color = Color.Red, fontSize = 12.sp)
@@ -86,9 +90,10 @@ fun AuthTextField(
 fun CustomTextFieldPreview() {
     AuthTextField(
         value = "",
-        onValueChange = {},
         label = "Password",
         error = "",
         isPasswordField = true,
+        onValueChange = {},
+        keyboardOptions = KeyboardOptions()
     )
 }

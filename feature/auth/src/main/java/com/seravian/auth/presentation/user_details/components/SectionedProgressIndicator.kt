@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.seravian.ui.theme.SeravianTheme
 import com.seravian.ui.theme.inversePrimaryDark
 import com.seravian.ui.theme.inversePrimaryDarkHighContrast
@@ -44,7 +45,8 @@ fun SectionedProgressIndicator(
         Text(
             text = "Step $currentStep of $totalSteps",
             style = MaterialTheme.typography.headlineLarge.copy(
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                fontSize = 26.sp
             ),
             color = MaterialTheme.colorScheme.onBackground
         )
@@ -73,7 +75,8 @@ fun SectionedProgressIndicator(
             text = title,
             style = MaterialTheme.typography.headlineLarge.copy(
                 textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                fontSize = 28.sp
             ),
             color = MaterialTheme.colorScheme.onBackground
         )

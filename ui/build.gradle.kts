@@ -46,6 +46,7 @@ dependencies {
     implementation(libs.bundles.image.loading)
     implementation(libs.bundles.dependency.injection)
     implementation(libs.material)
+    implementation(libs.country.picker)
     implementation(project(":domain"))
     implementation(project(":data"))
     testImplementation(libs.junit)

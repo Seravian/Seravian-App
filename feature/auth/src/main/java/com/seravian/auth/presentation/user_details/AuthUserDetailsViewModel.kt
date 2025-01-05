@@ -1,11 +1,15 @@
 package com.seravian.auth.presentation.user_details
 
 import androidx.lifecycle.viewModelScope
+import com.arpitkatiyarprojects.countrypicker.utils.CountryPickerUtils
 import com.seravian.auth.data.AuthError
 import com.seravian.auth.data.AuthUserDetails
 import com.seravian.auth.domain.repository.UserDetailsRepository
+import com.seravian.auth.util.ValidateInput
+import com.seravian.auth.util.ValidationError
 import com.seravian.domain.network.Result
 import com.seravian.domain.network.onError
+import com.seravian.domain.network.onSuccess
 import com.seravian.ui.presentation.BaseViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,19 +35,27 @@ class AuthUserDetailsViewModel(
         when (action) {
             is AuthUserDetailsAction.UpdateAuthUserType -> {
                 updateUserDetailsState(
-                    userType = action.userType,
+                    userType = action.type,
                 )
             }
             is AuthUserDetailsAction.UpdateAuthUserGender -> {
                 updateUserDetailsState(
-                    gender = action.userGender,
+                    gender = action.gender,
+                )
+            }
+            is AuthUserDetailsAction.ValidateFullName -> {
+                validateFullName(action.fullName)
+            }
+            is AuthUserDetailsAction.ValidatePhoneNumber -> {
+                validatePhoneNumber(
+                    phoneNumber = action.phoneNumber,
+                    countryCode = action.countryCode
                 )
             }
             is AuthUserDetailsAction.UpdateAuthUserDetails -> {
                 updateUserDetailsState(
-                    fullName = action.userFullName,
-                    phoneNumber = action.userPhoneNumber,
-                    birthDate = action.userBirthDate,
+                    fullName = action.fullName,
+                    birthDate = action.birthDate,
                 )
             }
             is AuthUserDetailsAction.NavigateForm -> {
@@ -61,6 +73,42 @@ class AuthUserDetailsViewModel(
             is AuthUserDetailsAction.ResetState -> {
                 resetState()
             }
+        }
+    }
+
+    private fun validateFullName(fullName: String) {
+        val validationResult = ValidateInput.validateFullName(fullName)
+        validationResult.onSuccess {
+            updateUserDetailsState(
+                fullName = fullName
+            )
+        }
+        _authUserDetailsState.update {
+            it.copy(
+                fullNameValidationResult = validationResult
+            )
+        }
+    }
+
+    private fun validatePhoneNumber(
+        phoneNumber: String,
+        countryCode: String
+    ) {
+        val isValid = CountryPickerUtils.isMobileNumberValid(phoneNumber, countryCode)
+        val validationResult =  if (isValid) {
+            val formattedNumber = CountryPickerUtils.getFormattedMobileNumber(phoneNumber, countryCode)
+            updateUserDetailsState(
+                phoneNumber = formattedNumber
+            )
+            Result.Success(Unit)
+        } else {
+            Result.Error(ValidationError.INVALID_PHONE_NUMBER)
+        }
+
+        _authUserDetailsState.update {
+            it.copy(
+                mobileNumberValidationResult = validationResult
+            )
         }
     }
 
