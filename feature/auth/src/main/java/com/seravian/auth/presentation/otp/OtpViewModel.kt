@@ -9,6 +9,7 @@ import com.seravian.domain.network.onError
 import com.seravian.ui.presentation.BaseViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -16,21 +17,21 @@ class OtpViewModel(
     private val authStateRepository: AuthStateRepository,
     private val otpRepository: OtpRepository
 ): BaseViewModel() {
-    var otpState = MutableStateFlow(OtpState())
-        private set
+    private val _otpState = MutableStateFlow(OtpState())
+    val otpState = _otpState.asStateFlow()
 
     private val _otpExceptionHandler = CoroutineExceptionHandler { _, exception ->
-        otpState.update { otpState.value.copy(
+        _otpState.update { _otpState.value.copy(
             otpResult = Result.Error(AuthError(exception.message.toString())),
         )}
         hideLoading()
-        otpState.value.otpResult?.onError { showErrorMessage(it.message) }
+        _otpState.value.otpResult?.onError { showErrorMessage(it.message) }
     }
 
     fun otpAction(action: OtpAction) {
         when(action) {
             is OtpAction.OnChangeFieldFocused -> {
-                otpState.update { it.copy(
+                _otpState.update { it.copy(
                     focusedIndex = action.index
                 ) }
             }
@@ -39,8 +40,8 @@ class OtpViewModel(
             }
 
             is OtpAction.OnKeyboardBack -> {
-                val previousIndex = getPreviousFocusedIndex(otpState.value.focusedIndex)
-                otpState.update { it.copy(
+                val previousIndex = getPreviousFocusedIndex(_otpState.value.focusedIndex)
+                _otpState.update { it.copy(
                     code = it.code.mapIndexed { index, number ->
                         if(index == previousIndex) {
                             null
@@ -62,13 +63,13 @@ class OtpViewModel(
         viewModelScope.launch(_otpExceptionHandler) {
             otpRepository.verifyOtp(email, otp)
         }.invokeOnCompletion {
-            otpState.update { it.copy(otpResult = Result.Success(Unit)) }
+            _otpState.update { it.copy(otpResult = Result.Success(Unit)) }
             hideLoading()
         }
     }
 
     private fun enterNumber(number: Int?, index: Int) {
-        val newCode = otpState.value.code.mapIndexed { currentIndex, currentNumber ->
+        val newCode = _otpState.value.code.mapIndexed { currentIndex, currentNumber ->
             if(currentIndex == index) {
                 number
             } else {
@@ -76,7 +77,7 @@ class OtpViewModel(
             }
         }
         val wasNumberRemoved = number == null
-        otpState.update { it.copy(
+        _otpState.update { it.copy(
             code = newCode,
             focusedIndex = if(wasNumberRemoved || it.code.getOrNull(index) != null) {
                 it.focusedIndex
@@ -131,6 +132,6 @@ class OtpViewModel(
     }
 
     private fun resetOtpState() {
-        otpState.value = OtpState()
+        _otpState.value = OtpState()
     }
 }

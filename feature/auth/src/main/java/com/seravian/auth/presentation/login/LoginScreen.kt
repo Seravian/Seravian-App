@@ -36,7 +36,7 @@ import com.seravian.ui.theme.onBackgroundLight
 fun LoginScreen(
     navigateToRegisterScreen: () -> Unit,
     navigateToEmailVerificationScreen: () -> Unit,
-    navigateToSurvey:()->Unit,
+    navigateToForm:()->Unit,
     navigateToHomeScreen: () -> Unit,
 ) {
     BaseScreen<LoginViewModel> { viewModel ->
@@ -46,7 +46,7 @@ fun LoginScreen(
             navigateToRegisterScreen = navigateToRegisterScreen,
             navigateToEmailVerificationScreen = navigateToEmailVerificationScreen,
             navigateToHomeScreen = navigateToHomeScreen,
-            navigateToSurvey = navigateToSurvey,
+            navigateToForm = navigateToForm,
             state = state,
             action = viewModel::loginAction,
         )
@@ -60,7 +60,7 @@ private fun LoginContent(
     navigateToRegisterScreen: () -> Unit,
     navigateToEmailVerificationScreen: () -> Unit,
     navigateToHomeScreen: () -> Unit,
-    navigateToSurvey: ()-> Unit,
+    navigateToForm: ()-> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -71,7 +71,7 @@ private fun LoginContent(
         state.loginResult?.onSuccess {
             action(LoginAction.ResetState)
             //have to be handled when using api
-            navigateToSurvey()
+            navigateToForm()
         }
     }
 
@@ -84,6 +84,7 @@ private fun LoginContent(
         AuthHeader(
             title = stringResource(R.string.sign_in_to_your_account),
             isLoginScreen = true,
+            isNavigationBackWanted = false,
             navigateToRegister = navigateToRegisterScreen
         )
         // Input Fields Section
@@ -154,7 +155,7 @@ private fun LoginContentsPreview() {
             navigateToRegisterScreen = { },
             navigateToEmailVerificationScreen = { },
             navigateToHomeScreen = { },
-            navigateToSurvey = {},
+            navigateToForm = {},
         )
     }
 }

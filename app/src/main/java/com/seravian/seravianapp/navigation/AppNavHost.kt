@@ -9,11 +9,10 @@ import androidx.navigation.compose.rememberNavController
 import com.seravian.auth.presentation.login.LoginScreen
 import com.seravian.auth.presentation.otp.OtpScreen
 import com.seravian.auth.presentation.register.RegisterScreen
-import com.seravian.auth.presentation.reset_password.screen.NewPasswordScreen
-import com.seravian.auth.presentation.reset_password.screen.VerifyEmailScreen
-import com.seravian.home.presentation.home.HomeScreen
-import com.seravian.auth.presentation.details_form.GetUserData
-import com.seravian.auth.presentation.details_form.GetUserType
+import com.seravian.auth.presentation.reset_password.screens.NewPasswordScreen
+import com.seravian.auth.presentation.reset_password.screens.VerifyEmailScreen
+import com.seravian.auth.presentation.user_details.screens.AuthUserDetailsScreen
+import com.seravian.home.presentation.HomeScreen
 
 @Composable
 fun AppNavHost(modifier: Modifier = Modifier) {
@@ -31,7 +30,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
                 navigateToRegisterScreen = { appNavigator.navigateTo(AppDestination.Register) },
                 navigateToEmailVerificationScreen = { appNavigator.navigateTo(AppDestination.VerifyEmail) },
                 navigateToHomeScreen = { appNavigator.navigateAndClearBackStack(AppDestination.Home) },
-                navigateToSurvey = {appNavigator.navigateAndClearBackStack(AppDestination.GetUserType)}
+                navigateToForm = {appNavigator.navigateAndClearBackStack(AppDestination.AuthUserDetails)}
             )
         }
         composable<AppDestination.Register> {
@@ -58,20 +57,13 @@ fun AppNavHost(modifier: Modifier = Modifier) {
                 navigateToLoginScreen = { appNavigator.navigateTo(AppDestination.Login) }
             )
         }
+
+        composable<AppDestination.AuthUserDetails> {
+            AuthUserDetailsScreen { appNavigator.navigateAndClearBackStack(AppDestination.Home) }
+        }
+
         composable<AppDestination.Home> {
             HomeScreen()
-        }
-
-        composable<AppDestination.GetUserType> {
-            GetUserType(
-                navigateToGetUserData = {appNavigator.navigateTo(AppDestination.GetUserData)}
-            )
-        }
-
-        composable<AppDestination.GetUserData> {
-            GetUserData(
-                navigateToHome = {appNavigator.navigateTo(AppDestination.Home)}
-            )
         }
     }
 }

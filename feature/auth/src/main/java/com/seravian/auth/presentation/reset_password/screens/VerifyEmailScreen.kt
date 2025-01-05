@@ -1,4 +1,4 @@
-package com.seravian.auth.presentation.reset_password.screen
+package com.seravian.auth.presentation.reset_password.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

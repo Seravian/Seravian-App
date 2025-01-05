@@ -1,4 +1,4 @@
-package com.seravian.home.presentation.home
+package com.seravian.home.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

@@ -1,4 +1,4 @@
-package com.seravian.home.presentation.home
+package com.seravian.home.presentation
 
 import com.seravian.ui.presentation.BaseViewModel
 

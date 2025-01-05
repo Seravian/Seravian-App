@@ -9,32 +9,33 @@ import com.seravian.domain.network.onError
 import com.seravian.ui.presentation.BaseViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val loginRepository: LoginRepository
 ): BaseViewModel() {
-    var loginState = MutableStateFlow(LoginState())
-        private set
+    private val _loginState = MutableStateFlow(LoginState())
+    val loginState = _loginState.asStateFlow()
 
     private val _loginExceptionHandler = CoroutineExceptionHandler { _, exception ->
-        loginState.value = loginState.value.copy(
+        _loginState.value = _loginState.value.copy(
             loginResult = Result.Error(AuthError(exception.message.toString())),
         )
         hideLoading()
-        loginState.value.loginResult?.onError { showErrorMessage(it.message) }
+        _loginState.value.loginResult?.onError { showErrorMessage(it.message) }
     }
 
     fun loginAction(action: LoginAction) {
         when(action) {
             is LoginAction.ValidateEmail -> {
-                loginState.value = loginState.value.copy(
+                _loginState.value = _loginState.value.copy(
                     emailValidity = ValidateInput.validateEmail(action.email)
                 )
             }
             is LoginAction.ValidatePassword -> {
-                loginState.value = loginState.value.copy(
+                _loginState.value = _loginState.value.copy(
                     passwordValidity = ValidateInput.validateLoginPassword(action.password)
                 )
             }
@@ -54,12 +55,12 @@ class LoginViewModel(
         viewModelScope.launch(_loginExceptionHandler) {
             loginRepository.loginUser(email, password)
         }.invokeOnCompletion {
-            loginState.update { it.copy(loginResult = Result.Success(Unit)) }
+            _loginState.update { it.copy(loginResult = Result.Success(Unit)) }
             hideLoading()
         }
     }
 
     private fun resetState() {
-        loginState.value = LoginState()
+        _loginState.value = LoginState()
     }
 }

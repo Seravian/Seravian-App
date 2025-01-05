@@ -1,4 +1,4 @@
-package com.seravian.auth.presentation.otp.component
+package com.seravian.auth.presentation.otp.components
 
 import android.view.KeyEvent
 import androidx.compose.foundation.background

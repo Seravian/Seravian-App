@@ -11,6 +11,7 @@ import com.seravian.domain.network.onSuccess
 import com.seravian.ui.presentation.BaseViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -18,15 +19,15 @@ class ResetPasswordViewModel(
     private val authStateRepository: AuthStateRepository,
     private val resetPasswordRepository: ResetPasswordRepository
 ): BaseViewModel() {
-    var resetPasswordState = MutableStateFlow(ResetPasswordState())
-        private set
+    private val _resetPasswordState = MutableStateFlow(ResetPasswordState())
+    val resetPasswordState = _resetPasswordState.asStateFlow()
 
     private val _resetPasswordExceptionHandler = CoroutineExceptionHandler { _, exception ->
-        resetPasswordState.value = resetPasswordState.value.copy(
+        _resetPasswordState.value = _resetPasswordState.value.copy(
             resetPasswordResult = Result.Error(AuthError(exception.message.toString())),
         )
         hideLoading()
-        resetPasswordState.value.resetPasswordResult?.onError { showErrorMessage(it.message) }
+        _resetPasswordState.value.resetPasswordResult?.onError { showErrorMessage(it.message) }
     }
 
     fun resetPasswordAction(action: ResetPasswordAction) {
@@ -35,12 +36,12 @@ class ResetPasswordViewModel(
                 validateEmail(action.email)
             }
             is ResetPasswordAction.ValidatePassword -> {
-                resetPasswordState.value = resetPasswordState.value.copy(
+                _resetPasswordState.value = _resetPasswordState.value.copy(
                     passwordValidity = ValidateInput.validatePassword(action.password)
                 )
             }
             is ResetPasswordAction.ValidatePasswordConfirmation -> {
-                resetPasswordState.value = resetPasswordState.value.copy(
+                _resetPasswordState.value = _resetPasswordState.value.copy(
                     confirmPasswordValidity = ValidateInput.validatePasswordConfirmation(
                         password = action.password,
                         confirmPassword = action.confirmPassword
@@ -73,12 +74,12 @@ class ResetPasswordViewModel(
         viewModelScope.launch(_resetPasswordExceptionHandler) {
             resetPasswordRepository.resetPassword(email, newPassword)
         }.invokeOnCompletion {
-            resetPasswordState.update { it.copy(resetPasswordResult = Result.Success(Unit)) }
+            _resetPasswordState.update { it.copy(resetPasswordResult = Result.Success(Unit)) }
             hideLoading()
         }
     }
 
     private fun resetState() {
-        resetPasswordState.value = ResetPasswordState()
+        _resetPasswordState.value = ResetPasswordState()
     }
 }

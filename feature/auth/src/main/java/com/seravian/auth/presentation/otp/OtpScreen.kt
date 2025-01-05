@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.seravian.auth.R
 import com.seravian.auth.component.AuthHeader
-import com.seravian.auth.presentation.otp.component.OtpInputField
+import com.seravian.auth.presentation.otp.components.OtpInputField
 import com.seravian.domain.network.onSuccess
 import com.seravian.ui.presentation.BaseScreen
 import com.seravian.ui.theme.SeravianTheme

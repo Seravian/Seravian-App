@@ -1,4 +1,4 @@
-package com.seravian.auth.presentation.reset_password.screen
+package com.seravian.auth.presentation.reset_password.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -80,7 +80,8 @@ private fun NewPasswordContent(
         AuthHeader(
             title = stringResource(R.string.create_new_password),
             navigateBack = navigateBack,
-            isLoginScreen = false
+            isLoginScreen = false,
+            isNavigationBackWanted = true
         )
         Column(
             modifier = Modifier

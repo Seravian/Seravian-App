@@ -37,6 +37,7 @@ import com.seravian.ui.theme.bluePrimary
 fun AuthHeader(
     title: String,
     isLoginScreen: Boolean = false,
+    isNavigationBackWanted: Boolean = true,
     navigateBack: () -> Unit = {},
     navigateToRegister: () -> Unit = {},
     modifier: Modifier = Modifier
@@ -62,7 +63,7 @@ fun AuthHeader(
                 .fillMaxHeight()
                 .padding(horizontal = 20.dp)
         ) {
-            if (!isLoginScreen) {
+            if (isNavigationBackWanted) {
                 IconButton(onClick = { navigateBack() }) {
                     Icon(
                         painter = painterResource(id = R.drawable.white_arrow_back),
@@ -129,7 +130,8 @@ private fun AuthHeaderPreview() {
     SeravianTheme {
         AuthHeader(
             title = stringResource(R.string.sign_in_to_your_account),
-            isLoginScreen = false
+            isLoginScreen = true,
+            isNavigationBackWanted = false
         )
     }
 }

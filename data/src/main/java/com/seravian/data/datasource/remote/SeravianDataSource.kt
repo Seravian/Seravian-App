@@ -20,6 +20,16 @@ class SeravianDataSource(): RemoteDataSource {
         Log.d("SeravianDS", "New Password")
     }
 
+    override suspend fun updateUserDetails(
+        fullName: String,
+        userType: String,
+        phoneNumber: String,
+        birthDate: String,
+        gender: String
+    ) {
+        Log.d("SeravianDS", "Updating User Details")
+    }
+
     override suspend fun logoutUser() {
         Log.d("SeravianDS", "Logging Out")
     }

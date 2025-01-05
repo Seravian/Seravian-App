@@ -5,5 +5,12 @@ interface RemoteDataSource {
     suspend fun loginUser(email: String, password: String)
     suspend fun verifyOtp(email: String, otp: String)
     suspend fun resetPassword(email: String, newPassword: String)
+    suspend fun updateUserDetails(
+        fullName: String,
+        userType: String,
+        phoneNumber: String,
+        birthDate: String,
+        gender: String
+    )
     suspend fun logoutUser()
 }
