@@ -2,31 +2,4 @@
 <resources>
     <string name="app_name">Seravian</string>
     <string name="dismiss">Dismiss</string>
-
-    # Network Error Messages
-    <string name="error_request_timeout">The request time out.</string>
-    <string name="error_too_many_requests">Your qouta has been exceeded.</string>
-    <string name="error_no_internet">Please check your internet connectrion.</string>
-    <string name="error_serialization">Couldn\'t serialize the data.</string>
-    <string name="error_server">Couldn\'t contact the server.</string>
-    <string name="error_unknown">Unknown error happened.</string>
-
-    # Validation Error Messages
-    <string name="empty_user_name_error">Username cannot be empty</string>
-    <string name="empty_email_error">Email cannot be empty</string>
-    <string name="invalid_email_error">Invalid email</string>
-    <string name="empty_password_error">Password cannot be empty</string>
-    <string name="empty_confirm_password_error">Confirm password cannot be empty</string>
-    <string name="minimum_6_characters_error">Minimum 6 characters</string>
-    <string name="minimum_8_characters_error">Minimum 8 characters</string>
-    <string name="at_least_one_number_error">At least one number</string>
-    <string name="at_least_one_uppercase_letter_error">At least one uppercase letter</string>
-    <string name="at_least_one_lowercase_letter_error">At least one lowercase letter</string>
-    <string name="at_least_one_special_character_error">At least one special character</string>
-    <string name="password_mismatch_error">Password and confirm password do not match</string>
-    <string name="invalid_otp_error">Invalid OTP</string>
-    <string name="name_cannot_be_empty">Name cannot be empty</string>
-    <string name="name_contains_invalid_characters">Name contains invalid characters</string>
-    <string name="name_contains_insufficient_parts">Name must include at least a first name and last name.</string>
-    <string name="invalid_phone_number">Invalid Phone Number</string>
 </resources>
