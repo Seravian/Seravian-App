@@ -70,6 +70,7 @@ dependencies {
     implementation(project(":feature:home"))
     implementation(project(":feature:chat"))
     implementation(project(":feature:onboarding"))
+    implementation(project(":networking"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

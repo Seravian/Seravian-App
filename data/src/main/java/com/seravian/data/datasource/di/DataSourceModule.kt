@@ -7,7 +7,7 @@ import org.koin.dsl.module
 
 val dataSourceModule = module {
     single<RemoteDataSource>(qualifier = named("seravian")) {
-        SeravianDataSource()
+        SeravianDataSource(httpClient = get())
     }
 
     single<RemoteDataSource> {

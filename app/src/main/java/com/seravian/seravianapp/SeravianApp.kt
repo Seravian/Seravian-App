@@ -1,6 +1,7 @@
 package com.seravian.seravianapp
 
 import android.app.Application
+import com.greenvenom.networking.di.networkingModule
 import com.seravian.seravianapp.di.appModule
 import com.seravian.auth.di.authenticationModule
 import com.seravian.data.datasource.di.dataSourceModule
@@ -19,6 +20,7 @@ class SeravianApp: Application() {
 
             modules(
                 appModule,
+                networkingModule,
                 dataSourceModule,
                 authenticationModule,
                 onBoardingModule,

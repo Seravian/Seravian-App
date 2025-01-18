@@ -1,10 +1,22 @@
 package com.seravian.data.datasource.remote
 
 import android.util.Log
+import com.greenvenom.networking.domain.constructUrl
+import com.greenvenom.networking.domain.safeCall
 import com.seravian.domain.datasource.RemoteDataSource
+import io.ktor.client.HttpClient
+import io.ktor.client.request.get
 
-class SeravianDataSource(): RemoteDataSource {
+class SeravianDataSource(
+    val httpClient: HttpClient
+): RemoteDataSource {
     override suspend fun registerUser(username: String, email: String, password: String) {
+//        return safeCall<Unit> {
+//            httpClient.get(
+//                urlString = constructUrl("")
+//            )
+//        }
+
         Log.d("SeravianDS", "Registration")
     }
 
