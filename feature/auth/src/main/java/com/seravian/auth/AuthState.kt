@@ -1,9 +1,9 @@
 package com.seravian.auth
 
-import com.seravian.auth.util.ValidationError
-import com.seravian.domain.network.Result
+import com.greenvenom.validation.domain.ValidationError
+import com.greenvenom.validation.domain.ValidationResult
 
 data class AuthState(
     val email: String? = null,
-    val emailValidity: Result<Unit, ValidationError>? = null
+    val emailValidity: ValidationResult<Unit, ValidationError>? = null
 )

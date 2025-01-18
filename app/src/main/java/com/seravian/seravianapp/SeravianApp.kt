@@ -5,6 +5,7 @@ import com.seravian.seravianapp.di.appModule
 import com.seravian.auth.di.authenticationModule
 import com.seravian.data.datasource.di.dataSourceModule
 import com.seravian.home.di.homeModule
+import com.seravian.onboarding.di.onBoardingModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -20,6 +21,7 @@ class SeravianApp: Application() {
                 appModule,
                 dataSourceModule,
                 authenticationModule,
+                onBoardingModule,
                 homeModule
             )
         }

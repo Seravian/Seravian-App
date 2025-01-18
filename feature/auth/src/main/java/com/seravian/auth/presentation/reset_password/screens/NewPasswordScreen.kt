@@ -24,13 +24,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.greenvenom.validation.domain.ValidationResult
+import com.greenvenom.validation.util.toString
 import com.seravian.auth.R
 import com.seravian.auth.component.AuthHeader
 import com.seravian.auth.presentation.reset_password.ResetPasswordAction
 import com.seravian.auth.presentation.reset_password.ResetPasswordState
 import com.seravian.auth.presentation.reset_password.ResetPasswordViewModel
-import com.seravian.auth.util.toString
-import com.seravian.domain.network.Result
 import com.seravian.auth.component.AuthCustomButton
 import com.seravian.auth.component.AuthTextField
 import com.seravian.domain.network.onSuccess
@@ -103,7 +103,7 @@ private fun NewPasswordContent(
                     action(ResetPasswordAction.ValidatePassword(password))
                 },
                 label = stringResource(R.string.enter_your_password),
-                error = if (state.passwordValidity is Result.Error) state.passwordValidity.error.toString(context) else "",
+                error = if (state.passwordValidity is ValidationResult.Error) state.passwordValidity.error.toString(context) else "",
                 isPasswordField = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
             )
@@ -119,13 +119,13 @@ private fun NewPasswordContent(
                     action(ResetPasswordAction.ValidatePasswordConfirmation(password, confirmPassword))
                 },
                 label = stringResource(R.string.confirm_your_password),
-                error = if (state.confirmPasswordValidity is Result.Error) state.confirmPasswordValidity.error.toString(context) else "",
+                error = if (state.confirmPasswordValidity is ValidationResult.Error) state.confirmPasswordValidity.error.toString(context) else "",
                 isPasswordField = true
             )
             Spacer(modifier = Modifier.height(20.dp))
             AuthCustomButton(
                 text = stringResource(R.string.next),
-                enabled = state.passwordValidity is Result.Success && state.confirmPasswordValidity is Result.Success,
+                enabled = state.passwordValidity is ValidationResult.Success && state.confirmPasswordValidity is ValidationResult.Success,
                 onClick = { action(ResetPasswordAction.ResetPassword(password)) }
             )
         }

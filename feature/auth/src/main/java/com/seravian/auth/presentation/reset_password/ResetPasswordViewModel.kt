@@ -1,13 +1,14 @@
 package com.seravian.auth.presentation.reset_password
 
 import androidx.lifecycle.viewModelScope
-import com.seravian.auth.data.AuthError
+import com.seravian.data.AuthError
 import com.seravian.auth.data.repository.AuthStateRepository
 import com.seravian.auth.domain.repository.ResetPasswordRepository
-import com.seravian.auth.util.ValidateInput
+import com.greenvenom.validation.ValidateInput
+import com.greenvenom.validation.domain.onError
+import com.greenvenom.validation.domain.onSuccess
 import com.seravian.domain.network.Result
 import com.seravian.domain.network.onError
-import com.seravian.domain.network.onSuccess
 import com.seravian.ui.presentation.BaseViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow

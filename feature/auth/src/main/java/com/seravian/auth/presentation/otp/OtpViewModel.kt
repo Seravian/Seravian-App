@@ -1,7 +1,7 @@
 package com.seravian.auth.presentation.otp
 
 import androidx.lifecycle.viewModelScope
-import com.seravian.auth.data.AuthError
+import com.seravian.data.AuthError
 import com.seravian.auth.data.repository.AuthStateRepository
 import com.seravian.auth.domain.repository.OtpRepository
 import com.seravian.domain.network.Result

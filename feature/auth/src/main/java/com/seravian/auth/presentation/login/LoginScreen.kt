@@ -21,8 +21,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.seravian.auth.util.toString
-import com.seravian.domain.network.Result
+import com.greenvenom.validation.domain.ValidationResult
+import com.greenvenom.validation.util.toString
 import com.seravian.domain.network.onSuccess
 import com.seravian.auth.R
 import com.seravian.auth.component.AuthHeader
@@ -109,7 +109,7 @@ private fun LoginContent(
                     action(LoginAction.ValidateEmail(email))
                 },
                 label = stringResource(R.string.enter_your_email),
-                error = if (state.emailValidity is Result.Error) state.emailValidity.error.toString(context) else "",
+                error = if (state.emailValidity is ValidationResult.Error) state.emailValidity.error.toString(context) else "",
                 isPasswordField = false,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
             )
@@ -125,7 +125,7 @@ private fun LoginContent(
                     action(LoginAction.ValidatePassword(password))
                 },
                 label = stringResource(R.string.enter_your_password),
-                error = if (state.passwordValidity is Result.Error) state.passwordValidity.error.toString(context) else "",
+                error = if (state.passwordValidity is ValidationResult.Error) state.passwordValidity.error.toString(context) else "",
                 isPasswordField = true
             )
             //forgot field
@@ -142,7 +142,7 @@ private fun LoginContent(
             AuthCustomButton(
                 text = stringResource(R.string.log_in),
                 onClick = { action(LoginAction.Login(email, password)) },
-                enabled = state.emailValidity is Result.Success && state.passwordValidity is Result.Success
+                enabled = state.emailValidity is ValidationResult.Success && state.passwordValidity is ValidationResult.Success
             )
         }
     }

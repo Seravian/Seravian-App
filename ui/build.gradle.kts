@@ -40,12 +40,11 @@ android {
 dependencies {
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
+    implementation(libs.material.v1120)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose)
     implementation(libs.bundles.image.loading)
     implementation(libs.bundles.dependency.injection)
-    implementation(libs.material)
     implementation(libs.country.picker)
     implementation(project(":domain"))
     implementation(project(":data"))

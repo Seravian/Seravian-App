@@ -11,7 +11,7 @@ import com.seravian.auth.presentation.otp.OtpScreen
 import com.seravian.auth.presentation.register.RegisterScreen
 import com.seravian.auth.presentation.reset_password.screens.NewPasswordScreen
 import com.seravian.auth.presentation.reset_password.screens.VerifyEmailScreen
-import com.seravian.auth.presentation.user_details.screens.AuthUserDetailsScreen
+import com.seravian.onboarding.presentation.screens.OnBoardingScreen
 import com.seravian.home.presentation.HomeScreen
 
 @Composable
@@ -59,7 +59,11 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         }
 
         composable<AppDestination.AuthUserDetails> {
-            AuthUserDetailsScreen { appNavigator.navigateAndClearBackStack(AppDestination.Home) }
+            OnBoardingScreen {
+                appNavigator.navigateAndClearBackStack(
+                    AppDestination.Home
+                )
+            }
         }
 
         composable<AppDestination.Home> {

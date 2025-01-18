@@ -21,14 +21,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.greenvenom.validation.domain.ValidationResult
+import com.greenvenom.validation.util.toString
 import com.seravian.auth.AuthState
 import com.seravian.auth.R
 import com.seravian.auth.component.AuthHeader
 import com.seravian.auth.data.repository.AuthStateRepository
 import com.seravian.auth.presentation.reset_password.ResetPasswordAction
 import com.seravian.auth.presentation.reset_password.ResetPasswordViewModel
-import com.seravian.auth.util.toString
-import com.seravian.domain.network.Result
 import com.seravian.auth.component.AuthCustomButton
 import com.seravian.auth.component.AuthTextField
 import com.seravian.ui.theme.SeravianTheme
@@ -91,12 +91,12 @@ private fun VerifyEmailContent(
                     action(ResetPasswordAction.UpdateEmail(email))
                 },
                 label = stringResource(R.string.enter_your_email),
-                error = if (state.emailValidity is Result.Error) state.emailValidity.error.toString(context) else "",
+                error = if (state.emailValidity is ValidationResult.Error) state.emailValidity.error.toString(context) else "",
             )
             Spacer(modifier = Modifier.height(20.dp))
             AuthCustomButton(
                 text = stringResource(R.string.next),
-                enabled = state.emailValidity is Result.Success,
+                enabled = state.emailValidity is ValidationResult.Success,
                 onClick = {
                     navigateToOtpScreen()
                 }

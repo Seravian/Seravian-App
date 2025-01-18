@@ -1,9 +1,8 @@
 package com.seravian.auth.presentation.register
 
 import androidx.lifecycle.viewModelScope
-import com.seravian.auth.data.AuthError
+import com.seravian.data.AuthError
 import com.seravian.auth.domain.repository.RegisterRepository
-import com.seravian.auth.util.ValidateInput
 import com.seravian.domain.network.Result
 import com.seravian.domain.network.onError
 import com.seravian.ui.presentation.BaseViewModel
@@ -31,22 +30,22 @@ class RegisterViewModel(
         when(action) {
             is RegisterAction.ValidateUsername -> {
                 _registerState.value = _registerState.value.copy(
-                    usernameValidity = ValidateInput.validateUsername(action.username)
+                    usernameValidity = com.greenvenom.validation.ValidateInput.validateUsername(action.username)
                 )
             }
             is RegisterAction.ValidateEmail -> {
                 _registerState.value = _registerState.value.copy(
-                    emailValidity = ValidateInput.validateEmail(action.email)
+                    emailValidity = com.greenvenom.validation.ValidateInput.validateEmail(action.email)
                 )
             }
             is RegisterAction.ValidatePassword -> {
                 _registerState.value = _registerState.value.copy(
-                    passwordValidity = ValidateInput.validatePassword(action.password)
+                    passwordValidity = com.greenvenom.validation.ValidateInput.validatePassword(action.password)
                 )
             }
             is RegisterAction.ValidatePasswordConfirmation -> {
                 _registerState.value = _registerState.value.copy(
-                    confirmPasswordValidity = ValidateInput.validatePasswordConfirmation(
+                    confirmPasswordValidity = com.greenvenom.validation.ValidateInput.validatePasswordConfirmation(
                         password = action.password,
                         confirmPassword = action.confirmPassword
                     )

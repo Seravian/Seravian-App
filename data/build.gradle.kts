@@ -59,8 +59,6 @@ android {
 dependencies {
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     implementation(libs.bundles.networking)
     implementation(libs.bundles.dependency.injection)
     implementation(project(":domain"))

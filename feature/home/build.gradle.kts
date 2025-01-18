@@ -40,8 +40,6 @@ android {
 dependencies {
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     implementation(libs.bundles.compose)
     implementation(libs.bundles.image.loading)
     implementation(libs.bundles.dependency.injection)
@@ -49,6 +47,7 @@ dependencies {
     implementation(project(":ui"))
     implementation(project(":domain"))
     implementation(project(":data"))
+    implementation(project(":networking"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

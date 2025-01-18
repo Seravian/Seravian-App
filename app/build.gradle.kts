@@ -63,12 +63,13 @@ dependencies {
 
     //splash api
     implementation(libs.androidx.core.splashscreen)
-    implementation(libs.material.v1120)
     implementation(project(":domain"))
     implementation(project(":data"))
     implementation(project(":ui"))
     implementation(project(":feature:auth"))
     implementation(project(":feature:home"))
+    implementation(project(":feature:chat"))
+    implementation(project(":feature:onboarding"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
