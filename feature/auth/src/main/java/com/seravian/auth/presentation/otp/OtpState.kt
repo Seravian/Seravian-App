@@ -1,8 +1,8 @@
 package com.seravian.auth.presentation.otp
 
 import androidx.compose.runtime.Immutable
-import com.seravian.data.AuthError
-import com.seravian.domain.network.Result
+import com.seravian.data.errors.AuthError
+import com.greenvenom.networking.data.Result
 
 @Immutable
 data class OtpState(

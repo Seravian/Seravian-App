@@ -1,6 +1,5 @@
 import java.io.FileInputStream
 import java.util.Properties
-import kotlin.apply
 
 plugins {
     alias(libs.plugins.android.library)
@@ -62,6 +61,8 @@ dependencies {
     implementation(libs.bundles.networking)
     implementation(libs.bundles.dependency.injection)
     implementation(project(":domain"))
+    implementation(project(":networking"))
+    implementation(project(":validation"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

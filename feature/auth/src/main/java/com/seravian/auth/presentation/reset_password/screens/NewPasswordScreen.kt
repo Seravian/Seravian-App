@@ -33,7 +33,7 @@ import com.seravian.auth.presentation.reset_password.ResetPasswordState
 import com.seravian.auth.presentation.reset_password.ResetPasswordViewModel
 import com.seravian.auth.component.AuthCustomButton
 import com.seravian.auth.component.AuthTextField
-import com.seravian.domain.network.onSuccess
+import com.greenvenom.networking.data.onSuccess
 import com.seravian.ui.presentation.BaseScreen
 import com.seravian.ui.theme.SeravianTheme
 import com.seravian.ui.theme.backgroundLight

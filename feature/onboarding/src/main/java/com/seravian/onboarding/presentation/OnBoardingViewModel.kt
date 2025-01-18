@@ -6,10 +6,10 @@ import com.greenvenom.validation.ValidateInput
 import com.greenvenom.validation.domain.ValidationError
 import com.greenvenom.validation.domain.ValidationResult
 import com.greenvenom.validation.domain.onSuccess
-import com.seravian.data.AuthError
+import com.seravian.data.errors.AuthError
 import com.seravian.onboarding.domain.OnBoardingRepository
-import com.seravian.domain.network.Result
-import com.seravian.domain.network.onError
+import com.greenvenom.networking.data.Result
+import com.greenvenom.networking.data.onError
 import com.seravian.ui.presentation.BaseViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow

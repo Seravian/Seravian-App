@@ -24,7 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.seravian.auth.R
 import com.seravian.auth.component.AuthHeader
 import com.seravian.auth.presentation.otp.components.OtpInputField
-import com.seravian.domain.network.onSuccess
+import com.greenvenom.networking.data.onSuccess
 import com.seravian.ui.presentation.BaseScreen
 import com.seravian.ui.theme.SeravianTheme
 import com.seravian.ui.theme.backgroundLight

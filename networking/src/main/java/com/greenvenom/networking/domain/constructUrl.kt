@@ -1,6 +1,6 @@
-package com.seravian.data.util.network
+package com.greenvenom.networking.domain
 
-import com.seravian.data.BuildConfig
+import com.greenvenom.networking.BuildConfig
 
 fun constructUrl(url: String): String {
     return when {

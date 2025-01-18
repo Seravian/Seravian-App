@@ -1,7 +1,7 @@
-package com.seravian.data.util.network
+package com.greenvenom.networking.domain
 
-import com.seravian.domain.network.NetworkError
-import com.seravian.domain.network.Result
+import com.greenvenom.networking.data.NetworkError
+import com.greenvenom.networking.data.Result
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.call.body

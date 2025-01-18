@@ -1,4 +1,4 @@
-package com.seravian.data.util.network
+package com.greenvenom.networking.domain
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine

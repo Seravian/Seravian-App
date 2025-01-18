@@ -1,11 +1,11 @@
 package com.seravian.auth.presentation.login
 
 import androidx.lifecycle.viewModelScope
-import com.seravian.data.AuthError
+import com.seravian.data.errors.AuthError
 import com.seravian.auth.domain.repository.LoginRepository
 import com.greenvenom.validation.ValidateInput
-import com.seravian.domain.network.Result
-import com.seravian.domain.network.onError
+import com.greenvenom.networking.data.Result
+import com.greenvenom.networking.data.onError
 import com.seravian.ui.presentation.BaseViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow

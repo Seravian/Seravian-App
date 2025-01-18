@@ -1,4 +1,4 @@
-package com.seravian.domain.network
+package com.greenvenom.networking.data
 
 enum class NetworkError: Error {
     REQUEST_TIMEOUT,

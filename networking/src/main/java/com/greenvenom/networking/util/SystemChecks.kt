@@ -1,4 +1,4 @@
-package com.seravian.domain.util
+package com.greenvenom.networking.util
 
 import android.content.Context
 import android.net.ConnectivityManager

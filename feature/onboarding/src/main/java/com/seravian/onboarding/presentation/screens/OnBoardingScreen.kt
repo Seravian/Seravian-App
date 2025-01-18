@@ -20,7 +20,7 @@ import com.seravian.onboarding.presentation.OnBoardingAction
 import com.seravian.onboarding.presentation.OnBoardingState
 import com.seravian.onboarding.presentation.OnBoardingViewModel
 import com.seravian.onboarding.presentation.components.SectionedProgressIndicator
-import com.seravian.domain.network.onSuccess
+import com.greenvenom.networking.data.onSuccess
 import com.seravian.ui.presentation.BaseScreen
 import com.seravian.ui.theme.SeravianTheme
 

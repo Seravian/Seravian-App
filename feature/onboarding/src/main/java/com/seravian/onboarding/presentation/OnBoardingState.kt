@@ -3,8 +3,8 @@ package com.seravian.onboarding.presentation
 import androidx.compose.runtime.Immutable
 import com.greenvenom.validation.domain.ValidationError
 import com.greenvenom.validation.domain.ValidationResult
-import com.seravian.data.AuthError
-import com.seravian.domain.network.Result
+import com.seravian.data.errors.AuthError
+import com.greenvenom.networking.data.Result
 
 @Immutable
 data class OnBoardingState(

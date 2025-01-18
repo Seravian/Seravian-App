@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.greenvenom.validation.domain.ValidationResult
 import com.greenvenom.validation.util.toString
-import com.seravian.domain.network.onSuccess
+import com.greenvenom.networking.data.onSuccess
 import com.seravian.auth.R
 import com.seravian.auth.component.AuthHeader
 import com.seravian.auth.component.AuthCustomButton
