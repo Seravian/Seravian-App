@@ -31,6 +31,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
@@ -85,7 +86,7 @@ fun OtpInputField(
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Light,
                 fontSize = 36.sp,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
+                color = onPrimaryContainerLight
             ),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.NumberPassword
@@ -110,7 +111,7 @@ fun OtpInputField(
                     Text(
                         text = "-",
                         textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        color = onPrimaryContainerLight,
                         fontSize = 36.sp,
                         fontWeight = FontWeight.Light,
                         modifier = Modifier
@@ -123,7 +124,7 @@ fun OtpInputField(
     }
 }
 
-@Preview
+@PreviewLightDark
 @Composable
 private fun OtpInputFieldPreview() {
     SeravianTheme {

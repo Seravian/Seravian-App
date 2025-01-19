@@ -1,5 +1,6 @@
 package com.seravian.home.presentation
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,11 +17,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.seravian.home.presentation.components.DoctorCard
 import com.seravian.home.presentation.components.FactCard
-import com.seravian.ui.R
+import com.seravian.home.R
 import com.seravian.ui.presentation.BaseScreen
 import com.seravian.ui.theme.SeravianTheme
 
@@ -47,12 +52,13 @@ private fun HomeContent(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
-                .background(colorScheme.primaryContainer, RoundedCornerShape(12.dp))
+                .background(colorScheme.primaryContainer.copy(alpha = 0f))
+                .clip(RoundedCornerShape(12.dp))
         ) {
-            Text(
-                text = "Sliding Images",
-                color = colorScheme.onPrimaryContainer,
-                style = MaterialTheme.typography.titleLarge,
+            Image(
+                painter = painterResource(R.drawable.promoting_positive_emotions),
+                contentDescription = "Sliding Images",
+                contentScale = ContentScale.Crop,
                 modifier = Modifier.align(Alignment.Center)
             )
         }
@@ -60,7 +66,7 @@ private fun HomeContent(modifier: Modifier = Modifier) {
         // Famous Doctors Section
         Text(
             text = "Famous Doctors",
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleLarge,
             color = colorScheme.onBackground,
             modifier = Modifier.padding(vertical = 8.dp)
         )
@@ -70,7 +76,7 @@ private fun HomeContent(modifier: Modifier = Modifier) {
                     name = "Dr. John Doe",
                     title = "Cardiologist",
                     location = "New York, USA",
-                    image = R.drawable.logo,
+                    image = R.drawable.doctor_ic,
                     navigateToDetails = {}
                 )
             }
@@ -79,7 +85,7 @@ private fun HomeContent(modifier: Modifier = Modifier) {
         // Small Facts Section
         Text(
             text = "Small Facts",
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleLarge,
             color = colorScheme.onBackground,
             modifier = Modifier.padding(vertical = 8.dp)
         )
@@ -91,6 +97,7 @@ private fun HomeContent(modifier: Modifier = Modifier) {
     }
 }
 
+@PreviewLightDark
 @Preview(showSystemUi = true)
 @Composable
 private fun HomeContentPreview() {
