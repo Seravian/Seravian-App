@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,20 +25,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.seravian.home.presentation.components.DoctorCard
-import com.seravian.home.presentation.components.FactCard
+import com.seravian.home.presentation.components.PreviousChatCard
 import com.seravian.home.R
 import com.seravian.ui.presentation.BaseScreen
 import com.seravian.ui.theme.SeravianTheme
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
+fun HomeScreen() {
     BaseScreen<HomeViewModel> { viewModel ->
         HomeContent()
     }
 }
 
 @Composable
-private fun HomeContent(modifier: Modifier = Modifier) {
+private fun HomeContent() {
     val colorScheme = MaterialTheme.colorScheme
 
     Column(
@@ -63,6 +64,8 @@ private fun HomeContent(modifier: Modifier = Modifier) {
             )
         }
 
+        Spacer(modifier = Modifier.height(16.dp))
+
         // Famous Doctors Section
         Text(
             text = "Famous Doctors",
@@ -82,15 +85,17 @@ private fun HomeContent(modifier: Modifier = Modifier) {
             }
         }
 
-        // Small Facts Section
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Previous Chats Section
         Text(
-            text = "Small Facts",
+            text = "Previous Chats",
             style = MaterialTheme.typography.titleLarge,
             color = colorScheme.onBackground,
             modifier = Modifier.padding(vertical = 8.dp)
         )
-        repeat(5) { // Placeholder for fact cards
-            FactCard(
+        repeat(5) { // Placeholder for chats cards
+            PreviousChatCard(
                 fact = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
             )
         }
