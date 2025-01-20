@@ -71,6 +71,7 @@ dependencies {
     implementation(project(":feature:chat"))
     implementation(project(":feature:onboarding"))
     implementation(project(":networking"))
+    implementation(project(":navigation"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

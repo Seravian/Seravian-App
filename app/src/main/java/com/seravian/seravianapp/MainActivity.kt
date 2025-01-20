@@ -11,6 +11,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.seravian.seravianapp.navigation.AppNavHost
+import com.seravian.ui.components.BottomNavigationBar
+import com.seravian.ui.components.TopAppBar
 import com.seravian.ui.theme.SeravianTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,18 +22,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SeravianTheme {
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                    content = { innerPadding ->
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(innerPadding) // Apply padding from the Scaffold
-                        ) {
-                            AppNavHost()
-                        }
-                    }
-                )
+                AppNavHost(modifier = Modifier.fillMaxSize())
             }
         }
     }

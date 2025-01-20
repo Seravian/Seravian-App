@@ -2,6 +2,9 @@
 
 package com.seravian.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -29,12 +32,21 @@ import com.seravian.ui.R
 import com.seravian.ui.theme.SeravianTheme
 
 @Composable
-fun TopAppBar() {
-    BarContent()
+fun TopAppBar(
+    isVisible: Boolean
+) {
+    AnimatedVisibility(
+        visible = isVisible,
+        enter = slideInVertically(initialOffsetY = { -it }),
+        exit = slideOutVertically(targetOffsetY = { -it }),
+        content = {
+            BarContent()
+        }
+    )
 }
 
 @Composable
-fun BarContent(modifier: Modifier = Modifier) {
+fun BarContent() {
     val colorScheme = MaterialTheme.colorScheme
 
     TopAppBar(
@@ -48,7 +60,6 @@ fun BarContent(modifier: Modifier = Modifier) {
                 Box(
                     modifier = Modifier
                         .size(40.dp)
-                        .background(colorScheme.primary, CircleShape)
                 ) {
                     Image(
                         painter = painterResource(R.drawable.logo),

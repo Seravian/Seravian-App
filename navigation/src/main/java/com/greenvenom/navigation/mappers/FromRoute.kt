@@ -1,9 +1,9 @@
-package com.seravian.seravianapp.navigation.mappers
+package com.greenvenom.navigation.mappers
 
 import androidx.navigation.NavBackStackEntry
-import com.seravian.seravianapp.navigation.AppDestination
+import com.greenvenom.navigation.AppDestination
 
-fun NavBackStackEntry?.fromRoute(): AppDestination? {
+fun NavBackStackEntry?.fromRoute(): AppDestination {
     this?.destination?.route?.substringBefore("?")?.substringBefore("/")
         ?.substringAfterLast(".")?.let {
             return when (it) {
@@ -14,9 +14,13 @@ fun NavBackStackEntry?.fromRoute(): AppDestination? {
                 AppDestination.OTP::class.simpleName -> return AppDestination.OTP
                 AppDestination.NewPassword::class.simpleName -> return AppDestination.NewPassword
                 AppDestination.Home::class.simpleName -> return AppDestination.Home
-                AppDestination.AuthUserDetails::class.simpleName -> return AppDestination.AuthUserDetails
-                else -> null
+                AppDestination.OnBoarding::class.simpleName -> return AppDestination.OnBoarding
+                AppDestination.AIChat::class.simpleName -> return AppDestination.AIChat
+                AppDestination.Doctors::class.simpleName -> return AppDestination.Doctors
+                AppDestination.Sessions::class.simpleName -> return AppDestination.Sessions
+                AppDestination.Profile::class.simpleName -> return AppDestination.Profile
+                else -> AppDestination.Splash
             }
         }
-    return null
+    return AppDestination.Splash
 }

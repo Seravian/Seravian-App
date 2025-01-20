@@ -1,12 +1,11 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
 }
 
 android {
-    namespace = "com.seravian.ui"
+    namespace = "com.greenvenom.navigation"
     compileSdk = 34
 
     defaultConfig {
@@ -32,27 +31,14 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-    buildFeatures {
-        compose = true
-    }
 }
 
 dependencies {
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.material.v1120)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.bundles.compose)
-    implementation(libs.bundles.image.loading)
-    implementation(libs.bundles.dependency.injection)
-    implementation(libs.country.picker)
-    implementation(project(":domain"))
-    implementation(project(":data"))
-    implementation(project(":navigation"))
+    implementation(libs.androidx.compose.navigation)
+    implementation(libs.kotlinx.serialization.json)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.bundles.compose.debug)
 }
