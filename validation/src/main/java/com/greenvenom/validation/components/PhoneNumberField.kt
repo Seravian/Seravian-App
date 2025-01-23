@@ -1,4 +1,4 @@
-package com.seravian.ui.components
+package com.greenvenom.validation.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -14,7 +14,6 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import com.arpitkatiyarprojects.countrypicker.CountryPickerOutlinedTextField
 import com.arpitkatiyarprojects.countrypicker.models.CountryDetails
-import com.seravian.ui.theme.SeravianTheme
 
 @Composable
 fun PhoneNumberField(
@@ -45,10 +44,8 @@ fun PhoneNumberField(
 @Preview(showBackground = true)
 @Composable
 private fun PhoneNumberFieldPreview() {
-    SeravianTheme {
-        PhoneNumberField(
-            isMobileNumberValid = true,
-            retrievePhoneNumber = { _, _ -> },
-        )
-    }
+    PhoneNumberField(
+        isMobileNumberValid = true,
+        retrievePhoneNumber = { _, _ -> },
+    )
 }

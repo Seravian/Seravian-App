@@ -4,15 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.seravian.seravianapp.navigation.AppNavHost
-import com.seravian.ui.components.BottomNavigationBar
-import com.seravian.ui.components.TopAppBar
 import com.seravian.ui.theme.SeravianTheme
 
 class MainActivity : ComponentActivity() {

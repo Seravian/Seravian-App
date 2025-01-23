@@ -1,4 +1,4 @@
-package com.seravian.ui.components
+package com.greenvenom.navigation.presentation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
@@ -12,8 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.greenvenom.navigation.AppDestination
-import com.seravian.ui.R
-import com.seravian.ui.theme.SeravianTheme
+import com.greenvenom.navigation.R
 
 @Composable
 fun BottomNavigationBar(
@@ -104,13 +103,11 @@ private fun BarContent(
 @PreviewLightDark
 @Composable
 private fun BottomNavigationBarContent() {
-    SeravianTheme {
-        BarContent(
-            navigateToHome = {  },
-            navigateToAIChat = {  },
-            navigateToSessions = {  },
-            navigateToDoctors = {  },
-            currentDestination = AppDestination.Home
-        )
-    }
+    BarContent(
+        navigateToHome = {  },
+        navigateToAIChat = {  },
+        navigateToSessions = {  },
+        navigateToDoctors = {  },
+        currentDestination = AppDestination.Home
+    )
 }

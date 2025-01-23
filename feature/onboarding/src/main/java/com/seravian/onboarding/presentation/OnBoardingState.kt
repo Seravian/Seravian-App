@@ -12,6 +12,6 @@ data class OnBoardingState(
     val userDetails: OnBoardingDetails = OnBoardingDetails(),
     val isDetailsFull: Boolean = false,
     val fullNameValidationResult: ValidationResult<Unit, ValidationError>? = null,
-    val mobileNumberValidationResult: ValidationResult<Unit, ValidationError>? = null,
+    val mobileNumberValidationResult: ValidationResult<String, ValidationError>? = null,
     val uploadingDetailsResult: Result<Unit, AuthError>? = null
 )

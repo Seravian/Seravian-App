@@ -1,7 +1,6 @@
 package com.seravian.onboarding.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.arpitkatiyarprojects.countrypicker.utils.CountryPickerUtils
 import com.greenvenom.validation.ValidateInput
 import com.greenvenom.validation.domain.ValidationError
 import com.greenvenom.validation.domain.ValidationResult
@@ -94,15 +93,11 @@ class OnBoardingViewModel(
         phoneNumber: String,
         countryCode: String
     ) {
-        val isValid = CountryPickerUtils.isMobileNumberValid(phoneNumber, countryCode)
-        val validationResult =  if (isValid) {
-            val formattedNumber = CountryPickerUtils.getFormattedMobileNumber(phoneNumber, countryCode)
+        val validationResult = ValidateInput.validateMobileNumber(phoneNumber, countryCode)
+        validationResult.onSuccess {
             updateUserDetailsState(
-                phoneNumber = formattedNumber
+                phoneNumber = it
             )
-            ValidationResult.Success(Unit)
-        } else {
-            ValidationResult.Error(ValidationError.INVALID_PHONE_NUMBER)
         }
 
         _onBoardingState.update {

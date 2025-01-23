@@ -41,7 +41,6 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.bundles.compose)
-    implementation(libs.country.picker)
     implementation(libs.bundles.image.loading)
     implementation(libs.bundles.dependency.injection)
     implementation(libs.bundles.data.persistence)

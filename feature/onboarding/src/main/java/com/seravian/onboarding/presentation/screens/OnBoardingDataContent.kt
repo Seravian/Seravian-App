@@ -29,13 +29,13 @@ import androidx.compose.ui.unit.sp
 import com.greenvenom.validation.domain.ValidationError
 import com.greenvenom.validation.domain.ValidationResult
 import com.greenvenom.validation.util.toString
-import com.seravian.ui.components.DatePickerField
-import com.seravian.ui.components.PhoneNumberField
+import com.greenvenom.validation.components.DatePickerField
+import com.greenvenom.validation.components.PhoneNumberField
 import com.seravian.ui.theme.SeravianTheme
 
 @Composable
 fun OnBoardingDataContent(
-    mobileNumberValidationResult: ValidationResult<Unit, ValidationError>?,
+    mobileNumberValidationResult: ValidationResult<String, ValidationError>?,
     fullNameValidationResult: ValidationResult<Unit, ValidationError>?,
     validateFullName: (String) -> Unit,
     validatePhoneNumber: (String, String) -> Unit,
@@ -112,7 +112,7 @@ fun OnBoardingDataContent(
 private fun OnBoardingDataContentPreview() {
     SeravianTheme {
         OnBoardingDataContent(
-            mobileNumberValidationResult = ValidationResult.Success(Unit),
+            mobileNumberValidationResult = ValidationResult.Success("Unit"),
             fullNameValidationResult = ValidationResult.Error(ValidationError.EMPTY_NAME),
             validateFullName = {},
             validatePhoneNumber = { _, _ -> },

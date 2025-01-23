@@ -1,6 +1,7 @@
 package com.greenvenom.validation
 
 import android.util.Patterns
+import com.arpitkatiyarprojects.countrypicker.utils.CountryPickerUtils
 import com.greenvenom.validation.domain.ValidationError
 import com.greenvenom.validation.domain.ValidationResult
 
@@ -71,5 +72,17 @@ object ValidateInput {
 
             else -> ValidationResult.Success(Unit)
         }
+    }
+
+    fun validateMobileNumber(mobileNumber: String, countryCode: String): ValidationResult<String, ValidationError> {
+        val isValid = CountryPickerUtils.isMobileNumberValid(mobileNumber, countryCode)
+        val validationResult = if (isValid) {
+            val formattedNumber = CountryPickerUtils.getFormattedMobileNumber(mobileNumber, countryCode)
+            ValidationResult.Success(formattedNumber)
+        } else {
+            ValidationResult.Error(ValidationError.INVALID_PHONE_NUMBER)
+        }
+
+        return validationResult
     }
 }

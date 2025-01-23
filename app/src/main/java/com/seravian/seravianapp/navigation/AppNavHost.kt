@@ -3,11 +3,9 @@ package com.seravian.seravianapp.navigation
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -15,7 +13,6 @@ import androidx.navigation.compose.rememberNavController
 import com.greenvenom.navigation.AppDestination
 import com.greenvenom.navigation.AppDestinationSaver
 import com.greenvenom.navigation.AppNavigator
-import com.greenvenom.navigation.mappers.toRoute
 import com.seravian.auth.presentation.login.LoginScreen
 import com.seravian.auth.presentation.otp.OtpScreen
 import com.seravian.auth.presentation.register.RegisterScreen
@@ -24,7 +21,7 @@ import com.seravian.auth.presentation.reset_password.screens.VerifyEmailScreen
 import com.seravian.auth.presentation.splash.SplashScreen
 import com.seravian.onboarding.presentation.screens.OnBoardingScreen
 import com.seravian.home.presentation.HomeScreen
-import com.seravian.ui.components.BottomNavigationBar
+import com.greenvenom.navigation.presentation.BottomNavigationBar
 import com.seravian.ui.components.TopAppBar
 import java.util.Timer
 import kotlin.concurrent.fixedRateTimer

@@ -1,4 +1,4 @@
-package com.seravian.ui.components
+package com.greenvenom.validation.components
 
 import android.icu.text.SimpleDateFormat
 import androidx.compose.foundation.gestures.awaitEachGesture
@@ -18,14 +18,12 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
-import com.seravian.ui.theme.SeravianTheme
 import java.util.Date
 import java.util.Locale
 
@@ -107,15 +105,11 @@ fun convertMillisToDate(millis: Long): String {
     return formatter.format(Date(millis))
 }
 
-
-
 @Preview(showBackground = true)
 @Composable
 private fun DatePickerPreview() {
-    SeravianTheme {
-        DatePickerField(
-            label = "Date of Birth",
-            onDateSelected = {}
-        )
-    }
+    DatePickerField(
+        label = "Date of Birth",
+        onDateSelected = {}
+    )
 }
