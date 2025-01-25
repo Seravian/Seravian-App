@@ -5,9 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextField
@@ -20,15 +17,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.seravian.auth.R
 import com.seravian.ui.theme.errorLight
 import com.seravian.ui.theme.onSurfaceLight
-import com.seravian.ui.theme.onSurfaceVariantLight
 import com.seravian.ui.theme.outlineLight
 import com.seravian.ui.theme.outlineVariantLight
 
@@ -55,7 +54,10 @@ fun AuthTextField(
             trailingIcon = if (isPasswordField) {
                 {
                     Icon(
-                        imageVector = if (passwordVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
+                        imageVector = ImageVector.vectorResource(
+                            if (passwordVisible) R.drawable.visibility_off_ic
+                            else R.drawable.visibility_ic
+                        ),
                         contentDescription = if (passwordVisible) "Hide password" else "Show password",
                         tint = onSurfaceLight,
                         modifier = Modifier.clickable { passwordVisible = !passwordVisible }
