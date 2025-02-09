@@ -1,10 +1,12 @@
 package com.seravian.seravianapp
 
 import android.app.Application
-import com.greenvenom.networking.di.networkingModule
+import com.greenvenom.networking.api.di.apiModule
 import com.seravian.seravianapp.di.appModule
-import com.seravian.auth.di.authenticationModule
+import com.greenvenom.auth.di.authenticationModule
+import com.greenvenom.navigation.di.navigationModule
 import com.seravian.data.datasource.di.dataSourceModule
+import com.seravian.data.di.dataModule
 import com.seravian.home.di.homeModule
 import com.seravian.onboarding.di.onBoardingModule
 import org.koin.android.ext.koin.androidContext
@@ -20,8 +22,11 @@ class SeravianApp: Application() {
 
             modules(
                 appModule,
-                networkingModule,
+                dataModule,
                 dataSourceModule,
+                apiModule,
+                dataSourceModule,
+                navigationModule,
                 authenticationModule,
                 onBoardingModule,
                 homeModule

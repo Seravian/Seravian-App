@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "com.seravian.seravianapp"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.seravian.seravianapp"
-        minSdk = 24
-        targetSdk = 34
+        minSdk = 26
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -46,7 +46,6 @@ android {
         jvmTarget = "11"
     }
     buildFeatures {
-        buildConfig = true
         compose = true
     }
 }
@@ -57,19 +56,17 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose)
     implementation(libs.bundles.dependency.injection)
-    implementation(libs.bundles.data.persistence)
     implementation(libs.androidx.compose.navigation)
     implementation(libs.kotlinx.serialization.json)
-
-    //splash api
     implementation(libs.androidx.core.splashscreen)
+
     implementation(project(":domain"))
     implementation(project(":data"))
     implementation(project(":ui"))
-    implementation(project(":feature:auth"))
-    implementation(project(":feature:home"))
-    implementation(project(":feature:chat"))
-    implementation(project(":feature:onboarding"))
+    implementation(project(":features:auth"))
+    implementation(project(":features:home"))
+    implementation(project(":features:chat"))
+    implementation(project(":features:onboarding"))
     implementation(project(":networking"))
     implementation(project(":navigation"))
 
@@ -78,5 +75,6 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.bundles.compose.debug)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
 }

@@ -7,10 +7,10 @@ plugins {
 
 android {
     namespace = "com.greenvenom.navigation"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
-        minSdk = 24
+        minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -35,13 +35,20 @@ android {
 }
 
 dependencies {
+    val koin = "4.0.0"
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.bundles.compose)
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.ui.tooling.preview)
     implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.compose.navigation)
-    implementation(libs.kotlinx.serialization.json)
+    implementation("androidx.navigation:navigation-compose:2.8.5")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+    implementation(platform("io.insert-koin:koin-bom:$koin"))
+    implementation("io.insert-koin:koin-androidx-compose")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(kotlin("reflect"))
 }

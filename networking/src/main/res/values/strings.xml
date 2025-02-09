@@ -6,4 +6,5 @@
     <string name="error_serialization">Couldn\'t serialize the data.</string>
     <string name="error_server">Couldn\'t contact the server.</string>
     <string name="error_unknown">Unknown error happened.</string>
+    <string name="successful_request">The request was successful.</string>
 </resources>

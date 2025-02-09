@@ -2,15 +2,14 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
-    namespace = "com.seravian.ui"
-    compileSdk = 34
+    namespace = "com.greenvenom.ui"
+    compileSdk = 35
 
     defaultConfig {
-        minSdk = 24
+        minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -38,7 +37,6 @@ android {
 }
 
 dependencies {
-
     val lifecycleVersion = "2.8.7"
     val koin = "4.0.0"
 
