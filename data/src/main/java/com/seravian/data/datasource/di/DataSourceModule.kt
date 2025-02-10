@@ -1,6 +1,6 @@
 package com.seravian.data.datasource.di
 
-import com.greenvenom.networking.domain.datasource.RemoteDataSource
+import com.seravian.domain.datasource.RemoteDataSource
 import com.seravian.data.datasource.remote.SeravianDataSource
 import org.koin.core.qualifier.named
 import org.koin.dsl.module

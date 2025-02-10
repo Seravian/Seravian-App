@@ -2,7 +2,7 @@ package com.greenvenom.auth.presentation.register
 
 import androidx.compose.runtime.Immutable
 import com.greenvenom.networking.data.Result
-import com.greenvenom.networking.domain.NetworkError
+import com.greenvenom.networking.domain.Error
 import com.greenvenom.validation.domain.ValidationError
 import com.greenvenom.validation.domain.ValidationResult
 
@@ -12,5 +12,5 @@ data class RegisterState(
     val usernameValidity: ValidationResult<Unit, ValidationError>? = null,
     val passwordValidity: ValidationResult<Unit, ValidationError>? = null,
     val confirmPasswordValidity: ValidationResult<Unit, ValidationError>? = null,
-    val registrationResult: Result<Any?, NetworkError>? = null
+    val registrationResult: Result<Any?, Error>? = null
 )

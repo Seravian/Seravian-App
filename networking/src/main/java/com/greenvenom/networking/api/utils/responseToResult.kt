@@ -3,14 +3,14 @@ package com.greenvenom.networking.api.utils
 import com.greenvenom.networking.api.data.APIError
 import com.greenvenom.networking.data.Result
 import com.greenvenom.networking.data.ErrorType
-import com.greenvenom.networking.domain.NetworkError
+import com.greenvenom.networking.domain.Error
 import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
 
 suspend inline fun <reified T> responseToResult(
     response: HttpResponse
-): Result<T, NetworkError> {
+): Result<T, Error> {
     return when (response.status.value) {
         in 200..299 -> {
             try {

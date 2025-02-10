@@ -1,4 +1,4 @@
-package com.greenvenom.navigation.routes
+package com.seravian.seravianapp.navigation.routes
 
 import com.greenvenom.navigation.domain.NavigationTarget
 import kotlinx.serialization.Serializable
@@ -36,7 +36,7 @@ sealed class Screen: NavigationTarget() {
     data object Doctors: Screen()
 
     @Serializable
-    data object Activity: Screen()
+    data object Sessions: Screen()
 
     @Serializable
     data object Profile: Screen()

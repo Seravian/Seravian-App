@@ -1,9 +1,9 @@
-package com.greenvenom.navigation.components
+package com.seravian.seravianapp.navigation.components
 
 import androidx.annotation.DrawableRes
 import com.greenvenom.navigation.domain.NavigationTarget
-import com.greenvenom.navigation.R
-import com.greenvenom.navigation.routes.Screen
+import com.seravian.seravianapp.R
+import com.seravian.seravianapp.navigation.routes.Screen
 
 enum class BottomDestination(
     @DrawableRes val icon: Int,
@@ -21,9 +21,9 @@ enum class BottomDestination(
         target = Screen.AIChat
     ),
     Sessions(
-        icon = R.drawable.activity_ic,
+        icon = R.drawable.sessions_ic,
         label = "Sessions",
-        target = Screen.Activity
+        target = Screen.Sessions
     ),
     Doctors(
         icon = R.drawable.person_circle_ic,

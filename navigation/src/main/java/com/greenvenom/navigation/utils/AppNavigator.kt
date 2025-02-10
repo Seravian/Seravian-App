@@ -4,11 +4,17 @@ import androidx.navigation.NavHostController
 import com.greenvenom.navigation.domain.NavigationTarget
 import kotlin.reflect.KClass
 
-class AppNavigator<NT : NavigationTarget>(private val returnDestinationType: KClass<out NavigationTarget>) {
+class AppNavigator<NT : NavigationTarget> {
     lateinit var navController: NavHostController
+    private lateinit var returnDestinationType: KClass<out NavigationTarget>
 
-    fun config(navController: NavHostController) {
+    fun config(
+        navController: NavHostController,
+        returnDestinationType: KClass<out NavigationTarget>
+    ) {
         this.navController = navController
+        if (::returnDestinationType.isInitialized) return
+        this.returnDestinationType = returnDestinationType
     }
 
     fun navigateTo(target: NT): NT? {

@@ -17,8 +17,8 @@ import com.greenvenom.auth.presentation.reset_password.screens.VerifyEmailScreen
 import com.greenvenom.auth.presentation.splash.SplashScreen
 import com.greenvenom.navigation.domain.NavigationTarget
 import com.greenvenom.navigation.data.NavigationType
-import com.greenvenom.navigation.routes.Screen
-import com.greenvenom.navigation.routes.SubGraph
+import com.seravian.seravianapp.navigation.routes.Screen
+import com.seravian.seravianapp.navigation.routes.SubGraph
 import com.greenvenom.navigation.repository.NavigationStateRepository
 import com.greenvenom.navigation.utils.AppNavigator
 import com.seravian.home.presentation.HomeScreen
@@ -33,12 +33,14 @@ fun AppNavHost(modifier: Modifier = Modifier) {
 
     appNavigator.config(
         navController = rememberNavController(),
+        returnDestinationType = Screen::class
     )
     navigationStateRepository.config(
+        appNavigator = appNavigator,
         enableBarsDestinations = setOf(
             Screen.Home,
             Screen.AIChat,
-            Screen.Activity,
+            Screen.Sessions,
             Screen.Doctors
         )
     )
@@ -62,7 +64,8 @@ fun AppNavHost(modifier: Modifier = Modifier) {
                         navigationStateRepository.updateDestination(NavigationType.Standard(Screen.VerifyEmail))
                     },
                     navigateToNextScreen = {
-                        navigationStateRepository.updateDestination(NavigationType.ClearBackStack(SubGraph.Main))
+                        navigationStateRepository.updateDestination(NavigationType.ClearBackStack(
+                            SubGraph.Main))
                     },
                 )
             }
@@ -93,7 +96,8 @@ fun AppNavHost(modifier: Modifier = Modifier) {
                     },
                     navigateToNewPasswordScreen = {
                         if (navigationState.previousDestination is Screen.VerifyEmail) {
-                            navigationStateRepository.updateDestination(NavigationType.ClearBackStack(Screen.NewPassword))
+                            navigationStateRepository.updateDestination(NavigationType.ClearBackStack(
+                                Screen.NewPassword))
                         }
                     }
                 )
@@ -104,7 +108,8 @@ fun AppNavHost(modifier: Modifier = Modifier) {
                         navigationStateRepository.updateDestination(NavigationType.Back)
                     },
                     navigateToLoginScreen = {
-                        navigationStateRepository.updateDestination(NavigationType.ClearBackStack(Screen.Login))
+                        navigationStateRepository.updateDestination(NavigationType.ClearBackStack(
+                            Screen.Login))
                     }
                 )
             }
@@ -113,7 +118,8 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         composable<Screen.OnBoarding> {
             OnBoardingScreen(
                 navigateToNextScreen = {
-                    navigationStateRepository.updateDestination(NavigationType.ClearBackStack(SubGraph.Main))
+                    navigationStateRepository.updateDestination(NavigationType.ClearBackStack(
+                        SubGraph.Main))
                 }
             )
         }
@@ -125,7 +131,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             composable<Screen.AIChat> {
                 Text(text = "AI Chat")
             }
-            composable<Screen.Activity> {
+            composable<Screen.Sessions> {
                 Text(text = "Sessions")
             }
             composable<Screen.Doctors> {

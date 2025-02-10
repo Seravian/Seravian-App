@@ -11,9 +11,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.greenvenom.navigation.components.BottomNavigationBar
+import com.seravian.seravianapp.navigation.components.BottomNavigationBar
 import com.greenvenom.navigation.repository.NavigationStateRepository
-import com.greenvenom.navigation.routes.Screen
+import com.seravian.seravianapp.navigation.routes.Screen
 import com.greenvenom.ui.components.TopAppBar
 import com.seravian.seravianapp.navigation.AppNavHost
 import com.greenvenom.ui.theme.AppTheme

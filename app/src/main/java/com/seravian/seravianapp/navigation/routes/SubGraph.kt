@@ -1,4 +1,4 @@
-package com.greenvenom.navigation.routes
+package com.seravian.seravianapp.navigation.routes
 
 import com.greenvenom.navigation.domain.NavigationTarget
 import kotlinx.serialization.Serializable

@@ -1,8 +1,8 @@
 package com.seravian.onboarding.data
 
 import com.greenvenom.networking.data.Result
-import com.greenvenom.networking.domain.NetworkError
-import com.greenvenom.networking.domain.datasource.RemoteDataSource
+import com.greenvenom.networking.domain.Error
+import com.seravian.domain.datasource.RemoteDataSource
 import com.seravian.onboarding.domain.OnBoardingRepository
 
 class OnBoardingRepositoryImpl(
@@ -14,8 +14,9 @@ class OnBoardingRepositoryImpl(
         phoneNumber: String,
         birthDate: String,
         gender: String
-    ): Result<Any, NetworkError> {
+    ): Result<Any, Error> {
         return remoteDataSource.updateUserDetails(
+            fullName = fullName,
             userType = userType,
             phoneNumber = phoneNumber,
             birthDate = birthDate,

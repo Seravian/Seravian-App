@@ -6,7 +6,6 @@ import com.seravian.seravianapp.di.appModule
 import com.greenvenom.auth.di.authenticationModule
 import com.greenvenom.navigation.di.navigationModule
 import com.seravian.data.datasource.di.dataSourceModule
-import com.seravian.data.di.dataModule
 import com.seravian.home.di.homeModule
 import com.seravian.onboarding.di.onBoardingModule
 import org.koin.android.ext.koin.androidContext
@@ -22,7 +21,6 @@ class SeravianApp: Application() {
 
             modules(
                 appModule,
-                dataModule,
                 dataSourceModule,
                 apiModule,
                 dataSourceModule,

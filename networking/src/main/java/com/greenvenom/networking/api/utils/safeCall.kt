@@ -3,7 +3,7 @@ package com.greenvenom.networking.api.utils
 import com.greenvenom.networking.api.data.APIError
 import com.greenvenom.networking.data.Result
 import com.greenvenom.networking.data.ErrorType
-import com.greenvenom.networking.domain.NetworkError
+import com.greenvenom.networking.domain.Error
 import io.ktor.client.statement.HttpResponse
 import io.ktor.util.network.UnresolvedAddressException
 import kotlinx.coroutines.ensureActive
@@ -12,7 +12,7 @@ import kotlin.coroutines.coroutineContext
 
 suspend inline fun <reified T> safeCall (
     execute: () -> HttpResponse
-): Result<T, NetworkError> {
+): Result<T, Error> {
     val response = try {
         execute()
     } catch (e: UnresolvedAddressException) {
