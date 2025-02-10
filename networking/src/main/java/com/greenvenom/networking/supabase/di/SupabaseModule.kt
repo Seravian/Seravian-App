@@ -11,4 +11,8 @@ val supabaseModule = module {
     single<SessionStateRepository>(qualifier = named<SupabaseSessionRepository>()) {
         SupabaseSessionRepository(supabaseClient = get())
     }
+
+    single<SessionStateRepository> {
+        get(named<SupabaseSessionRepository>())
+    }
 }

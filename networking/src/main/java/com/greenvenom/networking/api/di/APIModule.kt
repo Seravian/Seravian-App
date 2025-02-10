@@ -13,4 +13,8 @@ val apiModule = module {
     single<SessionStateRepository>(qualifier = named<APISessionRepository>()) {
         APISessionRepository(apiClient = get())
     }
+
+    single<SessionStateRepository> {
+        get(named<APISessionRepository>())
+    }
 }
