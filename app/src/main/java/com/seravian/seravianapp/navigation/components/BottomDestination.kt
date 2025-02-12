@@ -3,7 +3,7 @@ package com.seravian.seravianapp.navigation.components
 import androidx.annotation.DrawableRes
 import com.greenvenom.navigation.domain.NavigationTarget
 import com.seravian.seravianapp.R
-import com.seravian.seravianapp.navigation.routes.Screen
+import com.greenvenom.navigation.routes.Screen
 
 enum class BottomDestination(
     @DrawableRes val icon: Int,

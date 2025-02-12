@@ -1,7 +1,7 @@
 package com.seravian.seravianapp.navigation.utils
 
 import com.greenvenom.navigation.data.NavigationType
-import com.seravian.seravianapp.navigation.routes.SubGraph
+import com.greenvenom.navigation.routes.SubGraph
 import com.greenvenom.navigation.repository.NavigationStateRepository
 import com.greenvenom.networking.data.SessionDestinations
 import com.greenvenom.networking.domain.repository.SessionStateRepository

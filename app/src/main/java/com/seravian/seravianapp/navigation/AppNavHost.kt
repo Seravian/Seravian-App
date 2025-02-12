@@ -17,8 +17,8 @@ import com.greenvenom.auth.presentation.reset_password.screens.VerifyEmailScreen
 import com.greenvenom.auth.presentation.splash.SplashScreen
 import com.greenvenom.navigation.domain.NavigationTarget
 import com.greenvenom.navigation.data.NavigationType
-import com.seravian.seravianapp.navigation.routes.Screen
-import com.seravian.seravianapp.navigation.routes.SubGraph
+import com.greenvenom.navigation.routes.Screen
+import com.greenvenom.navigation.routes.SubGraph
 import com.greenvenom.navigation.repository.NavigationStateRepository
 import com.greenvenom.navigation.utils.AppNavigator
 import com.seravian.home.presentation.HomeScreen
@@ -27,16 +27,12 @@ import org.koin.compose.koinInject
 
 @Composable
 fun AppNavHost(modifier: Modifier = Modifier) {
-    val appNavigator = koinInject<AppNavigator<NavigationTarget>>()
+    val appNavigator = koinInject<AppNavigator>()
     val navigationStateRepository = koinInject<NavigationStateRepository>()
     val navigationState by navigationStateRepository.navigationState.collectAsStateWithLifecycle()
 
-    appNavigator.config(
-        navController = rememberNavController(),
-        returnDestinationType = Screen::class
-    )
+    appNavigator.config(navController = rememberNavController())
     navigationStateRepository.config(
-        appNavigator = appNavigator,
         enableBarsDestinations = setOf(
             Screen.Home,
             Screen.AIChat,

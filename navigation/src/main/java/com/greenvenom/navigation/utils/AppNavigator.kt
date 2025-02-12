@@ -2,34 +2,29 @@ package com.greenvenom.navigation.utils
 
 import androidx.navigation.NavHostController
 import com.greenvenom.navigation.domain.NavigationTarget
-import kotlin.reflect.KClass
+import com.greenvenom.navigation.routes.Screen
 
-class AppNavigator<NT : NavigationTarget> {
+class AppNavigator {
     lateinit var navController: NavHostController
-    private lateinit var returnDestinationType: KClass<out NavigationTarget>
+        private set
 
-    fun config(
-        navController: NavHostController,
-        returnDestinationType: KClass<out NavigationTarget>
-    ) {
+    fun config(navController: NavHostController) {
         this.navController = navController
-        if (::returnDestinationType.isInitialized) return
-        this.returnDestinationType = returnDestinationType
     }
 
-    fun navigateTo(target: NT): NT? {
+    fun navigateTo(target: NavigationTarget): NavigationTarget? {
         navController.navigate(target) {
             launchSingleTop = true
         }
         return getCurrentDestination()
     }
 
-    fun navigateBack(): NT? {
+    fun navigateBack(): NavigationTarget? {
         if (hasBackStack()) navController.popBackStack()
         return getCurrentDestination()
     }
 
-    fun navigateAndClearBackStack(target: NT): NT? {
+    fun navigateAndClearBackStack(target: NavigationTarget): NavigationTarget? {
         navController.navigate(target) {
             popUpTo(0) { inclusive = true }
             launchSingleTop = true
@@ -37,7 +32,7 @@ class AppNavigator<NT : NavigationTarget> {
         return getCurrentDestination()
     }
 
-    fun navigateFromBottomBar(target: NT): NT? {
+    fun navigateFromBottomBar(target: NavigationTarget): NavigationTarget? {
         navController.navigate(target) {
             popUpTo(navController.graph.startDestinationId) {
                 saveState = true
@@ -48,14 +43,12 @@ class AppNavigator<NT : NavigationTarget> {
         return getCurrentDestination()
     }
 
-    fun getCurrentDestination(): NT? {
-        val currentDest = navController.currentBackStackEntry?.destination
-        return currentDest.toNavigationTarget(returnDestinationType)
+    fun getCurrentDestination(): NavigationTarget? {
+        return navController.currentBackStackEntry?.destination?.toNavigationTarget<NavigationTarget>(Screen::class)
     }
 
-    fun getPreviousDestination(): NT? {
-        val previousDest = navController.previousBackStackEntry?.destination
-        return previousDest.toNavigationTarget(returnDestinationType)
+    fun getPreviousDestination(): NavigationTarget? {
+        return navController.previousBackStackEntry?.destination?.toNavigationTarget<NavigationTarget>(Screen::class)
     }
 
     private fun hasBackStack(): Boolean {

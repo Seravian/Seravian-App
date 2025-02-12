@@ -10,7 +10,10 @@ import org.koin.dsl.module
 
 val apiModule = module {
     single<HttpClient> { HttpClientFactory.create(CIO.create()) }
-    single<SessionStateRepository>(qualifier = named<APISessionRepository>()) {
+    single<SessionStateRepository>(
+        qualifier = named<APISessionRepository>(),
+        createdAtStart = true
+    ) {
         APISessionRepository(apiClient = get())
     }
 

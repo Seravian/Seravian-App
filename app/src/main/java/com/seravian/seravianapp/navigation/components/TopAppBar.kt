@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.greenvenom.ui.components
+package com.seravian.seravianapp.navigation.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
@@ -38,13 +38,13 @@ fun TopAppBar(
         enter = slideInVertically(initialOffsetY = { -it }),
         exit = slideOutVertically(targetOffsetY = { -it }),
         content = {
-            BarContent()
+            TopBarContent()
         }
     )
 }
 
 @Composable
-fun BarContent() {
+private fun TopBarContent() {
     val colorScheme = MaterialTheme.colorScheme
 
     TopAppBar(
@@ -86,6 +86,6 @@ fun BarContent() {
 @Composable
 private fun TopAppBarPreview() {
     AppTheme {
-        BarContent()
+        TopBarContent()
     }
 }

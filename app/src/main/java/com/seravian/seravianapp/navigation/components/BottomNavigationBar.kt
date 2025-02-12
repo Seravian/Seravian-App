@@ -11,7 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import com.seravian.seravianapp.navigation.routes.Screen
+import com.greenvenom.navigation.routes.Screen
 import com.greenvenom.navigation.domain.NavigationTarget
 import com.greenvenom.navigation.data.NavigationType
 
@@ -26,7 +26,7 @@ fun BottomNavigationBar(
         enter = slideInVertically(initialOffsetY = { it }),
         exit = slideOutVertically(targetOffsetY = { it }),
         content = {
-            BarContent(
+            BottomBarContent(
                 defaultNavigationMethod = defaultNavigationMethod,
                 currentDestination = currentDestination
             )
@@ -35,7 +35,7 @@ fun BottomNavigationBar(
 }
 
 @Composable
-private fun BarContent(
+private fun BottomBarContent(
     defaultNavigationMethod: (NavigationType) -> Unit,
     currentDestination: NavigationTarget
 ) {
@@ -62,7 +62,7 @@ private fun BarContent(
 @PreviewLightDark
 @Composable
 private fun BottomNavigationBarContent() {
-    BarContent(
+    BottomBarContent(
         defaultNavigationMethod = {  },
         currentDestination = Screen.Home
     )

@@ -1,10 +1,9 @@
-package com.seravian.seravianapp.navigation.routes
+package com.greenvenom.navigation.routes
 
 import com.greenvenom.navigation.domain.NavigationTarget
 import kotlinx.serialization.Serializable
 
-@Serializable
-sealed class Screen: NavigationTarget() {
+sealed class Screen: NavigationTarget {
     @Serializable
     data object Splash: Screen()
 
