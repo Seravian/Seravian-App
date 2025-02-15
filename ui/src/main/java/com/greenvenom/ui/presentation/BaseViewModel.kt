@@ -2,8 +2,9 @@ package com.greenvenom.ui.presentation
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 
-open class BaseViewModel: ViewModel() {
+abstract class BaseViewModel: ViewModel() {
     var baseState = MutableStateFlow(BaseState())
         private set
 
@@ -13,23 +14,22 @@ open class BaseViewModel: ViewModel() {
             is BaseAction.HideLoading -> hideLoading()
             is BaseAction.ShowErrorMessage -> showErrorMessage(action.errorMessage)
             is BaseAction.HideErrorMessage -> hideErrorMessage()
-            else -> Unit
         }
     }
 
     fun showLoading() {
-        baseState.value = baseState.value.copy(isLoading = true)
+        baseState.update { it.copy(isLoading = true) }
     }
 
     fun hideLoading() {
-        baseState.value = baseState.value.copy(isLoading = false)
+        baseState.update { it.copy(isLoading = false) }
     }
 
     fun showErrorMessage(givenMessage: String) {
-        baseState.value = baseState.value.copy(errorMessage = givenMessage)
+        baseState.update { it.copy(errorMessage = givenMessage) }
     }
 
     fun hideErrorMessage() {
-        baseState.value = baseState.value.copy(errorMessage = "")
+        baseState.update { it.copy(errorMessage = "") }
     }
 }

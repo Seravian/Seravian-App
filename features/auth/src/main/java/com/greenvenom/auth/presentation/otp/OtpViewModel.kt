@@ -3,6 +3,7 @@ package com.greenvenom.auth.presentation.otp
 import androidx.lifecycle.viewModelScope
 import com.greenvenom.auth.data.repository.EmailStateRepository
 import com.greenvenom.auth.domain.repository.AuthRepository
+import com.greenvenom.ui.presentation.BaseAction
 import com.greenvenom.ui.presentation.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -48,7 +49,7 @@ class OtpViewModel(
     }
 
     private fun verifyOtp(email: String, otp: String) {
-        showLoading()
+        baseAction(BaseAction.ShowLoading)
         viewModelScope.launch {
             val result = authRepository.verifyOtp(email, otp)
             _otpState.update { it.copy(otpResult = result) }
