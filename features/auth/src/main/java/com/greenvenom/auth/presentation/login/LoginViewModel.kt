@@ -1,7 +1,7 @@
 package com.greenvenom.auth.presentation.login
 
 import androidx.lifecycle.viewModelScope
-import com.greenvenom.auth.domain.repository.LoginRepository
+import com.greenvenom.auth.domain.repository.AuthRepository
 import com.greenvenom.ui.presentation.BaseViewModel
 import com.greenvenom.validation.ValidateInput
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
-    private val loginRepository: LoginRepository
+    private val authRepository: AuthRepository
 ): BaseViewModel() {
     private val _loginState = MutableStateFlow(LoginState())
     val loginState = _loginState.asStateFlow()
@@ -41,7 +41,7 @@ class LoginViewModel(
         password: String,
     ) {
         viewModelScope.launch {
-            val result = loginRepository.loginUser(email, password)
+            val result = authRepository.loginUser(email, password)
             _loginState.update { it.copy(loginResult = result) }
         }
     }

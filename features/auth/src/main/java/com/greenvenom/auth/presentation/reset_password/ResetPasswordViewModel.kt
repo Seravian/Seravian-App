@@ -2,7 +2,7 @@ package com.greenvenom.auth.presentation.reset_password
 
 import androidx.lifecycle.viewModelScope
 import com.greenvenom.auth.data.repository.EmailStateRepository
-import com.greenvenom.auth.domain.repository.ResetPasswordRepository
+import com.greenvenom.auth.domain.repository.AuthRepository
 import com.greenvenom.ui.presentation.BaseViewModel
 import com.greenvenom.validation.ValidateInput
 import com.greenvenom.validation.domain.onError
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 class ResetPasswordViewModel(
     private val emailStateRepository: EmailStateRepository,
-    private val resetPasswordRepository: ResetPasswordRepository
+    private val authRepository: AuthRepository
 ): BaseViewModel() {
     private val _resetPasswordState = MutableStateFlow(ResetPasswordState())
     val resetPasswordState = _resetPasswordState.asStateFlow()
@@ -64,14 +64,14 @@ class ResetPasswordViewModel(
 
     private fun sendPasswordResetEmail(email: String) {
         viewModelScope.launch {
-            val result = resetPasswordRepository.sendResetPasswordEmail(email)
+            val result = authRepository.sendResetPasswordEmail(email)
             _resetPasswordState.update { it.copy(emailSentResult = result) }
         }
     }
 
     private fun updatePassword(newPassword: String) {
         viewModelScope.launch {
-            val result = resetPasswordRepository.updatePassword(newPassword)
+            val result = authRepository.updatePassword(newPassword)
             _resetPasswordState.update { it.copy(passwordUpdatedResult = result) }
         }
     }

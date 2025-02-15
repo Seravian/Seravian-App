@@ -2,7 +2,7 @@ package com.greenvenom.auth.presentation.register
 
 import androidx.lifecycle.viewModelScope
 import com.greenvenom.auth.data.repository.EmailStateRepository
-import com.greenvenom.auth.domain.repository.RegisterRepository
+import com.greenvenom.auth.domain.repository.AuthRepository
 import com.greenvenom.networking.data.onSuccess
 import com.greenvenom.ui.presentation.BaseViewModel
 import com.greenvenom.validation.ValidateInput
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 class RegisterViewModel(
     private val emailStateRepository: EmailStateRepository,
-    private val registerRepository: RegisterRepository
+    private val authRepository: AuthRepository
 ): BaseViewModel() {
     private val _registerState = MutableStateFlow(RegisterState())
     val registerState = _registerState.asStateFlow()
@@ -59,7 +59,7 @@ class RegisterViewModel(
         password: String,
     ) {
         viewModelScope.launch {
-            val result = registerRepository.registerUser(username, email, password)
+            val result = authRepository.registerUser(username, email, password)
             _registerState.update { it.copy(registrationResult = result) }
             result.onSuccess { emailStateRepository.updateEmail(email) }
         }

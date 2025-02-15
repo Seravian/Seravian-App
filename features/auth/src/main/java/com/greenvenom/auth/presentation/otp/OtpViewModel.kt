@@ -2,7 +2,7 @@ package com.greenvenom.auth.presentation.otp
 
 import androidx.lifecycle.viewModelScope
 import com.greenvenom.auth.data.repository.EmailStateRepository
-import com.greenvenom.auth.domain.repository.OtpRepository
+import com.greenvenom.auth.domain.repository.AuthRepository
 import com.greenvenom.ui.presentation.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 class OtpViewModel(
     private val emailStateRepository: EmailStateRepository,
-    private val otpRepository: OtpRepository
+    private val authRepository: AuthRepository
 ): BaseViewModel() {
     private val _otpState = MutableStateFlow(OtpState())
     val otpState = _otpState.asStateFlow()
@@ -50,7 +50,7 @@ class OtpViewModel(
     private fun verifyOtp(email: String, otp: String) {
         showLoading()
         viewModelScope.launch {
-            val result = otpRepository.verifyOtp(email, otp)
+            val result = authRepository.verifyOtp(email, otp)
             _otpState.update { it.copy(otpResult = result) }
         }
     }
@@ -120,6 +120,7 @@ class OtpViewModel(
 
     private fun resetOtpState() {
         _otpState.update { OtpState() }
+        emailStateRepository.resetEmailState()
     }
 
     private fun resetNetworkResult() {
