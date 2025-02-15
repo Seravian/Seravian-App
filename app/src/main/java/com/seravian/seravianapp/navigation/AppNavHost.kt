@@ -47,7 +47,11 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         modifier = modifier
     ) {
         composable<Screen.Splash> {
-            SplashScreen()
+            SplashScreen(
+                onStart = {
+
+                }
+            )
         }
 
         navigation<SubGraph.Auth>(startDestination = Screen.Login) {
