@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -66,7 +67,7 @@ private fun OnBoardingContent(
         }
         state.uploadingDetailsResult?.onError {
             baseAction(BaseAction.ShowErrorMessage(
-                it.errorType?.toString(context)?: it.message.ifEmpty { "Something went wrong" }
+                it.errorType?.toString(context)?: context.getString(R.string.something_went_wrong)
             ))
             detailsAction(OnBoardingAction.ResetNetworkResult)
         }
@@ -93,9 +94,9 @@ private fun OnBoardingContent(
             currentStep = state.currentStep,
             totalSteps = 3,
             title = when (state.currentStep) {
-                1 -> "Choose Account Type"
-                2 -> "Choose Your Gender"
-                else -> "Enter Your Details"
+                1 -> stringResource(R.string.select_user_type)
+                2 -> stringResource(R.string.select_gender)
+                else -> stringResource(R.string.enter_details)
             },
         )
 
@@ -106,8 +107,8 @@ private fun OnBoardingContent(
                     detailsAction(OnBoardingAction.NavigateForm(true))
                 },
                 options = listOf(
-                    "Doctor" to R.drawable.doctor_ic,
-                    "Patient" to R.drawable.patient_ic
+                    stringResource(R.string.doctor) to R.drawable.doctor_ic,
+                    stringResource(R.string.patient) to R.drawable.patient_ic
                 ),
                 modifier = Modifier.fillMaxHeight(0.8f)
             )
@@ -119,8 +120,8 @@ private fun OnBoardingContent(
                 },
                 navigateBack = { detailsAction(OnBoardingAction.NavigateForm(false)) },
                 options = listOf(
-                    "Male" to R.drawable.male_ic,
-                    "Female" to R.drawable.female_ic
+                    stringResource(R.string.male) to R.drawable.male_ic,
+                    stringResource(R.string.female) to R.drawable.female_ic
                 ),
                 modifier = Modifier.fillMaxHeight(0.8f)
             )

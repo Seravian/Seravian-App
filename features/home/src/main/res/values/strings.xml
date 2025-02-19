@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Seravian</string>
+    <string name="app_name" translatable="false">Seravian</string>
+    <string name="famous_doctors">Famous Doctors</string>
+    <string name="chat_history">Chat History</string>
 </resources>

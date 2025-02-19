@@ -96,14 +96,14 @@ private fun OtpContent(
 ) {
     val context = LocalContext.current
 
-    LaunchedEffect(state.otpResult) {
+    LaunchedEffect(state.otpNetworkResult) {
         baseActions(BaseAction.HideLoading)
-        state.otpResult?.onSuccess {
+        state.otpNetworkResult?.onSuccess {
             navigateToNewPasswordScreen()
         }
-        state.otpResult?.onError {
+        state.otpNetworkResult?.onError {
             baseActions(BaseAction.ShowErrorMessage(
-                it.errorType?.toString(context)?: it.message.ifEmpty { "Something went wrong" }
+                it.errorType?.toString(context)?: context.getString(R.string.something_went_wrong)
             ))
             otpActions(OtpAction.ResetNetworkResult)
         }

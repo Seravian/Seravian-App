@@ -65,14 +65,14 @@ class ResetPasswordViewModel(
     private fun sendPasswordResetEmail(email: String) {
         viewModelScope.launch {
             val result = authRepository.sendResetPasswordEmail(email)
-            _resetPasswordState.update { it.copy(emailSentResult = result) }
+            _resetPasswordState.update { it.copy(emailSentNetworkResult = result) }
         }
     }
 
     private fun updatePassword(newPassword: String) {
         viewModelScope.launch {
             val result = authRepository.updatePassword(newPassword)
-            _resetPasswordState.update { it.copy(passwordUpdatedResult = result) }
+            _resetPasswordState.update { it.copy(passwordUpdatedNetworkResult = result) }
         }
     }
 
@@ -81,10 +81,10 @@ class ResetPasswordViewModel(
     }
 
     private fun resetEmailResult() {
-        _resetPasswordState.update { it.copy(emailSentResult = null) }
+        _resetPasswordState.update { it.copy(emailSentNetworkResult = null) }
     }
 
     private fun resetPasswordResult() {
-        _resetPasswordState.update { it.copy(passwordUpdatedResult = null) }
+        _resetPasswordState.update { it.copy(passwordUpdatedNetworkResult = null) }
     }
 }

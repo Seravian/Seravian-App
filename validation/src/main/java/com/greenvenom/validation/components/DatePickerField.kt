@@ -23,7 +23,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.greenvenom.validation.R
 import java.util.Date
 import java.util.Locale
 
@@ -40,7 +42,7 @@ fun DatePickerField(
         value = selectedDate?.let { convertMillisToDate(it) } ?: "",
         onValueChange = {  },
         label = { Text(text = label) },
-        placeholder = { Text("MM/DD/YYYY") },
+        placeholder = { Text("DD/MM/YYYY") },
         trailingIcon = {
             Icon(Icons.Default.DateRange, contentDescription = "Select date")
         },
@@ -87,12 +89,12 @@ private fun DatePickerModal(
                 onDateSelected(datePickerState.selectedDateMillis)
                 onDismiss()
             }) {
-                Text("OK")
+                Text(stringResource(R.string.ok))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel))
             }
         }
     ) {
@@ -101,7 +103,7 @@ private fun DatePickerModal(
 }
 
 fun convertMillisToDate(millis: Long): String {
-    val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+    val formatter = SimpleDateFormat("dd/mm/yyyy", Locale.getDefault())
     return formatter.format(Date(millis))
 }
 

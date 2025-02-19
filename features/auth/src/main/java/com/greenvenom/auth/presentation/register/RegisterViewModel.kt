@@ -60,7 +60,7 @@ class RegisterViewModel(
     ) {
         viewModelScope.launch {
             val result = authRepository.registerUser(username, email, password)
-            _registerState.update { it.copy(registrationResult = result) }
+            _registerState.update { it.copy(registrationNetworkResult = result) }
             result.onSuccess { emailStateRepository.updateEmail(email) }
         }
     }
@@ -70,6 +70,6 @@ class RegisterViewModel(
     }
 
     private fun resetNetworkResult() {
-        _registerState.update { it.copy(registrationResult = null) }
+        _registerState.update { it.copy(registrationNetworkResult = null) }
     }
 }

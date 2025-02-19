@@ -52,7 +52,7 @@ class OtpViewModel(
         baseAction(BaseAction.ShowLoading)
         viewModelScope.launch {
             val result = authRepository.verifyOtp(email, otp)
-            _otpState.update { it.copy(otpResult = result) }
+            _otpState.update { it.copy(otpNetworkResult = result) }
         }
     }
 
@@ -125,6 +125,6 @@ class OtpViewModel(
     }
 
     private fun resetNetworkResult() {
-        _otpState.update { it.copy(otpResult = null) }
+        _otpState.update { it.copy(otpNetworkResult = null) }
     }
 }

@@ -44,6 +44,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.bundles.dependency.injection)
+    implementation("com.valentinilk.shimmer:compose-shimmer:1.3.2")
     implementation(project(":ui"))
     implementation(project(":domain"))
     implementation(project(":data"))

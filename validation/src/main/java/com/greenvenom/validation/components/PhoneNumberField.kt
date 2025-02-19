@@ -11,9 +11,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.arpitkatiyarprojects.countrypicker.CountryPickerOutlinedTextField
 import com.arpitkatiyarprojects.countrypicker.models.CountryDetails
+import com.greenvenom.validation.R
 
 @Composable
 fun PhoneNumberField(
@@ -26,7 +28,7 @@ fun PhoneNumberField(
     var mobileNumber by rememberSaveable { mutableStateOf("") }
 
     CountryPickerOutlinedTextField(
-        label = { Text("Mobile Number") },
+        label = { Text(stringResource(R.string.mobile_number)) },
         defaultCountryCode = "EG",
         mobileNumber = mobileNumber,
         onMobileNumberChange = {

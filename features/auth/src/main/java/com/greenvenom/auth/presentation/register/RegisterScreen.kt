@@ -35,7 +35,6 @@ import com.greenvenom.networking.utils.toString
 import com.greenvenom.ui.presentation.BaseAction
 import com.greenvenom.ui.presentation.BaseScreen
 import com.greenvenom.ui.theme.AppTheme
-import com.greenvenom.ui.theme.onBackgroundLight
 import com.greenvenom.validation.domain.ValidationResult
 import com.greenvenom.validation.util.toString
 
@@ -72,14 +71,14 @@ private fun RegisterContent(
     var password by rememberSaveable { mutableStateOf("") }
     var confirmPassword by rememberSaveable { mutableStateOf("") }
 
-    LaunchedEffect(state.registrationResult) {
+    LaunchedEffect(state.registrationNetworkResult) {
         baseActions(BaseAction.HideLoading)
-        state.registrationResult?.onSuccess {
+        state.registrationNetworkResult?.onSuccess {
             navigateToAccountVerificationScreen()
         }
-        state.registrationResult?.onError {
+        state.registrationNetworkResult?.onError {
             baseActions(BaseAction.ShowErrorMessage(
-                it.errorType?.toString(context)?: it.message.ifEmpty { "Something went wrong" }
+                it.errorType?.toString(context)?: context.getString(R.string.something_went_wrong)
             ))
             registerActions(RegisterAction.ResetNetworkResult)
         }

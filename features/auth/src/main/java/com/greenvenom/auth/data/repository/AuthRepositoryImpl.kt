@@ -1,8 +1,8 @@
 package com.greenvenom.auth.data.repository
 
 import com.greenvenom.auth.domain.repository.AuthRepository
-import com.greenvenom.networking.data.Result
-import com.greenvenom.networking.domain.Error
+import com.greenvenom.networking.data.NetworkError
+import com.greenvenom.networking.data.NetworkResult
 import com.seravian.domain.datasource.RemoteDataSource
 
 class AuthRepositoryImpl(
@@ -11,7 +11,7 @@ class AuthRepositoryImpl(
     override suspend fun loginUser(
         email: String,
         password: String
-    ): Result<Any, Error> {
+    ): NetworkResult<Any, NetworkError> {
         return remoteDataSource.loginUser(email, password)
     }
 
@@ -19,29 +19,29 @@ class AuthRepositoryImpl(
         email: String,
         password: String,
         displayName: String
-    ): Result<Any?, Error> {
+    ): NetworkResult<Any?, NetworkError> {
         return remoteDataSource.registerUser(email, password, displayName)
     }
 
     override suspend fun verifyUserRegistration(
         email: String,
         otp: String
-    ): Result<Any, Error> {
+    ): NetworkResult<Any, NetworkError> {
         return remoteDataSource.verifyOtp(email, otp)
     }
 
-    override suspend fun sendResetPasswordEmail(email: String): Result<Any, Error> {
+    override suspend fun sendResetPasswordEmail(email: String): NetworkResult<Any, NetworkError> {
         return remoteDataSource.sendResetPasswordEmail(email)
     }
 
-    override suspend fun updatePassword(newPassword: String): Result<Any, Error> {
+    override suspend fun updatePassword(newPassword: String): NetworkResult<Any, NetworkError> {
         return remoteDataSource.updatePassword(password = newPassword)
     }
 
     override suspend fun verifyOtp(
         email: String,
         otp: String
-    ): Result<Any, Error> {
+    ): NetworkResult<Any, NetworkError> {
         return remoteDataSource.verifyOtp(email, otp)
     }
 }

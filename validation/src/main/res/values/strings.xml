@@ -15,6 +15,10 @@
     <string name="invalid_otp_error">Invalid OTP</string>
     <string name="name_cannot_be_empty">Name cannot be empty</string>
     <string name="name_contains_invalid_characters">Name contains invalid characters</string>
-    <string name="name_contains_insufficient_parts">Name must include at least a first name and last name.</string>
+    <string name="name_contains_insufficient_parts">Name must include at least a first name and last name</string>
     <string name="invalid_phone_number">Invalid Phone Number</string>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
 </resources>

@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,6 +34,7 @@ import com.greenvenom.validation.domain.ValidationResult
 import com.greenvenom.validation.util.toString
 import com.greenvenom.validation.components.DatePickerField
 import com.greenvenom.validation.components.PhoneNumberField
+import com.seravian.onboarding.R
 
 @Composable
 fun OnBoardingDataContent(
@@ -66,7 +68,7 @@ fun OnBoardingDataContent(
                 fullName = it
                 validateFullName(it)
             },
-            label = { Text("Full Name") },
+            label = { Text(text = stringResource(R.string.full_name)) },
             modifier = Modifier.fillMaxWidth(),
             isError = fullNameValidationResult is ValidationResult.Error,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
@@ -92,7 +94,7 @@ fun OnBoardingDataContent(
         Spacer(modifier = Modifier.height(22.dp))
 
         DatePickerField(
-            label = "Date of Birth",
+            label = stringResource(R.string.birth_date),
             onDateSelected = { date ->
                 birthDate = date
             }
@@ -110,7 +112,7 @@ fun OnBoardingDataContent(
                 .padding(20.dp)
                 .fillMaxWidth(),
         ) {
-            Text(text = "Submit")
+            Text(text = stringResource(R.string.submit))
         }
     }
 }

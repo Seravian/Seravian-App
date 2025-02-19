@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="select_user_type">Select User Type</string>
+    <string name="select_gender">Select Gender</string>
+    <string name="enter_details">Enter Details</string>
+    <string name="doctor">Doctor</string>
+    <string name="patient">Patient</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="submit">Submit</string>
+    <string name="birth_date">Date of Birth</string>
+    <string name="full_name">Full Name</string>
 </resources>

@@ -48,7 +48,7 @@ fun AuthHeader(
     ) {
         Image(
             painter = painterResource(id = R.drawable.stars),
-            contentDescription = "Stars",
+            contentDescription = stringResource(R.string.stars),
             contentScale = ContentScale.Crop,
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
             modifier = Modifier
@@ -65,7 +65,7 @@ fun AuthHeader(
                 IconButton(onClick = { navigateBack() }) {
                     Icon(
                         painter = painterResource(id = R.drawable.white_arrow_back),
-                        contentDescription = "Back Button",
+                        contentDescription = stringResource(R.string.back_button),
                         tint = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier.fillMaxSize()
                     )

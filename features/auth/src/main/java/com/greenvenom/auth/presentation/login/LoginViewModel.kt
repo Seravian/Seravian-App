@@ -42,7 +42,7 @@ class LoginViewModel(
     ) {
         viewModelScope.launch {
             val result = authRepository.loginUser(email, password)
-            _loginState.update { it.copy(loginResult = result) }
+            _loginState.update { it.copy(loginNetworkResult = result) }
         }
     }
 
@@ -51,6 +51,6 @@ class LoginViewModel(
     }
 
     private fun resetNetworkResult() {
-        _loginState.update { it.copy(loginResult = null) }
+        _loginState.update { it.copy(loginNetworkResult = null) }
     }
 }

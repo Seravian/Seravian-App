@@ -37,7 +37,6 @@ import com.greenvenom.networking.utils.toString
 import com.greenvenom.ui.presentation.BaseAction
 import com.greenvenom.ui.presentation.BaseScreen
 import com.greenvenom.ui.theme.AppTheme
-import com.greenvenom.ui.theme.onBackgroundLight
 import com.greenvenom.validation.domain.ValidationResult
 import com.greenvenom.validation.util.toString
 import org.koin.compose.koinInject
@@ -76,14 +75,14 @@ private fun VerifyEmailContent(
     val context = LocalContext.current
     var email by rememberSaveable { mutableStateOf("") }
 
-    LaunchedEffect(resetPasswordState.emailSentResult) {
+    LaunchedEffect(resetPasswordState.emailSentNetworkResult) {
         baseActions(BaseAction.HideLoading)
-        resetPasswordState.emailSentResult?.onSuccess {
+        resetPasswordState.emailSentNetworkResult?.onSuccess {
             navigateToOtpScreen()
         }
-        resetPasswordState.emailSentResult?.onError {
+        resetPasswordState.emailSentNetworkResult?.onError {
             baseActions(BaseAction.ShowErrorMessage(
-                it.errorType?.toString(context)?: it.message.ifEmpty { "Something went wrong" }
+                it.errorType?.toString(context)?: context.getString(R.string.something_went_wrong)
             ))
             resetPasswordActions(ResetPasswordAction.ResetEmailResult)
         }

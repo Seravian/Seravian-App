@@ -1,7 +1,8 @@
 package com.seravian.onboarding.domain
 
-import com.greenvenom.networking.data.Result
-import com.greenvenom.networking.domain.Error
+import com.greenvenom.networking.data.NetworkError
+import com.greenvenom.networking.data.NetworkResult
+
 
 interface OnBoardingRepository {
     suspend fun updateUserDetails(
@@ -10,5 +11,5 @@ interface OnBoardingRepository {
         phoneNumber: String,
         birthDate: String,
         gender: String,
-    ): Result<Any, Error>
+    ): NetworkResult<Any, NetworkError>
 }

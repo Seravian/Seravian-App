@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Seravian</string>
+    <string name="app_name" translatable="false">Track Hub</string>
     <string name="dismiss">Dismiss</string>
+    <string name="add">Add new hub</string>
 </resources>
