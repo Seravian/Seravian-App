@@ -1,4 +1,4 @@
-package com.seravian.domain.datasource
+package com.seravian.seravianapp.domain.remote
 
 import com.greenvenom.networking.data.NetworkError
 import com.greenvenom.networking.data.NetworkResult

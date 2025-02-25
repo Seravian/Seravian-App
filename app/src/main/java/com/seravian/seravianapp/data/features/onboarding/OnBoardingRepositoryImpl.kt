@@ -1,12 +1,11 @@
-package com.seravian.onboarding.data
+package com.seravian.seravianapp.data.features.onboarding
 
 import com.greenvenom.networking.data.NetworkError
 import com.greenvenom.networking.data.NetworkResult
-import com.seravian.domain.datasource.RemoteDataSource
 import com.seravian.onboarding.domain.OnBoardingRepository
 
 class OnBoardingRepositoryImpl(
-    private val remoteDataSource: RemoteDataSource
+    private val remoteDataSource: com.seravian.seravianapp.domain.remote.RemoteDataSource
 ): OnBoardingRepository {
     override suspend fun updateUserDetails(
         fullName: String,

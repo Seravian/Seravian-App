@@ -22,8 +22,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "Seravian"
 include(":app")
-include(":domain")
-include(":data")
 include(":features:auth")
 include(":ui")
 include(":features:home")

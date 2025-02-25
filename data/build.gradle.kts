@@ -43,7 +43,6 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.bundles.networking)
     implementation(libs.bundles.dependency.injection)
-    implementation(project(":domain"))
     implementation(project(":networking"))
     implementation(project(":navigation"))
     testImplementation(libs.junit)

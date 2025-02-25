@@ -45,8 +45,6 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.bundles.dependency.injection)
     implementation(project(":ui"))
-    implementation(project(":domain"))
-    implementation(project(":data"))
     implementation(project(":networking"))
     implementation(project(":validation"))
     testImplementation(libs.junit)

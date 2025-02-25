@@ -1,12 +1,11 @@
-package com.greenvenom.auth.data.repository
+package com.seravian.seravianapp.data.features.auth
 
 import com.greenvenom.auth.domain.repository.AuthRepository
 import com.greenvenom.networking.data.NetworkError
 import com.greenvenom.networking.data.NetworkResult
-import com.seravian.domain.datasource.RemoteDataSource
 
 class AuthRepositoryImpl(
-    private val remoteDataSource: RemoteDataSource
+    private val remoteDataSource: com.seravian.seravianapp.domain.remote.RemoteDataSource
 ): AuthRepository {
     override suspend fun loginUser(
         email: String,

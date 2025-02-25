@@ -1,9 +1,9 @@
-package com.seravian.data.datasource.remote
+package com.seravian.seravianapp.data.remote
 
 import android.util.Log
 import com.greenvenom.networking.data.NetworkError
 import com.greenvenom.networking.data.NetworkResult
-import com.seravian.domain.datasource.RemoteDataSource
+import com.seravian.seravianapp.domain.remote.RemoteDataSource
 import io.ktor.client.HttpClient
 
 class SeravianDataSource(

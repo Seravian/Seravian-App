@@ -1,4 +1,4 @@
-package com.greenvenom.auth.data.repository
+package com.greenvenom.auth.data
 
 import com.greenvenom.auth.presentation.EmailState
 import com.greenvenom.validation.domain.ValidationError

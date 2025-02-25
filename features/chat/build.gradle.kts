@@ -46,8 +46,6 @@ dependencies {
     implementation(libs.bundles.dependency.injection)
     implementation("com.valentinilk.shimmer:compose-shimmer:1.3.2")
     implementation(project(":ui"))
-    implementation(project(":domain"))
-    implementation(project(":data"))
     implementation(project(":networking"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
