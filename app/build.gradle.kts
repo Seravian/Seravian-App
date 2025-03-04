@@ -45,12 +45,18 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-    buildFeatures {
-        compose = true
-    }
 }
 
 dependencies {
+
+    implementation(project(":core-ui"))
+    implementation(project(":network:core-network"))
+    implementation(project(":network:feat-network"))
+    implementation(project(":navigation:core-navigation"))
+    implementation(project(":navigation:feat-navigation"))
+    implementation(project(":auth:feat-auth"))
+    implementation(project(":onboarding:feat-onboarding"))
+    implementation(project(":home:feat-home"))
 
     val appcompatVersion = "1.7.0"
 
@@ -65,14 +71,6 @@ dependencies {
     implementation(libs.androidx.compose.navigation)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.core.splashscreen)
-
-    implementation(project(":ui"))
-    implementation(project(":features:auth"))
-    implementation(project(":features:home"))
-    implementation(project(":features:chat"))
-    implementation(project(":features:onboarding"))
-    implementation(project(":networking"))
-    implementation(project(":navigation"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

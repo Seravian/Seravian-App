@@ -11,12 +11,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.seravian.seravianapp.navigation.components.BottomNavigationBar
-import com.greenvenom.navigation.repository.NavigationStateRepository
-import com.greenvenom.navigation.routes.Screen
-import com.seravian.seravianapp.navigation.components.TopAppBar
+import com.seravian.feat_navigation.components.BottomNavigationBar
+import com.greenvenom.core_navigation.data.repository.NavigationStateRepository
+import com.seravian.feat_navigation.routes.Screen
+import com.seravian.feat_navigation.components.TopAppBar
 import com.seravian.seravianapp.navigation.AppNavHost
-import com.greenvenom.ui.theme.AppTheme
+import com.greenvenom.core_ui.theme.AppTheme
 import org.koin.compose.koinInject
 
 class MainActivity : AppCompatActivity() {

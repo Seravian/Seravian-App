@@ -1,10 +1,10 @@
 package com.seravian.seravianapp.navigation.utils
 
-import com.greenvenom.navigation.data.NavigationType
-import com.greenvenom.navigation.routes.SubGraph
-import com.greenvenom.navigation.repository.NavigationStateRepository
-import com.greenvenom.networking.data.SessionDestinations
-import com.greenvenom.networking.domain.repository.SessionStateRepository
+import com.greenvenom.core_navigation.data.NavigationType
+import com.greenvenom.core_navigation.data.repository.NavigationStateRepository
+import com.seravian.feat_network.data.remote.repository.SessionDestinations
+import com.seravian.feat_network.data.remote.repository.SessionStateRepository
+import com.seravian.feat_navigation.routes.SubGraph
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,7 +33,9 @@ class SessionDestinationHandler(
             SessionDestinations.AUTH -> {
                 navigationStateRepository.updateDestination(NavigationType.ClearBackStack(SubGraph.Auth))
             }
-
+            SessionDestinations.ONBOARDING -> {
+                navigationStateRepository.updateDestination(NavigationType.ClearBackStack(SubGraph.OnBoarding))
+            }
             SessionDestinations.MAIN -> {
                 navigationStateRepository.updateDestination(NavigationType.ClearBackStack(SubGraph.Main))
             }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Seravian</string>
+    <string name="home">Home</string>
+    <string name="ai_chat">AI Chat</string>
+    <string name="sessions">Sessions</string>
+    <string name="doctors">Doctors</string>
+</resources>

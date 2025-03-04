@@ -32,7 +32,8 @@ object ValidateInput {
             !password.matches(".*[0-9].*".toRegex()) -> ValidationResult.Error(ValidationError.MINIMUM_1_NUMBER)
             !password.matches(".*[A-Z].*".toRegex()) -> ValidationResult.Error(ValidationError.MINIMUM_1_UPPERCASE_LETTER)
             !password.matches(".*[a-z].*".toRegex()) -> ValidationResult.Error(ValidationError.MINIMUM_1_LOWERCASE_LETTER)
-            !password.matches(".*[!@#$%^&*()_+].*".toRegex()) -> ValidationResult.Error(ValidationError.MINIMUM_1_SPECIAL_CHARACTER)
+            !password.matches(".*[!@#$%^&*()_+].*".toRegex()) -> ValidationResult.Error(
+                ValidationError.MINIMUM_1_SPECIAL_CHARACTER)
 
             else -> ValidationResult.Success(Unit)
         }
