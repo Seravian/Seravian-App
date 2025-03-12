@@ -12,7 +12,10 @@ abstract class BaseViewModel: ViewModel() {
         when(action) {
             is BaseAction.ShowLoading -> showLoading()
             is BaseAction.HideLoading -> hideLoading()
-            is BaseAction.ShowErrorMessage -> showErrorMessage(action.errorMessage)
+            is BaseAction.ShowErrorMessage -> showErrorMessage(
+                action.errorMessage,
+                action.dismissAction
+            )
             is BaseAction.HideErrorMessage -> hideErrorMessage()
         }
     }
@@ -25,11 +28,22 @@ abstract class BaseViewModel: ViewModel() {
         baseState.update { it.copy(isLoading = false) }
     }
 
-    fun showErrorMessage(givenMessage: String) {
-        baseState.update { it.copy(errorMessage = givenMessage) }
+    fun showErrorMessage(givenMessage: String, dismissAction: (() -> Unit)?) {
+        baseState.update {
+            it.copy(
+                errorMessage = givenMessage,
+                onDismiss = dismissAction
+            )
+        }
     }
 
     fun hideErrorMessage() {
-        baseState.update { it.copy(errorMessage = "") }
+        baseState.value.onDismiss?.invoke()
+        baseState.update {
+            it.copy(
+                errorMessage = "",
+                onDismiss = null
+            )
+        }
     }
 }

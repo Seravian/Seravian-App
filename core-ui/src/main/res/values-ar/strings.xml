@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dismiss">غلق</string>
-    <string name="add">إضافة مخزن جديد</string>
+    <string name="add">أضف جديد</string>
+    <string name="dark_mode">الوضع المظلم</string>
+    <string name="light_mode">الوضع المضيء</string>
+    <string name="arabic">العربية</string>
+    <string name="english">الإنجليزية</string>
 </resources>

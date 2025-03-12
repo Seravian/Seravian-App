@@ -25,9 +25,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.greenvenom.feat_auth.R
 import com.greenvenom.core_auth.data.repository.EmailState
 import com.greenvenom.core_auth.data.repository.EmailStateRepository
-import com.greenvenom.feat_auth.presentation.component.AuthCustomButton
+import com.greenvenom.core_ui.components.CustomButton
 import com.greenvenom.feat_auth.presentation.component.AuthHeader
-import com.greenvenom.feat_auth.presentation.component.AuthTextField
+import com.greenvenom.core_ui.components.CustomTextField
 import com.greenvenom.feat_auth.presentation.reset_password.ResetPasswordAction
 import com.greenvenom.feat_auth.presentation.reset_password.ResetPasswordState
 import com.greenvenom.feat_auth.presentation.reset_password.ResetPasswordViewModel
@@ -110,7 +110,7 @@ private fun VerifyEmailContent(
                 text = stringResource(R.string.email),
                 color = MaterialTheme.colorScheme.onBackground
             )
-            AuthTextField(
+            CustomTextField(
                 value = email,
                 onValueChange = {
                     email = it
@@ -122,7 +122,7 @@ private fun VerifyEmailContent(
                 } else "",
             )
             Spacer(modifier = Modifier.height(20.dp))
-            AuthCustomButton(
+            CustomButton(
                 text = stringResource(R.string.next),
                 enabled = emailState.emailValidity is ValidationResult.Success,
                 onClick = {

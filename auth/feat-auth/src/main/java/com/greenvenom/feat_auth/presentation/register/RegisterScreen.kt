@@ -26,9 +26,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.greenvenom.feat_auth.R
-import com.greenvenom.feat_auth.presentation.component.AuthCustomButton
+import com.greenvenom.core_ui.components.CustomButton
 import com.greenvenom.feat_auth.presentation.component.AuthHeader
-import com.greenvenom.feat_auth.presentation.component.AuthTextField
+import com.greenvenom.core_ui.components.CustomTextField
 import com.greenvenom.core_network.data.onError
 import com.greenvenom.core_network.data.onSuccess
 import com.greenvenom.core_network.utils.toString
@@ -118,7 +118,7 @@ private fun RegisterContent(
                 text = stringResource(R.string.user_name),
                 color = MaterialTheme.colorScheme.onBackground
             )
-            AuthTextField(
+            CustomTextField(
                 value = username,
                 onValueChange = {
                     username = it
@@ -134,7 +134,7 @@ private fun RegisterContent(
                 text = stringResource(R.string.email),
                 color = MaterialTheme.colorScheme.onBackground
             )
-            AuthTextField(
+            CustomTextField(
                 value = email,
                 onValueChange = {
                     email = it
@@ -150,7 +150,7 @@ private fun RegisterContent(
                 text = stringResource(R.string.Password),
                 color = MaterialTheme.colorScheme.onBackground
             )
-            AuthTextField(
+            CustomTextField(
                 value = password,
                 onValueChange = {
                     password = it
@@ -166,7 +166,7 @@ private fun RegisterContent(
                 text = stringResource(R.string.confirm_password),
                 color = MaterialTheme.colorScheme.onBackground
                 )
-            AuthTextField(
+            CustomTextField(
                 value = confirmPassword,
                 onValueChange = {
                     confirmPassword = it
@@ -178,7 +178,7 @@ private fun RegisterContent(
             )
             Spacer(modifier = Modifier.height(20.dp))
             // Register Button
-            AuthCustomButton(
+            CustomButton(
                 text = stringResource(R.string.register),
                 onClick = {
                     registerActions(

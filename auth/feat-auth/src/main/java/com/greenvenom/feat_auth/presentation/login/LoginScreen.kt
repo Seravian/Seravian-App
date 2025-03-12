@@ -35,9 +35,9 @@ import com.greenvenom.core_ui.presentation.BaseScreen
 import com.greenvenom.core_ui.theme.AppTheme
 import com.greenvenom.core_ui.theme.bluePrimary
 import com.greenvenom.feat_auth.R
-import com.greenvenom.feat_auth.presentation.component.AuthCustomButton
+import com.greenvenom.core_ui.components.CustomButton
 import com.greenvenom.feat_auth.presentation.component.AuthHeader
-import com.greenvenom.feat_auth.presentation.component.AuthTextField
+import com.greenvenom.core_ui.components.CustomTextField
 import com.greenvenom.validation.domain.ValidationResult
 import com.greenvenom.validation.util.toString
 
@@ -121,7 +121,7 @@ private fun LoginContent(
                 text = stringResource(R.string.email),
                 color = MaterialTheme.colorScheme.onBackground
             )
-            AuthTextField(
+            CustomTextField(
                 value = email,
                 onValueChange = {
                     email = it
@@ -137,7 +137,7 @@ private fun LoginContent(
                 text = stringResource(R.string.Password),
                 color = MaterialTheme.colorScheme.onBackground
             )
-            AuthTextField(
+            CustomTextField(
                 value = password,
                 onValueChange = {
                     password = it
@@ -158,7 +158,7 @@ private fun LoginContent(
                     }
             )
             Spacer(modifier = Modifier.height(20.dp))
-            AuthCustomButton(
+            CustomButton(
                 text = stringResource(R.string.log_in),
                 onClick = {
                     baseActions(BaseAction.ShowLoading)

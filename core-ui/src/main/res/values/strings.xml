@@ -2,5 +2,9 @@
 <resources>
     <string name="app_name" translatable="false">Track Hub</string>
     <string name="dismiss">Dismiss</string>
-    <string name="add">Add new hub</string>
+    <string name="add">Add New</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="light_mode">Light Mode</string>
+    <string name="arabic">Arabic</string>
+    <string name="english">English</string>
 </resources>

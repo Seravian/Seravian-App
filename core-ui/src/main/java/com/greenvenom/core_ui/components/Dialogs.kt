@@ -34,7 +34,7 @@ fun LoadingDialog(
                 onDismissRequest = {  },
                 properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
             ) {
-                CircularProgressIndicator(color = MaterialTheme.colorScheme.primaryContainer)
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
             }
         }
     }
