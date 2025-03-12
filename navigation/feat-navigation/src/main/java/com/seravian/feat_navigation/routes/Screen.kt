@@ -1,42 +1,67 @@
 package com.seravian.feat_navigation.routes
 
-import com.greenvenom.core_navigation.domain.NavigationTarget
+import com.greenvenom.core_navigation.domain.Destination
+import com.greenvenom.core_navigation.domain.DestinationType
 import kotlinx.serialization.Serializable
 
-sealed class Screen: NavigationTarget {
+sealed class Screen: Destination {
     @Serializable
-    data object Splash: Screen()
+    data object Splash: Screen() {
+        override val destinationType: DestinationType = DestinationType.AUTH
+    }
 
     @Serializable
-    data object Login: Screen()
+    data object Login: Screen() {
+        override val destinationType: DestinationType = DestinationType.AUTH
+    }
 
     @Serializable
-    data object Register: Screen()
+    data object Register: Screen() {
+        override val destinationType: DestinationType = DestinationType.AUTH
+    }
 
     @Serializable
-    data object VerifyEmail: Screen()
+    data object VerifyEmail: Screen() {
+        override val destinationType: DestinationType = DestinationType.AUTH
+    }
 
     @Serializable
-    data object OTP: Screen()
+    data object OTP: Screen() {
+        override val destinationType: DestinationType = DestinationType.AUTH
+    }
 
     @Serializable
-    data object NewPassword: Screen()
+    data object NewPassword: Screen() {
+        override val destinationType: DestinationType = DestinationType.AUTH
+    }
 
     @Serializable
-    data object OnBoarding: Screen()
+    data object OnBoarding: Screen() {
+        override val destinationType: DestinationType = DestinationType.OTHER
+    }
 
     @Serializable
-    data object Home: Screen()
+    data object Home: Screen() {
+        override val destinationType: DestinationType = DestinationType.MAIN
+    }
 
     @Serializable
-    data object AIChat: Screen()
+    data object AIChat: Screen() {
+        override val destinationType: DestinationType = DestinationType.MAIN
+    }
 
     @Serializable
-    data object Doctors: Screen()
+    data object Doctors: Screen() {
+        override val destinationType: DestinationType = DestinationType.MAIN
+    }
 
     @Serializable
-    data object Sessions: Screen()
+    data object Sessions: Screen() {
+        override val destinationType: DestinationType = DestinationType.MAIN
+    }
 
     @Serializable
-    data object Profile: Screen()
+    data object Profile: Screen() {
+        override val destinationType: DestinationType = DestinationType.SIDE
+    }
 }

@@ -5,7 +5,7 @@ import com.greenvenom.core_navigation.utils.AppNavigator
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
-val navigationModule = module {
+val navigationCoreModule = module {
     singleOf(::AppNavigator)
     singleOf(::NavigationStateRepository)
 }

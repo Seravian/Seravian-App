@@ -2,14 +2,14 @@ package com.seravian.feat_navigation.components
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.greenvenom.core_navigation.domain.NavigationTarget
+import com.greenvenom.core_navigation.domain.Destination
 import com.seravian.feat_navigation.R
 import com.seravian.feat_navigation.routes.Screen
 
 enum class BottomDestination(
     @DrawableRes val icon: Int,
     @StringRes val label: Int,
-    val target: NavigationTarget,
+    val target: Destination,
 ) {
     Home(
         icon = R.drawable.home_ic,

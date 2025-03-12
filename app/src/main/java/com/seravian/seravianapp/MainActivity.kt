@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
                     topBar = { TopAppBar(isVisible = navigationState.topBarState) },
                     bottomBar = {
                         BottomNavigationBar(
-                            defaultNavigationMethod = navigationRepository::updateDestination,
+                            defaultNavigationMethod = navigationRepository::navigate,
                             currentDestination = navigationState.currentDestination ?: Screen.Home,
                             isVisible = navigationState.bottomBarState
                         )

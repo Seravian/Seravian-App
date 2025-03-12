@@ -45,6 +45,7 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.bundles.dependency.injection)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

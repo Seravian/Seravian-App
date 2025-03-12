@@ -13,13 +13,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.greenvenom.core_navigation.data.NavigationType
-import com.greenvenom.core_navigation.domain.NavigationTarget
+import com.greenvenom.core_navigation.domain.Destination
 import com.seravian.feat_navigation.routes.Screen
 
 @Composable
 fun BottomNavigationBar(
     defaultNavigationMethod: (NavigationType) -> Unit,
-    currentDestination: NavigationTarget,
+    currentDestination: Destination,
     isVisible: Boolean
 ) {
     AnimatedVisibility(
@@ -38,7 +38,7 @@ fun BottomNavigationBar(
 @Composable
 private fun BottomBarContent(
     defaultNavigationMethod: (NavigationType) -> Unit,
-    currentDestination: NavigationTarget
+    currentDestination: Destination
 ) {
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surface,
