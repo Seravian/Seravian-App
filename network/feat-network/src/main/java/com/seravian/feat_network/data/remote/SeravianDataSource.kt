@@ -1,13 +1,20 @@
 package com.seravian.feat_network.data.remote
 
 import android.util.Log
+import com.greenvenom.core_network.api.utils.constructUrl
+import com.greenvenom.core_network.api.utils.safeCall
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
 import com.seravian.feat_network.domain.remote.RemoteDataSource
 import io.ktor.client.HttpClient
+import io.ktor.client.request.headers
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.HttpHeaders
 
 class SeravianDataSource(
-    val httpClient: HttpClient
+    val publicHttpClient: HttpClient,
+    val authorizedHttpClient: HttpClient
 ): RemoteDataSource {
     override suspend fun registerUser(
         username: String,
@@ -15,9 +22,15 @@ class SeravianDataSource(
         password: String
     ): NetworkResult<Any, NetworkError> {
 //        return safeCall<Unit> {
-//            httpClient.get(
-//                urlString = constructUrl("")
-//            )
+//            httpClient.post(urlString = constructUrl("auth/register")) {
+//                setBody(
+//                    mapOf(
+//                        "username" to username,
+//                        "email" to email,
+//                        "password" to password
+//                    )
+//                )
+//            }
 //        }
 
         Log.d("SeravianDS", "Registration")
@@ -25,6 +38,20 @@ class SeravianDataSource(
     }
 
     override suspend fun loginUser(email: String, password: String): NetworkResult<Any, NetworkError> {
+        return safeCall {
+            publicHttpClient.post(urlString = constructUrl("auth/login")) {
+                headers {
+                    append(HttpHeaders.AuthenticationInfo, "Bearer")
+                }
+                setBody(
+                    mapOf(
+                        "email" to email,
+                        "password" to password
+                    )
+                )
+            }
+        }
+
         Log.d("SeravianDS", "Logging In")
         return NetworkResult.Success(Unit)
     }

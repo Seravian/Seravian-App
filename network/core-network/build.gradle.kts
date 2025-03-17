@@ -52,7 +52,6 @@ android {
 
 dependencies {
     val ktor = "3.0.3"
-    val supabase = "3.1.1"
     val koin = "4.0.0"
 
     implementation(libs.androidx.core.ktx)
@@ -64,13 +63,8 @@ dependencies {
     implementation("io.ktor:ktor-client-okhttp:$ktor")
     implementation("io.ktor:ktor-client-content-negotiation:$ktor")
     implementation("io.ktor:ktor-client-logging:$ktor")
-
-    implementation(platform("io.github.jan-tennert.supabase:bom:$supabase"))
-    implementation("io.github.jan-tennert.supabase:postgrest-kt")
-    implementation("io.github.jan-tennert.supabase:auth-kt")
-    implementation("io.github.jan-tennert.supabase:realtime-kt")
-    implementation("io.github.jan-tennert.supabase:storage-kt")
-    implementation("io.github.jan-tennert.supabase:coil3-integration")
+    implementation("io.ktor:ktor-client-auth:$ktor")
+    implementation("io.ktor:ktor-client-resources:$ktor")
 
     implementation(platform("io.insert-koin:koin-bom:$koin"))
     implementation("io.insert-koin:koin-androidx-compose")

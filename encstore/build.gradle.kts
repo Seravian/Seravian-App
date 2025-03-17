@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.seravian.feat_network"
+    namespace = "com.greenvenom.encstore"
     compileSdk = 35
 
     defaultConfig {
@@ -17,7 +17,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -35,27 +35,7 @@ android {
 
 dependencies {
 
-    implementation(project(":network:core-network"))
-    implementation(project(":encstore"))
-    implementation(project(":auth:core-auth"))
-    implementation(project(":home:core-home"))
-    implementation(project(":onboarding:core-onboarding"))
-
-    val ktor = "3.0.3"
-
-    implementation("io.ktor:ktor-client-cio:$ktor")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor")
-    implementation("io.ktor:ktor-client-core:$ktor")
-    implementation("io.ktor:ktor-client-okhttp:$ktor")
-    implementation("io.ktor:ktor-client-content-negotiation:$ktor")
-    implementation("io.ktor:ktor-client-logging:$ktor")
-    implementation("io.ktor:ktor-client-auth:$ktor")
-    implementation("io.ktor:ktor-client-resources:$ktor")
-
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
-    implementation("androidx.datastore:datastore-preferences:1.1.3")
-
-    implementation(libs.bundles.dependency.injection)
 
     implementation(libs.androidx.core.ktx)
     testImplementation(libs.junit)
