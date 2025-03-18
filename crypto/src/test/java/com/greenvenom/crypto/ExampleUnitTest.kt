@@ -1,4 +1,4 @@
-package com.greenvenom.encstore
+package com.greenvenom.crypto
 
 import org.junit.Test
 

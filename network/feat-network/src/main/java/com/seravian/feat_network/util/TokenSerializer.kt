@@ -2,7 +2,7 @@ package com.seravian.feat_network.util
 
 import androidx.datastore.core.Serializer
 import com.greenvenom.core_network.data.TokenInfo
-import com.greenvenom.encstore.EncStore
+import com.greenvenom.crypto.Crypto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
@@ -21,7 +21,7 @@ object TokenSerializer : Serializer<TokenInfo> {
             input.use { it.readBytes() }
         }
         val encryptedBytesDecoded = Base64.getDecoder().decode(encryptedBytes)
-        val decryptedBytes = EncStore.decrypt(
+        val decryptedBytes = Crypto.decrypt(
             keyAlias = KEY_ALIAS,
             bytes = encryptedBytesDecoded
         )
@@ -32,7 +32,7 @@ object TokenSerializer : Serializer<TokenInfo> {
     override suspend fun writeTo(t: TokenInfo, output: OutputStream) {
         val json = Json.encodeToString(t)
         val bytes = json.toByteArray()
-        val encryptedBytes = EncStore.encrypt(
+        val encryptedBytes = Crypto.encrypt(
             keyAlias = KEY_ALIAS,
             bytes = bytes
         )

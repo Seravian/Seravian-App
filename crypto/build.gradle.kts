@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.greenvenom.encstore"
+    namespace = "com.greenvenom.crypto"
     compileSdk = 35
 
     defaultConfig {
