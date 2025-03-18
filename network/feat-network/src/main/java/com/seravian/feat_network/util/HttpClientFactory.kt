@@ -1,6 +1,7 @@
 package com.seravian.feat_network.util
 
 import com.greenvenom.core_network.api.utils.applyBaseConfig
+import com.greenvenom.core_network.data.onSuccess
 import com.greenvenom.core_network.domain.TokenRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
@@ -31,10 +32,14 @@ object HttpClientFactory {
                     }
 
                     refreshTokens {
+                        var bearerTokens = BearerTokens("", "")
                         val tokenInfo = tokenRepository.getStoredToken()
                         tokenInfo?.let { info ->
                             val newToken = tokenRepository.refreshToken(info.refreshToken)
-                            BearerTokens(newToken.accessToken, newToken.refreshToken)
+                            newToken.onSuccess { token ->
+                                bearerTokens = BearerTokens(token.accessToken, token.refreshToken)
+                            }
+                            bearerTokens
                         } ?: throw Exception()
                     }
                 }
