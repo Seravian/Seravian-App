@@ -22,7 +22,7 @@ class SeravianDataSource(
         password: String
     ): NetworkResult<Any, NetworkError> {
 //        return safeCall<Unit> {
-//            httpClient.post(urlString = constructUrl("auth/register")) {
+//            publicHttpClient.post(urlString = constructUrl("auth/register")) {
 //                setBody(
 //                    mapOf(
 //                        "username" to username,
@@ -38,19 +38,19 @@ class SeravianDataSource(
     }
 
     override suspend fun loginUser(email: String, password: String): NetworkResult<Any, NetworkError> {
-        return safeCall {
-            publicHttpClient.post(urlString = constructUrl("auth/login")) {
-                headers {
-                    append(HttpHeaders.AuthenticationInfo, "Bearer")
-                }
-                setBody(
-                    mapOf(
-                        "email" to email,
-                        "password" to password
-                    )
-                )
-            }
-        }
+//        return safeCall {
+//            publicHttpClient.post(urlString = constructUrl("auth/login")) {
+//                headers {
+//                    append(HttpHeaders.AuthenticationInfo, "Bearer")
+//                }
+//                setBody(
+//                    mapOf(
+//                        "email" to email,
+//                        "password" to password
+//                    )
+//                )
+//            }
+//        }
 
         Log.d("SeravianDS", "Logging In")
         return NetworkResult.Success(Unit)
