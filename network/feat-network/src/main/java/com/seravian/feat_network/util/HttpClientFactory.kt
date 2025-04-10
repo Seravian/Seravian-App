@@ -8,7 +8,6 @@ import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
-import org.koin.mp.KoinPlatform.getKoin
 
 object HttpClientFactory {
     fun publicClient(engine: HttpClientEngine): HttpClient {
@@ -16,24 +15,25 @@ object HttpClientFactory {
             applyBaseConfig()
         }
     }
-    fun authorizedClient(engine: HttpClientEngine, tokenRepoProvider: () -> TokenRepository): HttpClient {
+
+    fun authorizedClient(engine: HttpClientEngine, tokenRepo: () -> TokenRepository): HttpClient {
         return HttpClient(engine) {
             applyBaseConfig()
 
             install(Auth) {
                 bearer {
                     loadTokens {
-                        val tokenInfo = tokenRepoProvider().getStoredToken()
+                        val tokenInfo = tokenRepo().getStoredToken()
                         tokenInfo?.let {
                             BearerTokens(it.accessToken, it.refreshToken)
                         }
                     }
 
                     refreshTokens {
-                        val tokenInfo = tokenRepoProvider().getStoredToken()
+                        val tokenInfo = tokenRepo().getStoredToken()
                         var bearerTokens = BearerTokens("", "")
                         tokenInfo?.let { info ->
-                            val newToken = tokenRepoProvider().refreshToken(info.refreshToken)
+                            val newToken = tokenRepo().refreshToken(info.refreshToken)
                             newToken.onSuccess {
                                 bearerTokens = BearerTokens(it.accessToken, it.refreshToken)
                             }
@@ -44,34 +44,4 @@ object HttpClientFactory {
             }
         }
     }
-
-//    fun authorizedClient(engine: HttpClientEngine): HttpClient {
-//        val tokenRepository = getKoin().get<TokenRepository>()
-//        return HttpClient(engine) {
-//            applyBaseConfig()
-//
-//            install(Auth) {
-//                bearer {
-//                    loadTokens {
-//                        val tokenInfo = tokenRepository.getStoredToken()
-//                        tokenInfo?.let { info ->
-//                            BearerTokens(info.accessToken, info.refreshToken)
-//                        }
-//                    }
-//
-//                    refreshTokens {
-//                        var bearerTokens = BearerTokens("", "")
-//                        val tokenInfo = tokenRepository.getStoredToken()
-//                        tokenInfo?.let { info ->
-//                            val newToken = tokenRepository.refreshToken(info.refreshToken)
-//                            newToken.onSuccess { token ->
-//                                bearerTokens = BearerTokens(token.accessToken, token.refreshToken)
-//                            }
-//                            bearerTokens
-//                        } ?: throw Exception()
-//                    }
-//                }
-//            }
-//        }
-//    }
 }

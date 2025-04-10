@@ -16,42 +16,7 @@ import io.ktor.client.engine.cio.CIO
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-//
-//val networkFeatureModule = module {
-//    single<AuthRepository> {
-//        AuthRepositoryImpl(remoteDataSource = get())
-//    }
-//
-//    single<OnBoardingRepository> {
-//        OnBoardingRepositoryImpl(remoteDataSource = get())
-//    }
-//
-//    single<RemoteDataSource> {
-//        SeravianDataSource(
-//            publicHttpClient = get(named("publicClient")),
-//            authorizedHttpClient = get(named("authorizedClient"))
-//        )
-//    }
-//
-//    single<TokenRepository> {
-//        TokenRepositoryImpl(
-//            remoteDataSource = get(),
-//            localDataSource = get(named<TokenDataSource>())
-//        )
-//    }
-//
-//    single<LocalDataSource>(named<TokenDataSource>()) {
-//        TokenDataSource(context = androidContext())
-//    }
-//
-//    single<HttpClient>(qualifier = named("publicClient")) {
-//        HttpClientFactory.publicClient(CIO.create())
-//    }
-//
-//    single<HttpClient>(qualifier = named("authorizedClient")) {
-//        HttpClientFactory.authorizedClient(CIO.create())
-//    }
-//}
+
 val networkFeatureModule = module {
 
     single<LocalDataSource>(named<TokenDataSource>()) {
@@ -60,7 +25,7 @@ val networkFeatureModule = module {
 
     single<TokenRepository> {
         TokenRepositoryImpl(
-            remoteDataSource = get(), // make sure this doesn't trigger authorizedClient directly
+            remoteDataSource = get(),
             localDataSource = get(named<TokenDataSource>())
         )
     }
@@ -71,7 +36,7 @@ val networkFeatureModule = module {
 
     single<HttpClient>(qualifier = named("authorizedClient")) {
         HttpClientFactory.authorizedClient(CIO.create()) {
-            get<TokenRepository>() // injected only when needed
+            get<TokenRepository>()
         }
     }
 
