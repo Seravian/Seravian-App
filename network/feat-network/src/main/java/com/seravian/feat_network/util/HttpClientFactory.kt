@@ -16,34 +16,62 @@ object HttpClientFactory {
             applyBaseConfig()
         }
     }
-
-    fun authorizedClient(engine: HttpClientEngine): HttpClient {
-        val tokenRepository = getKoin().get<TokenRepository>()
+    fun authorizedClient(engine: HttpClientEngine, tokenRepoProvider: () -> TokenRepository): HttpClient {
         return HttpClient(engine) {
             applyBaseConfig()
 
             install(Auth) {
                 bearer {
                     loadTokens {
-                        val tokenInfo = tokenRepository.getStoredToken()
-                        tokenInfo?.let { info ->
-                            BearerTokens(info.accessToken, info.refreshToken)
+                        val tokenInfo = tokenRepoProvider().getStoredToken()
+                        tokenInfo?.let {
+                            BearerTokens(it.accessToken, it.refreshToken)
                         }
                     }
 
                     refreshTokens {
+                        val tokenInfo = tokenRepoProvider().getStoredToken()
                         var bearerTokens = BearerTokens("", "")
-                        val tokenInfo = tokenRepository.getStoredToken()
                         tokenInfo?.let { info ->
-                            val newToken = tokenRepository.refreshToken(info.refreshToken)
-                            newToken.onSuccess { token ->
-                                bearerTokens = BearerTokens(token.accessToken, token.refreshToken)
+                            val newToken = tokenRepoProvider().refreshToken(info.refreshToken)
+                            newToken.onSuccess {
+                                bearerTokens = BearerTokens(it.accessToken, it.refreshToken)
                             }
-                            bearerTokens
-                        } ?: throw Exception()
+                        }
+                        bearerTokens
                     }
                 }
             }
         }
     }
+
+//    fun authorizedClient(engine: HttpClientEngine): HttpClient {
+//        val tokenRepository = getKoin().get<TokenRepository>()
+//        return HttpClient(engine) {
+//            applyBaseConfig()
+//
+//            install(Auth) {
+//                bearer {
+//                    loadTokens {
+//                        val tokenInfo = tokenRepository.getStoredToken()
+//                        tokenInfo?.let { info ->
+//                            BearerTokens(info.accessToken, info.refreshToken)
+//                        }
+//                    }
+//
+//                    refreshTokens {
+//                        var bearerTokens = BearerTokens("", "")
+//                        val tokenInfo = tokenRepository.getStoredToken()
+//                        tokenInfo?.let { info ->
+//                            val newToken = tokenRepository.refreshToken(info.refreshToken)
+//                            newToken.onSuccess { token ->
+//                                bearerTokens = BearerTokens(token.accessToken, token.refreshToken)
+//                            }
+//                            bearerTokens
+//                        } ?: throw Exception()
+//                    }
+//                }
+//            }
+//        }
+//    }
 }
