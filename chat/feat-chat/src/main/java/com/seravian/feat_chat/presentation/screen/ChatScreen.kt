@@ -1,4 +1,4 @@
-package com.seravian.feat_chat.screen
+package com.seravian.feat_chat.presentation.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -15,8 +15,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.greenvenom.core_ui.presentation.BaseScreen
 import com.seravian.feat_chat.R
-import com.seravian.feat_chat.utils.ChatToolbar
-import com.seravian.feat_chat.viewModel.ChatViewModel
+import com.seravian.feat_chat.presentation.utils.ChatToolbar
+import com.seravian.feat_chat.presentation.viewModel.ChatViewModel
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,20 +32,22 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.greenvenom.core_ui.theme.bluePrimary
 import com.seravian.core_chat.domain.entity.Room
-import com.seravian.feat_chat.utils.ChatInputTextField
-import com.seravian.feat_chat.utils.MessagesLazyColumn
+import com.seravian.feat_chat.presentation.utils.ChatInputTextField
+import com.seravian.feat_chat.presentation.utils.MessagesLazyColumn
 
 
 @Composable
-fun ChatScreen(room: Room, navController: NavController, modifier: Modifier = Modifier) {
+fun ChatScreen(
+    //room: Room ,
+     modifier: Modifier = Modifier) {
     BaseScreen<ChatViewModel> { viewModel ->
-        LaunchedEffect(key1 = room.id) {
-            viewModel.room = room
+        LaunchedEffect(key1 = Unit) {
+//            viewModel.room = room
         }
 
         Scaffold (topBar = {
             ChatToolbar(
-                title = "${room.name}",
+                title = "room.name",
             )
         }) { innerPadding ->
             innerPadding
@@ -96,5 +98,5 @@ fun ChatScreen(room: Room, navController: NavController, modifier: Modifier = Mo
 @Preview
 @Composable
 private fun ChatScreenPreview() {
-    ChatScreen(navController = rememberNavController(), room = Room())
+    ChatScreen()
 }

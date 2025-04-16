@@ -22,6 +22,7 @@ import com.seravian.feat_navigation.routes.Screen
 import com.seravian.feat_navigation.routes.SubGraph
 import com.seravian.feat_home.presentation.HomeScreen
 import com.greenvenom.feat_onboarding.presentation.screens.OnBoardingScreen
+import com.seravian.feat_chat.presentation.screen.ChatScreen
 import org.koin.compose.koinInject
 
 @Composable
@@ -137,7 +138,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
                 HomeScreen()
             }
             composable<Screen.AIChat> {
-                Text(text = "AI Chat")
+               ChatScreen()
             }
             composable<Screen.Sessions> {
                 Text(text = "Sessions")

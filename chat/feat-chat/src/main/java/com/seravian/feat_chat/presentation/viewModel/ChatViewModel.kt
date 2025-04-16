@@ -1,4 +1,4 @@
-package com.seravian.feat_chat.viewModel
+package com.seravian.feat_chat.presentation.viewModel
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf

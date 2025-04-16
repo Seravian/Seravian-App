@@ -1,4 +1,4 @@
-package com.seravian.feat_chat.utils
+package com.seravian.feat_chat.presentation.utils
 
 
 

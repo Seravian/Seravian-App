@@ -1,4 +1,4 @@
-package com.seravian.feat_chat.ui.theme
+package com.seravian.feat_chat.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

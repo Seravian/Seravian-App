@@ -1,4 +1,4 @@
-package com.seravian.feat_chat.utils
+package com.seravian.feat_chat.presentation.utils
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,9 +21,9 @@ import androidx.compose.ui.unit.dp
 import com.greenvenom.core_ui.presentation.BaseScreen
 import com.greenvenom.core_ui.theme.bluePrimary
 import com.seravian.core_chat.domain.entity.Message
-import com.seravian.feat_chat.DataUtils
-import com.seravian.feat_chat.ui.theme.gray
-import com.seravian.feat_chat.viewModel.ChatViewModel
+import com.seravian.feat_chat.presentation.DataUtils
+import com.seravian.feat_chat.presentation.ui.theme.gray
+import com.seravian.feat_chat.presentation.viewModel.ChatViewModel
 
 
 @Composable
