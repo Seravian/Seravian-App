@@ -6,4 +6,5 @@
     <string name="light_mode">الوضع المضيء</string>
     <string name="arabic">العربية</string>
     <string name="english">الإنجليزية</string>
+    <string name="back_button">الرجوع للخلف</string>
 </resources>

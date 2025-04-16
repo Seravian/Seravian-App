@@ -24,12 +24,12 @@ fun FloatingButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    AnimatedVisibility(
-        visible = isVisible,
-        enter = fadeIn(),
-        exit = fadeOut(),
-        content = {
-            Box(modifier = modifier) {
+    Box(modifier = modifier) {
+        AnimatedVisibility(
+            visible = isVisible,
+            enter = fadeIn(),
+            exit = fadeOut(),
+            content = {
                 FloatingActionButton(
                     onClick = { onClick() },
                     content = {
@@ -42,8 +42,8 @@ fun FloatingButton(
                     modifier = Modifier.fillMaxSize()
                 )
             }
-        }
-    )
+        )
+    }
 }
 
 @PreviewLightDark

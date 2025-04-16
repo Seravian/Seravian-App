@@ -1,49 +1,51 @@
-package com.seravian.feat_chat.presentation.utils
+package com.seravian.feat_chat.presentation.components
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.seravian.feat_chat.R
-import com.seravian.feat_chat.presentation.ui.theme.gray
-
 
 @Composable
-fun ChatInputTextField(state: MutableState<String>,modifier: Modifier = Modifier) {
+fun ChatInputTextField(
+    input: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     OutlinedTextField(
-        value = state.value,
-        onValueChange = {
-            state.value = it
-        },
+        value = input,
+        onValueChange = onValueChange,
         colors = TextFieldDefaults.colors(
             focusedContainerColor = Color.Transparent,
             unfocusedContainerColor = Color.Transparent,
-            unfocusedIndicatorColor = gray,
-            focusedIndicatorColor = gray
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            focusedIndicatorColor = MaterialTheme.colorScheme.onSurfaceVariant
         ),
         shape = RoundedCornerShape(topEnd = 20.dp),
         placeholder = {
             Text(text = stringResource(R.string.type_a_message))
-        }, modifier = Modifier.padding(10.dp).fillMaxWidth(.65f)
+        },
+        modifier = modifier
     )
 }
 
 @Preview
 @Composable
 private fun ChatInputTextFieldPreview() {
-    val state = remember {
-        mutableStateOf ("")
-    }
-    ChatInputTextField(state)
+    ChatInputTextField(
+        input = "",
+        onValueChange = {}
+    )
 }

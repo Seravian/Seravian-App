@@ -1,6 +1,4 @@
-package com.seravian.feat_chat.presentation.utils
-
-
+package com.seravian.feat_chat.presentation.components
 
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api

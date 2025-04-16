@@ -1,5 +1,6 @@
 package com.greenvenom.core_ui.components
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -29,12 +30,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.greenvenom.core_ui.R
+import com.greenvenom.core_ui.theme.AppTheme
 
 @Composable
 fun LanguageSwitcher(
     isArabic: Boolean = false,
     size: Dp = 150.dp,
-    iconSize: Dp = size / 3,
+    iconSize: Dp = size / 2,
     padding: Dp = 10.dp,
     borderWidth: Dp = 1.dp,
     parentShape: Shape = CircleShape,
@@ -53,7 +55,7 @@ fun LanguageSwitcher(
             .height(size)
             .clip(shape = parentShape)
             .clickable { onClick(if (isArabic) "en" else "ar") }
-            .background(MaterialTheme.colorScheme.secondaryContainer)
+            .background(MaterialTheme.colorScheme.surface)
     ) {
         Box(
             modifier = Modifier
@@ -61,15 +63,14 @@ fun LanguageSwitcher(
                 .offset(x = offset)
                 .padding(all = padding)
                 .clip(shape = toggleShape)
-                .background(MaterialTheme.colorScheme.primary)
+                .background(MaterialTheme.colorScheme.primaryContainer)
         )
-
         Row(
             modifier = Modifier
                 .border(
                     border = BorderStroke(
                         width = borderWidth,
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.outline
                     ),
                     shape = parentShape
                 )
@@ -83,9 +84,9 @@ fun LanguageSwitcher(
                     painter = painterResource(R.drawable.english_ic),
                     contentDescription = stringResource(R.string.english),
                     tint = if (isArabic) {
-                        MaterialTheme.colorScheme.primary
+                        MaterialTheme.colorScheme.secondary
                     } else {
-                        MaterialTheme.colorScheme.secondaryContainer
+                        MaterialTheme.colorScheme.onPrimaryContainer
                     }
                 )
             }
@@ -99,9 +100,9 @@ fun LanguageSwitcher(
                     painter = painterResource(R.drawable.arabic_ic),
                     contentDescription = stringResource(R.string.arabic),
                     tint = if (isArabic) {
-                        MaterialTheme.colorScheme.secondaryContainer
+                        MaterialTheme.colorScheme.onPrimaryContainer
                     } else {
-                        MaterialTheme.colorScheme.primary
+                        MaterialTheme.colorScheme.secondary
                     }
                 )
             }
@@ -109,11 +110,46 @@ fun LanguageSwitcher(
     }
 }
 
+@Preview(uiMode = UI_MODE_NIGHT_YES)
+@Composable
+private fun LanguageSwitcherENDarkPreview() {
+    AppTheme {
+        LanguageSwitcher(
+            isArabic = false,
+            onClick = {}
+        )
+    }
+}
+
+@Preview(uiMode = UI_MODE_NIGHT_YES)
+@Composable
+private fun LanguageSwitcherARDarkPreview() {
+    AppTheme {
+        LanguageSwitcher(
+            isArabic = true,
+            onClick = {}
+        )
+    }
+}
+
 @Preview
 @Composable
-private fun LanguageSwitcherPreview() {
-    LanguageSwitcher(
-        isArabic = true,
-        onClick = {}
-    )
+private fun LanguageSwitcherENLightPreview() {
+    AppTheme {
+        LanguageSwitcher(
+            isArabic = false,
+            onClick = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun LanguageSwitcherARLightPreview() {
+    AppTheme {
+        LanguageSwitcher(
+            isArabic = true,
+            onClick = {}
+        )
+    }
 }

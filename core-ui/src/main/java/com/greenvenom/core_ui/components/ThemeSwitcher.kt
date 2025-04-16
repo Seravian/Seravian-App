@@ -1,5 +1,6 @@
 package com.greenvenom.core_ui.components
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -30,12 +31,13 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.greenvenom.core_ui.R
+import com.greenvenom.core_ui.theme.AppTheme
 
 @Composable
 fun ThemeSwitcher(
     darkTheme: Boolean = false,
     size: Dp = 150.dp,
-    iconSize: Dp = size / 3,
+    iconSize: Dp = size / 2,
     padding: Dp = 10.dp,
     borderWidth: Dp = 1.dp,
     parentShape: Shape = CircleShape,
@@ -53,7 +55,7 @@ fun ThemeSwitcher(
         .height(size)
         .clip(shape = parentShape)
         .clickable { onClick() }
-        .background(MaterialTheme.colorScheme.secondaryContainer)
+        .background(MaterialTheme.colorScheme.surface)
     ) {
         Box(
             modifier = Modifier
@@ -61,14 +63,14 @@ fun ThemeSwitcher(
                 .offset(x = offset)
                 .padding(all = padding)
                 .clip(shape = toggleShape)
-                .background(MaterialTheme.colorScheme.primary)
-        ) {}
+                .background(MaterialTheme.colorScheme.primaryContainer)
+        )
         Row(
             modifier = Modifier
                 .border(
                     border = BorderStroke(
                         width = borderWidth,
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.outline
                     ),
                     shape = parentShape
                 )
@@ -81,8 +83,8 @@ fun ThemeSwitcher(
                     modifier = Modifier.size(iconSize),
                     painter = painterResource(R.drawable.dark_mode_ic),
                     contentDescription = stringResource(R.string.dark_mode),
-                    tint = if (darkTheme) MaterialTheme.colorScheme.secondaryContainer
-                    else MaterialTheme.colorScheme.primary
+                    tint = if (darkTheme) MaterialTheme.colorScheme.onPrimaryContainer
+                    else MaterialTheme.colorScheme.secondary
                 )
             }
             Box(
@@ -93,19 +95,32 @@ fun ThemeSwitcher(
                     modifier = Modifier.size(iconSize),
                     painter = painterResource(R.drawable.light_mode_ic),
                     contentDescription = stringResource(R.string.light_mode),
-                    tint = if (darkTheme) MaterialTheme.colorScheme.primary
-                    else MaterialTheme.colorScheme.secondaryContainer
+                    tint = if (darkTheme) MaterialTheme.colorScheme.secondary
+                    else MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
         }
     }
 }
 
-@PreviewLightDark
+@Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
-private fun ThemSwitcherPreview() {
-    ThemeSwitcher(
-        darkTheme = false,
-        onClick = {}
-    )
+private fun ThemeSwitcherDarkPreview() {
+    AppTheme {
+        ThemeSwitcher(
+            darkTheme = true,
+            onClick = {}
+        )
+    }
+}
+
+@Preview()
+@Composable
+private fun ThemeSwitcherLightPreview() {
+    AppTheme {
+        ThemeSwitcher(
+            darkTheme = false,
+            onClick = {}
+        )
+    }
 }

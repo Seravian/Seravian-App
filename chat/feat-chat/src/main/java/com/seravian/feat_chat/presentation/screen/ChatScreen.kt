@@ -1,95 +1,122 @@
 package com.seravian.feat_chat.presentation.screen
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.navigation.NavController
 import com.greenvenom.core_ui.presentation.BaseScreen
 import com.seravian.feat_chat.R
-import com.seravian.feat_chat.presentation.utils.ChatToolbar
 import com.seravian.feat_chat.presentation.viewModel.ChatViewModel
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.ui.graphics.Color
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
-import com.greenvenom.core_ui.theme.bluePrimary
-import com.seravian.core_chat.domain.entity.Room
-import com.seravian.feat_chat.presentation.utils.ChatInputTextField
-import com.seravian.feat_chat.presentation.utils.MessagesLazyColumn
-
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.greenvenom.core_ui.components.TopAppBar
+import com.greenvenom.core_ui.theme.AppTheme
+import com.seravian.core_chat.domain.models.Message
+import com.seravian.feat_chat.presentation.components.ChatInputTextField
+import com.seravian.feat_chat.presentation.components.ReceivedMessageCard
+import com.seravian.feat_chat.presentation.components.SentMessageCard
+import com.seravian.feat_chat.presentation.models.toMessageUI
+import com.seravian.feat_chat.presentation.viewModel.ChatState
 
 @Composable
 fun ChatScreen(
-    //room: Room ,
-     modifier: Modifier = Modifier) {
+    modifier: Modifier = Modifier
+) {
+    val userId = "suid3"
+
     BaseScreen<ChatViewModel> { viewModel ->
-        LaunchedEffect(key1 = Unit) {
-//            viewModel.room = room
-        }
+        val chatState by viewModel.chatState.collectAsStateWithLifecycle()
 
-        Scaffold (topBar = {
-            ChatToolbar(
-                title = "room.name",
+        ChatScreenContent(
+            chatState = chatState,
+            userId = userId,
+            modifier = modifier
+        )
+    }
+}
+
+@Composable
+private fun ChatScreenContent(
+    chatState: ChatState,
+    userId: String,
+    modifier: Modifier = Modifier
+) {
+    Scaffold (
+        topBar = {
+            TopAppBar(
+                isVisible = true,
+                isActionEnabled = false,
+                isSideDestination = false,
             )
-        }) { innerPadding ->
-            innerPadding
-            Column(
-                modifier = modifier
-                    .padding(innerPadding)
-                    .fillMaxSize()
-                    , verticalArrangement = Arrangement.Bottom
+        },
+        bottomBar = {
+            ElevatedCard(
+                modifier = Modifier.fillMaxWidth(),
             ) {
-
-                Card(
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .fillMaxWidth(.9f)
-                        .fillMaxHeight(.8f),
-                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                        .fillMaxWidth()
+                        .padding(8.dp)
                 ) {
-                    MessagesLazyColumn()
-
-                }
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    ChatInputTextField(state = viewModel.messageState)
-                    Button(
-                        modifier = Modifier.padding(10.dp),
+                    ChatInputTextField(
+                        input = "",
+                        onValueChange = {},
+                        modifier = Modifier.weight(1f)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    FilledIconButton (
+                        modifier = Modifier.size(48.dp),
                         onClick = {
                             //click to send a message
                         },
-                        shape = RoundedCornerShape(10.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+                        shape = RoundedCornerShape(50),
                     ) {
-                        Text(
-                            text = stringResource(R.string.send),
-                            modifier = Modifier.padding(10.dp)
-                        )
-                        Image(
-                            painter = painterResource(id = R.drawable.send),
+                        Icon(
+                            painter = painterResource(R.drawable.send_ic),
                             contentDescription = stringResource(
                                 R.string.send_message_button_icon
                             )
                         )
                     }
+                }
+            }
+        }
+    ) { innerPadding ->
+        LazyColumn(
+            modifier = Modifier
+                .padding(innerPadding)
+                .padding(8.dp)
+                .fillMaxSize()
+        ) {
+            items(
+                items = chatState.messagesList.map { message -> message.toMessageUI() },
+                key = { message -> message.id }
+            ) { message ->
+                if (userId == message.senderId) {
+                    //sent
+                    SentMessageCard(message = message)
+
+                } else {
+                    //received
+                    ReceivedMessageCard(message = message)
                 }
             }
         }
@@ -99,5 +126,15 @@ fun ChatScreen(
 @Preview
 @Composable
 private fun ChatScreenPreview() {
-    ChatScreen()
+    AppTheme {
+        ChatScreenContent(
+            chatState = ChatState(
+                messagesList = listOf(
+                    Message(id = "uuid1", content = "Hello", senderName = "kareem", dateTime = 2333232),
+                    Message(id = "uuid2", content = "Hello", senderId = "suid3", dateTime = 2333232)
+                )
+            ),
+            userId = "suid3"
+        )
+    }
 }

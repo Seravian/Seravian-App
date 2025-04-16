@@ -1,15 +1,10 @@
 package com.seravian.feat_chat.presentation.viewModel
 
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import com.greenvenom.core_ui.presentation.BaseViewModel
-import com.seravian.core_chat.domain.entity.Message
-import com.seravian.core_chat.domain.entity.Room
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
-class ChatViewModel () : BaseViewModel() {
-
-    val messageState = mutableStateOf("")
-    val messagesListState = mutableStateListOf<Message>()
-    var room: Room? = null
-
+class ChatViewModel(): BaseViewModel() {
+    private val _chatState: MutableStateFlow<ChatState> = MutableStateFlow(ChatState())
+    val chatState = _chatState.asStateFlow()
 }
