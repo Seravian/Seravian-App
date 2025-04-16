@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name ="type_a_message">Type a message…</string>
+    <string name="send_message_button_icon">send message icon</string>
+    <string name="send">Send</string>
+</resources>
