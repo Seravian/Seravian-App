@@ -23,6 +23,9 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -59,6 +62,8 @@ private fun ChatScreenContent(
     userId: String,
     modifier: Modifier = Modifier
 ) {
+    var input by rememberSaveable { mutableStateOf("") }
+
     Scaffold (
         topBar = {
             TopAppBar(
@@ -84,8 +89,8 @@ private fun ChatScreenContent(
                         .padding(8.dp)
                 ) {
                     ChatInputTextField(
-                        input = "",
-                        onValueChange = {},
+                        input = input,
+                        onValueChange = { input = it },
                         modifier = Modifier.weight(1f)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
