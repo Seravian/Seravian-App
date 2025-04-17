@@ -11,7 +11,7 @@ data class Message(
     val content: String = "",
     val dateTime: Long = 0
 ) {
-    fun formatDateTime(): String{
+    fun formatDateTime(): String {
         val date = Date(dateTime)
         val simpleDateFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
         return simpleDateFormat.format(date)

@@ -142,7 +142,8 @@ private fun ChatScreenPreview() {
         ChatScreenContent(
             chatState = ChatState(
                 messagesList = listOf(
-                    Message(id = "uuid1", content = "Hello", senderName = "kareem", dateTime = 2333232),
+                    Message(id = "uuid1", content = "Hello", senderName = "hossam", dateTime = 2333232),
+                    Message(id = "uuid3", content = "Hello", senderName = "hossam", dateTime = 2333232),
                     Message(id = "uuid2", content = "Hello", senderId = "suid3", dateTime = 2333232)
                 )
             ),
