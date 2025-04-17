@@ -1,59 +1,76 @@
 package com.seravian.feat_chat.presentation.components
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.seravian.feat_chat.presentation.models.MessageUI
+import com.seravian.feat_chat.R
 
 @Composable
 fun ReceivedMessageCard(
     message: MessageUI,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .padding(4.dp))
-    {
-        Text(text = message.senderName, modifier = Modifier.padding(start = 8.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start
+    Row (
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    ) {
+        Card(
+            shape = MaterialTheme.shapes.extraLarge,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.secondary
+            ),
+            modifier = Modifier.align(Alignment.Bottom)
         ) {
-            Text(
-                text = message.content, modifier = Modifier
-                    .padding(4.dp)
-                    .background(
-                        MaterialTheme.colorScheme.surfaceVariant,
-                        RoundedCornerShape(bottomEnd = 24.dp, topEnd = 24.dp, topStart = 24.dp)
-                    )
-                    .padding(8.dp)
-                    .padding(end = 8.dp)
-            )
-            Spacer(modifier = Modifier.width(10.dp))
-            Text(
-                text = message.dateTime,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.align(Alignment.Bottom)
+            Icon(
+                painter = painterResource(R.drawable.chatbot_ic),
+                contentDescription = stringResource(R.string.chatbot_ic),
+                modifier = Modifier
+                    .padding(6.dp)
+                    .size(24.dp)
             )
         }
+        Spacer(modifier = Modifier.size(8.dp))
+        Card(
+            shape = RoundedCornerShape(12.dp, 12.dp, 12.dp, 0.dp),
+            modifier = Modifier
+                .weight(1f, false)
+        ) {
+            Text(
+                text = message.content,
+                modifier = Modifier
+                    .padding(12.dp)
+                    .padding(start = 4.dp)
+            )
+        }
+        Spacer(
+            modifier = Modifier
+                .width(24.dp)
+        )
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showSystemUi = true)
 @Composable
 private fun ReceivedMessageCardPreview() {
-    ReceivedMessageCard(MessageUI(content = "Hello", senderName = "kareem", dateTime = "2333232"))
+    ReceivedMessageCard(MessageUI(content = "jghvchjcvbnbvnbvjmhjmjkhgfkhjgkghkghkjhghghjhghjg,hjkghjkhlhjlhjghkjhl", senderName = "Kareem", dateTime = "02:38 AM"))
 }
