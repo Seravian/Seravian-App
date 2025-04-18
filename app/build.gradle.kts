@@ -57,6 +57,7 @@ dependencies {
     implementation(project(":auth:feat-auth"))
     implementation(project(":onboarding:feat-onboarding"))
     implementation(project(":home:feat-home"))
+    implementation(project(":chat:feat-chat"))
 
     val appcompatVersion = "1.7.0"
 
