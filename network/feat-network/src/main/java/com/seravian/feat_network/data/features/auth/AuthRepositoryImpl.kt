@@ -23,13 +23,6 @@ class AuthRepositoryImpl(
         return remoteDataSource.registerUser(email, password, displayName)
     }
 
-    override suspend fun verifyUserRegistration(
-        email: String,
-        otp: String
-    ): NetworkResult<Any, NetworkError> {
-        return remoteDataSource.verifyOtp(email, otp)
-    }
-
     override suspend fun sendResetPasswordEmail(email: String): NetworkResult<Any, NetworkError> {
         return remoteDataSource.sendResetPasswordEmail(email)
     }
