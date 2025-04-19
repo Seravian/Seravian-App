@@ -5,10 +5,10 @@ import com.greenvenom.core_network.domain.TokenRepository
 import com.greenvenom.core_onboarding.domain.OnBoardingRepository
 import com.seravian.feat_network.data.features.auth.AuthRepositoryImpl
 import com.seravian.feat_network.data.features.onboarding.OnBoardingRepositoryImpl
-import com.seravian.feat_network.data.local.TokenDataSource
+import com.seravian.feat_network.data.local.EncryptedTokenDataSource
 import com.seravian.feat_network.data.local.TokenRepositoryImpl
 import com.seravian.feat_network.data.remote.SeravianDataSource
-import com.seravian.feat_network.domain.local.LocalDataSource
+import com.seravian.feat_network.domain.local.TokenDataSource
 import com.seravian.feat_network.domain.remote.RemoteDataSource
 import com.seravian.feat_network.util.HttpClientFactory
 import io.ktor.client.HttpClient
@@ -19,14 +19,14 @@ import org.koin.dsl.module
 
 val networkFeatureModule = module {
 
-    single<LocalDataSource>(named<TokenDataSource>()) {
-        TokenDataSource(context = androidContext())
+    single<TokenDataSource>(named<EncryptedTokenDataSource>()) {
+        EncryptedTokenDataSource(context = androidContext())
     }
 
     single<TokenRepository> {
         TokenRepositoryImpl(
             remoteDataSource = get(),
-            localDataSource = get(named<TokenDataSource>())
+            tokenDataSource = get(named<EncryptedTokenDataSource>())
         )
     }
 

@@ -3,17 +3,16 @@ package com.seravian.feat_network.data.local
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
 import com.greenvenom.core_network.data.TokenInfo
-import com.greenvenom.core_network.data.onSuccess
 import com.greenvenom.core_network.domain.TokenRepository
-import com.seravian.feat_network.domain.local.LocalDataSource
+import com.seravian.feat_network.domain.local.TokenDataSource
 import com.seravian.feat_network.domain.remote.RemoteDataSource
 
 class TokenRepositoryImpl(
     private val remoteDataSource: RemoteDataSource,
-    private val localDataSource: LocalDataSource
+    private val tokenDataSource: TokenDataSource
 ): TokenRepository {
     override suspend fun getStoredToken(): TokenInfo? {
-        return localDataSource.getStoredToken()
+        return tokenDataSource.getStoredToken()
     }
 
     override suspend fun refreshToken(
@@ -32,10 +31,10 @@ class TokenRepositoryImpl(
     }
 
     override suspend fun saveTokenLocally(tokenInfo: TokenInfo) {
-        localDataSource.saveTokenLocally(tokenInfo)
+        tokenDataSource.saveTokenLocally(tokenInfo)
     }
 
     override suspend fun deleteToken() {
-        localDataSource.deleteToken()
+        tokenDataSource.deleteToken()
     }
 }
