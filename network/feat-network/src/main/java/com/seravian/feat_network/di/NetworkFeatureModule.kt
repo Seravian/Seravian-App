@@ -31,15 +31,17 @@ val networkFeatureModule = module {
     }
 
     single<HttpClient>(qualifier = named("publicClient")) {
-        HttpClientFactory.publicClient(CIO.create())
+        HttpClientFactory.publicClient(
+            engine = CIO.create()
+        )
     }
 
     single<HttpClient>(qualifier = named("authorizedClient")) {
-        HttpClientFactory.authorizedClient(CIO.create()) {
-            get<TokenRepository>()
-        }
+        HttpClientFactory.authorizedClient(
+            engine = CIO.create(),
+            tokenRepo = get<TokenRepository>()
+        )
     }
-
 
     single<RemoteDataSource> {
         SeravianDataSource(

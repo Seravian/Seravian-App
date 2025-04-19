@@ -16,24 +16,24 @@ object HttpClientFactory {
         }
     }
 
-    fun authorizedClient(engine: HttpClientEngine, tokenRepo: () -> TokenRepository): HttpClient {
+    fun authorizedClient(engine: HttpClientEngine, tokenRepo: TokenRepository): HttpClient {
         return HttpClient(engine) {
             applyBaseConfig()
 
             install(Auth) {
                 bearer {
                     loadTokens {
-                        val tokenInfo = tokenRepo().getStoredToken()
+                        val tokenInfo = tokenRepo.getStoredToken()
                         tokenInfo?.let {
                             BearerTokens(it.accessToken, it.refreshToken)
                         }
                     }
 
                     refreshTokens {
-                        val tokenInfo = tokenRepo().getStoredToken()
+                        val tokenInfo = tokenRepo.getStoredToken()
                         var bearerTokens = BearerTokens("", "")
                         tokenInfo?.let { info ->
-                            val newToken = tokenRepo().refreshToken(info.refreshToken)
+                            val newToken = tokenRepo.refreshToken(info.refreshToken)
                             newToken.onSuccess {
                                 bearerTokens = BearerTokens(it.accessToken, it.refreshToken)
                             }
