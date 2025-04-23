@@ -1,8 +1,9 @@
 package com.seravian.feat_network.util
 
 import com.greenvenom.core_network.api.utils.applyBaseConfig
+import com.greenvenom.core_network.data.onError
 import com.greenvenom.core_network.data.onSuccess
-import com.greenvenom.core_network.domain.TokenRepository
+import com.seravian.feat_network.domain.TokensRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.auth.Auth
@@ -16,28 +17,32 @@ object HttpClientFactory {
         }
     }
 
-    fun authorizedClient(engine: HttpClientEngine, tokenRepo: TokenRepository): HttpClient {
+    fun authorizedClient(engine: HttpClientEngine, tokensRepo: TokensRepository): HttpClient {
         return HttpClient(engine) {
             applyBaseConfig()
 
             install(Auth) {
                 bearer {
                     loadTokens {
-                        val tokenInfo = tokenRepo.getStoredToken()
-                        tokenInfo?.let {
-                            BearerTokens(it.accessToken, it.refreshToken)
+                        val tokenInfo = tokensRepo.getStoredTokens()
+                        tokenInfo?.let { info ->
+                            BearerTokens(info.accessToken, info.refreshToken)
                         }
                     }
 
                     refreshTokens {
-                        val tokenInfo = tokenRepo.getStoredToken()
-                        var bearerTokens = BearerTokens("", "")
-                        tokenInfo?.let { info ->
-                            val newToken = tokenRepo.refreshToken(info.refreshToken)
-                            newToken.onSuccess {
+                        val tokensInfo = tokensRepo.getStoredTokens() ?: return@refreshTokens null
+                        val refreshToken = tokensInfo.refreshToken ?: return@refreshTokens null
+
+                        val newTokensResult = tokensRepo.refreshToken(refreshToken)
+                        var bearerTokens: BearerTokens? = null
+                        newTokensResult
+                            .onSuccess {
+                                tokensRepo.saveTokensLocally(it)
                                 bearerTokens = BearerTokens(it.accessToken, it.refreshToken)
                             }
-                        }
+                            .onError { bearerTokens = null }
+
                         bearerTokens
                     }
                 }

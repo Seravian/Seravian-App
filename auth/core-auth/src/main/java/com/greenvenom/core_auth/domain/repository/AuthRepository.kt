@@ -1,15 +1,23 @@
 package com.greenvenom.core_auth.domain.repository
 
+import com.greenvenom.core_auth.data.dto.request.ResetPasswordRequest
+import com.greenvenom.core_auth.data.dto.request.LoginRequest
+import com.greenvenom.core_auth.data.dto.request.NewPasswordRequest
+import com.greenvenom.core_auth.data.dto.request.OTPRequest
+import com.greenvenom.core_auth.data.dto.request.RegisterRequest
+import com.greenvenom.core_auth.data.dto.response.LoginResponse
+import com.greenvenom.core_auth.data.dto.response.RegisterResponse
+import com.greenvenom.core_network.data.EmptyResult
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
 
 interface AuthRepository {
-    suspend fun loginUser(email: String, password: String): NetworkResult<Any, NetworkError>
+    suspend fun loginUser(loginRequest: LoginRequest): NetworkResult<LoginResponse, NetworkError>
 
-    suspend fun registerUser(email: String, password: String, displayName: String): NetworkResult<Any?, NetworkError>
+    suspend fun registerUser(registerRequest: RegisterRequest): NetworkResult<RegisterResponse, NetworkError>
 
-    suspend fun sendResetPasswordEmail(email: String): NetworkResult<Any, NetworkError>
-    suspend fun updatePassword(newPassword: String): NetworkResult<Any, NetworkError>
+    suspend fun sendResetPasswordEmail(resetPasswordRequest: ResetPasswordRequest): NetworkResult<Any, NetworkError>
+    suspend fun updatePassword(newPasswordRequest: NewPasswordRequest): NetworkResult<Any, NetworkError>
 
-    suspend fun verifyOtp(email: String, otp: String): NetworkResult<Any, NetworkError>
+    suspend fun verifyOtp(otpRequest: OTPRequest): EmptyResult<NetworkError>
 }

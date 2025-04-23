@@ -1,6 +1,7 @@
 package com.greenvenom.feat_auth.presentation.register
 
 import androidx.lifecycle.viewModelScope
+import com.greenvenom.core_auth.data.dto.request.RegisterRequest
 import com.greenvenom.core_auth.data.repository.EmailStateRepository
 import com.greenvenom.core_auth.domain.repository.AuthRepository
 import com.greenvenom.core_network.data.onSuccess
@@ -20,11 +21,6 @@ class RegisterViewModel(
 
     fun registerAction(action: RegisterAction) {
         when(action) {
-            is RegisterAction.ValidateUsername -> {
-                _registerState.value = _registerState.value.copy(
-                    usernameValidity = ValidateInput.validateUsername(action.username)
-                )
-            }
             is RegisterAction.ValidateEmail -> {
                 _registerState.value = _registerState.value.copy(
                     emailValidity = ValidateInput.validateEmail(action.email)
@@ -44,7 +40,6 @@ class RegisterViewModel(
                 )
             }
             is RegisterAction.Register -> registerUser(
-                username = action.username,
                 email = action.email,
                 password = action.password,
             )
@@ -54,14 +49,18 @@ class RegisterViewModel(
     }
 
     private fun registerUser(
-        username: String,
         email: String,
         password: String,
     ) {
         viewModelScope.launch {
-            val result = authRepository.registerUser(username, email, password)
+            val result = authRepository.registerUser(
+                RegisterRequest(
+                    email = email,
+                    password = password
+                )
+            )
             _registerState.update { it.copy(registrationNetworkResult = result) }
-            result.onSuccess { emailStateRepository.updateEmail(email) }
+            result.onSuccess { emailStateRepository.updateEmail(it.email) }
         }
     }
 

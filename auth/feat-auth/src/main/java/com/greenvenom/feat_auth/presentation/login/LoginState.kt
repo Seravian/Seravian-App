@@ -1,6 +1,7 @@
 package com.greenvenom.feat_auth.presentation.login
 
 import androidx.compose.runtime.Immutable
+import com.greenvenom.core_auth.data.dto.response.LoginResponse
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
 import com.greenvenom.validation.domain.ValidationError
@@ -10,5 +11,5 @@ import com.greenvenom.validation.domain.ValidationResult
 data class LoginState(
     val emailValidity: ValidationResult<Unit, ValidationError>? = null,
     val passwordValidity: ValidationResult<Unit, ValidationError>? = null,
-    val loginNetworkResult: NetworkResult<Any, NetworkError>? = null,
+    val loginNetworkResult: NetworkResult<LoginResponse, NetworkError>? = null,
 )

@@ -36,7 +36,6 @@ fun CustomButton(
         colors = colors,
         modifier = modifier
             .fillMaxWidth()
-            .padding(8.dp)
     ) {
         Text(
             text = text,

@@ -1,6 +1,7 @@
 package com.greenvenom.feat_auth.presentation.otp
 
 import androidx.lifecycle.viewModelScope
+import com.greenvenom.core_auth.data.dto.request.OTPRequest
 import com.greenvenom.core_auth.data.repository.EmailStateRepository
 import com.greenvenom.core_auth.domain.repository.AuthRepository
 import com.greenvenom.core_ui.presentation.BaseAction
@@ -51,7 +52,12 @@ class OtpViewModel(
     private fun verifyOtp(email: String, otp: String) {
         baseAction(BaseAction.ShowLoading)
         viewModelScope.launch {
-            val result = authRepository.verifyOtp(email, otp)
+            val result = authRepository.verifyOtp(
+                OTPRequest(
+                    email = email,
+                    otp = otp
+                )
+            )
             _otpState.update { it.copy(otpNetworkResult = result) }
         }
     }
@@ -94,7 +100,7 @@ class OtpViewModel(
             return null
         }
 
-        if(currentFocusedIndex == 5) {
+        if(currentFocusedIndex == 7) {
             return currentFocusedIndex
         }
 

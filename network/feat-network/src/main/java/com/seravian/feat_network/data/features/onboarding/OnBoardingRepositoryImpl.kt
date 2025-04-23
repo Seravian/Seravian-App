@@ -3,7 +3,7 @@ package com.seravian.feat_network.data.features.onboarding
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
 import com.greenvenom.core_onboarding.domain.OnBoardingRepository
-import com.seravian.feat_network.domain.remote.RemoteDataSource
+import com.seravian.feat_network.domain.RemoteDataSource
 
 class OnBoardingRepositoryImpl(
     private val remoteDataSource: RemoteDataSource

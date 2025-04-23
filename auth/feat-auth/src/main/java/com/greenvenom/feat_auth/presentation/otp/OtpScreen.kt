@@ -41,7 +41,7 @@ fun OtpScreen(
     BaseScreen<OtpViewModel> { viewModel ->
         val otpState by viewModel.otpState.collectAsStateWithLifecycle()
         val focusRequesters = remember {
-            List(6) { FocusRequester() }
+            List(8) { FocusRequester() }
         }
         val focusManager = LocalFocusManager.current
         val keyboardManager = LocalSoftwareKeyboardController.current
@@ -130,11 +130,11 @@ private fun OtpContent(
         )
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+            horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
             modifier = Modifier
                 .fillMaxHeight(0.7f)
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(8.dp)
         ) {
             state.code.forEachIndexed { index, number ->
                 OtpInputField(
@@ -168,7 +168,7 @@ private fun OtpScreenPreview() {
             state = OtpState(),
             otpActions = {},
             baseActions = {},
-            focusRequesters = List(6) { FocusRequester() },
+            focusRequesters = List(8) { FocusRequester() },
             navigateToNewPasswordScreen = {},
             navigateBack = {}
         )
