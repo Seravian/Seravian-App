@@ -7,6 +7,7 @@ sealed interface LoginAction {
         val email: String,
         val password: String,
     ): LoginAction
+    data class StoreReceivedEmail(val email: String): LoginAction
     data object ResetState: LoginAction
     data object ResetNetworkResult: LoginAction
 }

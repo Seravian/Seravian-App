@@ -11,7 +11,7 @@ import org.koin.dsl.module
 val authFeatureModule = module {
     single { EmailStateRepository() }
 
-    viewModel { LoginViewModel(authRepository = get()) }
+    viewModel { LoginViewModel(authRepository = get(), emailStateRepository = get()) }
     viewModel { RegisterViewModel(emailStateRepository = get(), authRepository = get()) }
     viewModel { OtpViewModel(emailStateRepository = get(), authRepository = get() ) }
     viewModel { ResetPasswordViewModel(emailStateRepository = get(), authRepository = get()) }

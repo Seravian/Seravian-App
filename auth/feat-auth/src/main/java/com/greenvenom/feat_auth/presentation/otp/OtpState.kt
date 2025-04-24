@@ -7,7 +7,7 @@ import com.greenvenom.core_network.data.NetworkResult
 
 @Immutable
 data class OtpState(
-    val code: List<Int?> = (1..8).map { null },
+    val code: List<String?> = (1..8).map { null },
     val focusedIndex: Int? = null,
     val otpNetworkResult: EmptyResult<NetworkError>? = null
 )

@@ -37,13 +37,18 @@ val networkFeatureModule = module {
 
     single<TokensRepository> {
         TokensRepositoryImpl(
-            tokenDataSource = get(),
-            remoteDataSource = get()
+            localTokenDataSource = get(),
+            publicHttpClient = get(named("publicClient"))
         )
     }
 
     single<AuthRepository> {
-        AuthRepositoryImpl(remoteDataSource = get())
+        AuthRepositoryImpl(
+            remoteDataSource = get(),
+            roomDataSource = get(),
+            localTokenDataSource = get(),
+            emailStateRepository = get()
+        )
     }
 
     single<OnBoardingRepository> {

@@ -1,7 +1,7 @@
 package com.greenvenom.feat_auth.presentation.reset_password
 
 import androidx.lifecycle.viewModelScope
-import com.greenvenom.core_auth.data.dto.request.ResetPasswordRequest
+import com.greenvenom.core_auth.data.dto.request.SendOTPRequest
 import com.greenvenom.core_auth.data.dto.request.NewPasswordRequest
 import com.greenvenom.core_auth.data.repository.EmailStateRepository
 import com.greenvenom.core_auth.domain.repository.AuthRepository
@@ -66,7 +66,7 @@ class ResetPasswordViewModel(
 
     private fun sendPasswordResetEmail(email: String) {
         viewModelScope.launch {
-            val result = authRepository.sendResetPasswordEmail(ResetPasswordRequest(email))
+            val result = authRepository.sendOTP(SendOTPRequest(email))
             _resetPasswordState.update { it.copy(emailSentNetworkResult = result) }
         }
     }

@@ -3,13 +3,13 @@ package com.seravian.feat_local.data
 import android.content.Context
 import androidx.datastore.dataStore
 import com.seravian.core_local.data.TokensInfo
-import com.seravian.core_local.domain.TokenDataSource
+import com.seravian.core_local.domain.LocalTokenDataSource
 import com.seravian.feat_local.utils.TokensSerializer
 import kotlinx.coroutines.flow.firstOrNull
 
 class EncryptedTokenDataSource(
     private val context: Context
-): TokenDataSource {
+): LocalTokenDataSource {
     private val Context.tokenDataStore by dataStore("tokens", TokensSerializer)
 
     override suspend fun getStoredToken(): TokensInfo? {

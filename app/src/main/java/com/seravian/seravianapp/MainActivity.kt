@@ -1,6 +1,7 @@
 package com.seravian.seravianapp
 
 import android.os.Bundle
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.greenvenom.core_navigation.data.NavigationType
 import com.seravian.feat_navigation.components.BottomNavigationBar
 import com.greenvenom.core_navigation.data.repository.NavigationStateRepository
 import com.seravian.feat_navigation.routes.Screen
@@ -26,6 +28,10 @@ class MainActivity : AppCompatActivity() {
         setContent {
             val navigationRepository = koinInject<NavigationStateRepository>()
             val navigationState by navigationRepository.navigationState.collectAsStateWithLifecycle()
+
+            BackHandler {
+                navigationRepository.navigate(NavigationType.Back)
+            }
 
             AppTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {

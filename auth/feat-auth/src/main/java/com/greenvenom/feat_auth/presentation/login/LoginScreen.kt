@@ -1,5 +1,6 @@
 package com.greenvenom.feat_auth.presentation.login
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -45,7 +46,9 @@ import com.greenvenom.validation.util.toString
 fun LoginScreen(
     navigateToRegisterScreen: () -> Unit,
     navigateToEmailVerificationScreen: () -> Unit,
-    navigateToNextScreen:() -> Unit
+    navigateToOnBoarding:() -> Unit,
+    navigateToOTPScreen: () -> Unit,
+    navigateToMainScreen: () -> Unit
 ) {
     BaseScreen<LoginViewModel> { viewModel ->
         val state by viewModel.loginState.collectAsStateWithLifecycle()
@@ -56,7 +59,9 @@ fun LoginScreen(
             baseActions = viewModel::baseAction,
             navigateToRegisterScreen = navigateToRegisterScreen,
             navigateToEmailVerificationScreen = navigateToEmailVerificationScreen,
-            navigateToNextScreen = navigateToNextScreen
+            navigateToOnBoarding = navigateToOnBoarding,
+            navigateToOTPScreen = navigateToOTPScreen,
+            navigateToMainScreen = navigateToMainScreen
         )
     }
 }
@@ -68,7 +73,9 @@ private fun LoginContent(
     baseActions: (BaseAction) -> Unit,
     navigateToRegisterScreen: () -> Unit,
     navigateToEmailVerificationScreen: () -> Unit,
-    navigateToNextScreen: ()-> Unit,
+    navigateToOnBoarding: () -> Unit,
+    navigateToOTPScreen: () -> Unit,
+    navigateToMainScreen: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -77,9 +84,22 @@ private fun LoginContent(
 
     LaunchedEffect(state.loginNetworkResult) {
         baseActions(BaseAction.HideLoading)
-        state.loginNetworkResult?.onSuccess {
-            navigateToNextScreen()
+        state.loginNetworkResult?.onSuccess { response ->
+            if (!response.isEmailVerified) {
+                loginActions(LoginAction.StoreReceivedEmail(response.email))
+                navigateToOTPScreen()
+            }
+            else {
+                if (response.role == null){
+                    navigateToOnBoarding()
+                    Log.d("Login", "Role is null")
+                } else{
+                    navigateToMainScreen()
+                    Log.d("Login", "Role is not null")
+                }
+            }
         }
+
         state.loginNetworkResult?.onError {
             baseActions(
                 BaseAction.ShowErrorMessage(
@@ -180,7 +200,9 @@ private fun LoginContentsPreview() {
             baseActions = { },
             navigateToRegisterScreen = { },
             navigateToEmailVerificationScreen = { },
-            navigateToNextScreen = {  },
+            navigateToOnBoarding = {  },
+            navigateToOTPScreen = { },
+            navigateToMainScreen = { }
         )
     }
 }

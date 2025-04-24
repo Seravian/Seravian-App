@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.seravian.feat_local"
+    namespace = "com.seravian.core_profile"
     compileSdk = 35
 
     defaultConfig {
@@ -37,18 +37,12 @@ android {
 dependencies {
     val room = "2.6.1"
 
-    implementation(project(":local:core-local"))
-    implementation(project(":profile:core-profile"))
-    implementation(project(":crypto"))
-
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
 
     implementation("androidx.room:room-runtime:$room")
     ksp("androidx.room:room-compiler:$room")
     implementation("androidx.room:room-ktx:$room")
     implementation("androidx.room:room-paging:$room")
-
-    implementation("androidx.datastore:datastore-preferences:1.1.3")
 
     implementation(libs.bundles.dependency.injection)
 

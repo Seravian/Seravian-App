@@ -1,37 +1,55 @@
 package com.seravian.feat_network.data.features.auth
 
-import com.greenvenom.core_auth.data.dto.request.ResetPasswordRequest
+import com.greenvenom.core_auth.data.dto.request.SendOTPRequest
 import com.greenvenom.core_auth.data.dto.request.LoginRequest
 import com.greenvenom.core_auth.data.dto.request.NewPasswordRequest
-import com.greenvenom.core_auth.data.dto.request.OTPRequest
+import com.greenvenom.core_auth.data.dto.request.VerifyOTPRequest
 import com.greenvenom.core_auth.data.dto.request.RegisterRequest
 import com.greenvenom.core_auth.data.dto.response.LoginResponse
 import com.greenvenom.core_auth.data.dto.response.RegisterResponse
+import com.greenvenom.core_auth.data.repository.EmailStateRepository
 import com.greenvenom.core_auth.domain.repository.AuthRepository
 import com.greenvenom.core_network.data.EmptyResult
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
+import com.greenvenom.core_network.data.onSuccess
+import com.seravian.core_local.domain.LocalDataSource
+import com.seravian.core_local.domain.LocalTokenDataSource
 import com.seravian.feat_network.domain.RemoteDataSource
+import com.seravian.feat_network.util.extractProfile
+import com.seravian.feat_network.util.extractTokens
 
 class AuthRepositoryImpl(
-    private val remoteDataSource: RemoteDataSource
+    private val remoteDataSource: RemoteDataSource,
+    private val roomDataSource: LocalDataSource,
+    private val localTokenDataSource: LocalTokenDataSource,
+    private val emailStateRepository: EmailStateRepository
 ): AuthRepository {
     override suspend fun loginUser(
         loginRequest: LoginRequest
     ): NetworkResult<LoginResponse, NetworkError> {
-        return remoteDataSource.loginUser(loginRequest)
+        val loginResponse = remoteDataSource.loginUser(loginRequest)
+        return loginResponse.onSuccess { response ->
+            if (response.isEmailVerified) {
+                roomDataSource.insertProfile(response.extractProfile().toProfileEntity())
+                localTokenDataSource.saveTokenLocally(response.extractTokens())
+            }
+        }
     }
 
     override suspend fun registerUser(
         registerRequest: RegisterRequest
     ): NetworkResult<RegisterResponse, NetworkError> {
-        return remoteDataSource.registerUser(registerRequest)
+        val registerResponse = remoteDataSource.registerUser(registerRequest)
+        return registerResponse.onSuccess { response ->
+            emailStateRepository.updateEmail(response.email)
+        }
     }
 
-    override suspend fun sendResetPasswordEmail(
-        resetPasswordRequest: ResetPasswordRequest
-    ): NetworkResult<Any, NetworkError> {
-        return remoteDataSource.sendResetPasswordEmail(resetPasswordRequest)
+    override suspend fun sendOTP(
+        sendOTPRequest: SendOTPRequest
+    ): EmptyResult<NetworkError> {
+        return remoteDataSource.sendOtp(sendOTPRequest)
     }
 
     override suspend fun updatePassword(
@@ -40,9 +58,9 @@ class AuthRepositoryImpl(
         return remoteDataSource.updatePassword(newPasswordRequest)
     }
 
-    override suspend fun verifyOtp(
-        otpRequest: OTPRequest
+    override suspend fun verifyOTP(
+        verifyOtpRequest: VerifyOTPRequest
     ): EmptyResult<NetworkError> {
-        return remoteDataSource.verifyOtp(otpRequest)
+        return remoteDataSource.verifyOtp(verifyOtpRequest)
     }
 }

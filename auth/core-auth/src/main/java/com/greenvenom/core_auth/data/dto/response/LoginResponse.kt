@@ -7,7 +7,7 @@ data class LoginResponse(
     val userId: String,
     val email: String,
     val fullName: String?,
-    val dataOfBirth: String?,
+    val dateOfBirth: String?,
     val gender: Int?,
     val role: Int?,
     val isEmailVerified: Boolean,

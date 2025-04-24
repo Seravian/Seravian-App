@@ -1,7 +1,7 @@
 package com.greenvenom.feat_auth.presentation.otp
 
 import androidx.lifecycle.viewModelScope
-import com.greenvenom.core_auth.data.dto.request.OTPRequest
+import com.greenvenom.core_auth.data.dto.request.VerifyOTPRequest
 import com.greenvenom.core_auth.data.repository.EmailStateRepository
 import com.greenvenom.core_auth.domain.repository.AuthRepository
 import com.greenvenom.core_ui.presentation.BaseAction
@@ -52,17 +52,17 @@ class OtpViewModel(
     private fun verifyOtp(email: String, otp: String) {
         baseAction(BaseAction.ShowLoading)
         viewModelScope.launch {
-            val result = authRepository.verifyOtp(
-                OTPRequest(
+            val result = authRepository.verifyOTP(
+                VerifyOTPRequest(
                     email = email,
-                    otp = otp
+                    otpCode = otp
                 )
             )
             _otpState.update { it.copy(otpNetworkResult = result) }
         }
     }
 
-    private fun enterNumber(number: Int?, index: Int) {
+    private fun enterNumber(number: String?, index: Int) {
         val newCode = _otpState.value.code.mapIndexed { currentIndex, currentNumber ->
             if(currentIndex == index) {
                 number
@@ -93,7 +93,7 @@ class OtpViewModel(
     }
 
     private fun getNextFocusedTextFieldIndex(
-        currentCode: List<Int?>,
+        currentCode: List<String?>,
         currentFocusedIndex: Int?
     ): Int? {
         if(currentFocusedIndex == null) {
@@ -111,7 +111,7 @@ class OtpViewModel(
     }
 
     private fun getFirstEmptyFieldIndexAfterFocusedIndex(
-        code: List<Int?>,
+        code: List<String?>,
         currentFocusedIndex: Int
     ): Int {
         code.forEachIndexed { index, number ->

@@ -35,7 +35,7 @@ import com.greenvenom.core_ui.theme.AppTheme
 
 @Composable
 fun OtpScreen(
-    navigateToNewPasswordScreen: () -> Unit,
+    navigateToNextScreen: () -> Unit,
     navigateBack: () -> Unit
 ) {
     BaseScreen<OtpViewModel> { viewModel ->
@@ -78,7 +78,7 @@ fun OtpScreen(
             },
             baseActions = viewModel::baseAction,
             focusRequesters = focusRequesters,
-            navigateToNewPasswordScreen = navigateToNewPasswordScreen,
+            navigateToNextScreen = navigateToNextScreen,
             navigateBack = navigateBack,
         )
     }
@@ -90,7 +90,7 @@ private fun OtpContent(
     otpActions: (OtpAction) -> Unit,
     baseActions: (BaseAction) -> Unit,
     focusRequesters: List<FocusRequester>,
-    navigateToNewPasswordScreen: () -> Unit,
+    navigateToNextScreen: () -> Unit,
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -99,7 +99,7 @@ private fun OtpContent(
     LaunchedEffect(state.otpNetworkResult) {
         baseActions(BaseAction.HideLoading)
         state.otpNetworkResult?.onSuccess {
-            navigateToNewPasswordScreen()
+            navigateToNextScreen()
         }
         state.otpNetworkResult?.onError {
             baseActions(
@@ -169,7 +169,7 @@ private fun OtpScreenPreview() {
             otpActions = {},
             baseActions = {},
             focusRequesters = List(8) { FocusRequester() },
-            navigateToNewPasswordScreen = {},
+            navigateToNextScreen = {},
             navigateBack = {}
         )
     }
