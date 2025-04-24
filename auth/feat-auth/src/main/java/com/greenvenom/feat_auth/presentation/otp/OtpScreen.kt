@@ -35,13 +35,13 @@ import com.greenvenom.core_ui.theme.AppTheme
 
 @Composable
 fun OtpScreen(
-    navigateToNewPasswordScreen: () -> Unit,
+    navigateToNextScreen: () -> Unit,
     navigateBack: () -> Unit
 ) {
     BaseScreen<OtpViewModel> { viewModel ->
         val otpState by viewModel.otpState.collectAsStateWithLifecycle()
         val focusRequesters = remember {
-            List(6) { FocusRequester() }
+            List(8) { FocusRequester() }
         }
         val focusManager = LocalFocusManager.current
         val keyboardManager = LocalSoftwareKeyboardController.current
@@ -78,7 +78,7 @@ fun OtpScreen(
             },
             baseActions = viewModel::baseAction,
             focusRequesters = focusRequesters,
-            navigateToNewPasswordScreen = navigateToNewPasswordScreen,
+            navigateToNextScreen = navigateToNextScreen,
             navigateBack = navigateBack,
         )
     }
@@ -90,7 +90,7 @@ private fun OtpContent(
     otpActions: (OtpAction) -> Unit,
     baseActions: (BaseAction) -> Unit,
     focusRequesters: List<FocusRequester>,
-    navigateToNewPasswordScreen: () -> Unit,
+    navigateToNextScreen: () -> Unit,
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -99,7 +99,7 @@ private fun OtpContent(
     LaunchedEffect(state.otpNetworkResult) {
         baseActions(BaseAction.HideLoading)
         state.otpNetworkResult?.onSuccess {
-            navigateToNewPasswordScreen()
+            navigateToNextScreen()
         }
         state.otpNetworkResult?.onError {
             baseActions(
@@ -130,11 +130,11 @@ private fun OtpContent(
         )
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+            horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
             modifier = Modifier
                 .fillMaxHeight(0.7f)
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(8.dp)
         ) {
             state.code.forEachIndexed { index, number ->
                 OtpInputField(
@@ -168,8 +168,8 @@ private fun OtpScreenPreview() {
             state = OtpState(),
             otpActions = {},
             baseActions = {},
-            focusRequesters = List(6) { FocusRequester() },
-            navigateToNewPasswordScreen = {},
+            focusRequesters = List(8) { FocusRequester() },
+            navigateToNextScreen = {},
             navigateBack = {}
         )
     }

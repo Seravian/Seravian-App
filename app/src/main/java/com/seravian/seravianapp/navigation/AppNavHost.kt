@@ -62,11 +62,21 @@ fun AppNavHost(modifier: Modifier = Modifier) {
                             NavigationType.Standard(Screen.VerifyEmail)
                         )
                     },
-                    navigateToNextScreen = {
+                    navigateToOnBoarding = {
+                        navigationStateRepository.navigate(
+                            NavigationType.ClearBackStack(SubGraph.OnBoarding)
+                        )
+                    },
+                    navigateToOTPScreen = {
+                        navigationStateRepository.navigate(
+                            NavigationType.Standard(Screen.OTP)
+                        )
+                    },
+                    navigateToMainScreen = {
                         navigationStateRepository.navigate(
                             NavigationType.ClearBackStack(SubGraph.Main)
                         )
-                    },
+                    }
                 )
             }
             composable<Screen.Register> {
@@ -98,11 +108,23 @@ fun AppNavHost(modifier: Modifier = Modifier) {
                     navigateBack = {
                         navigationStateRepository.navigate(NavigationType.Back)
                     },
-                    navigateToNewPasswordScreen = {
-                        if (navigationState.previousDestination is Screen.VerifyEmail) {
-                            navigationStateRepository.navigate(
-                                NavigationType.ClearBackStack(Screen.NewPassword)
-                            )
+                    navigateToNextScreen = {
+                        when (navigationState.previousDestination) {
+                            is Screen.Login -> {
+                                navigationStateRepository.navigate(
+                                    NavigationType.ClearBackStack(Screen.Login)
+                                )
+                            }
+                            is Screen.Register -> {
+                                navigationStateRepository.navigate(
+                                    NavigationType.ClearBackStack(Screen.Login)
+                                )
+                            }
+                            is Screen.VerifyEmail -> {
+                                navigationStateRepository.navigate(
+                                    NavigationType.ClearBackStack(Screen.NewPassword)
+                                )
+                            }
                         }
                     }
                 )

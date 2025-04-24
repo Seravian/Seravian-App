@@ -1,45 +1,32 @@
 package com.seravian.feat_network.di
 
 import com.greenvenom.core_auth.domain.repository.AuthRepository
-import com.greenvenom.core_network.domain.TokenRepository
+import com.seravian.feat_network.domain.TokensRepository
 import com.greenvenom.core_onboarding.domain.OnBoardingRepository
 import com.seravian.feat_network.data.features.auth.AuthRepositoryImpl
 import com.seravian.feat_network.data.features.onboarding.OnBoardingRepositoryImpl
-import com.seravian.feat_network.data.local.TokenDataSource
-import com.seravian.feat_network.data.local.TokenRepositoryImpl
-import com.seravian.feat_network.data.remote.SeravianDataSource
-import com.seravian.feat_network.domain.local.LocalDataSource
-import com.seravian.feat_network.domain.remote.RemoteDataSource
+import com.seravian.feat_network.data.SeravianDataSource
+import com.seravian.feat_network.data.features.tokens.TokensRepositoryImpl
+import com.seravian.feat_network.domain.RemoteDataSource
 import com.seravian.feat_network.util.HttpClientFactory
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
-import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val networkFeatureModule = module {
-
-    single<LocalDataSource>(named<TokenDataSource>()) {
-        TokenDataSource(context = androidContext())
-    }
-
-    single<TokenRepository> {
-        TokenRepositoryImpl(
-            remoteDataSource = get(),
-            localDataSource = get(named<TokenDataSource>())
+    single<HttpClient>(qualifier = named("publicClient")) {
+        HttpClientFactory.publicClient(
+            engine = CIO.create()
         )
     }
 
-    single<HttpClient>(qualifier = named("publicClient")) {
-        HttpClientFactory.publicClient(CIO.create())
-    }
-
     single<HttpClient>(qualifier = named("authorizedClient")) {
-        HttpClientFactory.authorizedClient(CIO.create()) {
-            get<TokenRepository>()
-        }
+        HttpClientFactory.authorizedClient(
+            engine = CIO.create(),
+            tokensRepo = get<TokensRepository>()
+        )
     }
-
 
     single<RemoteDataSource> {
         SeravianDataSource(
@@ -48,8 +35,20 @@ val networkFeatureModule = module {
         )
     }
 
+    single<TokensRepository> {
+        TokensRepositoryImpl(
+            localTokenDataSource = get(),
+            publicHttpClient = get(named("publicClient"))
+        )
+    }
+
     single<AuthRepository> {
-        AuthRepositoryImpl(remoteDataSource = get())
+        AuthRepositoryImpl(
+            remoteDataSource = get(),
+            roomDataSource = get(),
+            localTokenDataSource = get(),
+            emailStateRepository = get()
+        )
     }
 
     single<OnBoardingRepository> {

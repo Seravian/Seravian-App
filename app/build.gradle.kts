@@ -52,6 +52,8 @@ dependencies {
     implementation(project(":core-ui"))
     implementation(project(":network:core-network"))
     implementation(project(":network:feat-network"))
+    implementation(project(":local:core-local"))
+    implementation(project(":local:feat-local"))
     implementation(project(":navigation:core-navigation"))
     implementation(project(":navigation:feat-navigation"))
     implementation(project(":auth:feat-auth"))

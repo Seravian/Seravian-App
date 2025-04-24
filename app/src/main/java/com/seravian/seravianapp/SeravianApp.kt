@@ -8,6 +8,7 @@ import com.greenvenom.core_navigation.di.navigationCoreModule
 import com.seravian.feat_home.di.homeModule
 import com.greenvenom.feat_onboarding.di.onBoardingFeatureModule
 import com.seravian.feat_chat.di.chatModule
+import com.seravian.feat_local.di.localFeatureModule
 import com.seravian.feat_navigation.di.navigationFeatureModule
 import com.seravian.feat_network.di.networkFeatureModule
 import org.koin.android.ext.koin.androidContext
@@ -24,6 +25,7 @@ class SeravianApp: Application() {
             modules(
                 appModule,
                 apiModule,
+                localFeatureModule,
                 networkFeatureModule,
                 navigationCoreModule,
                 navigationFeatureModule,

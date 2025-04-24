@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,7 +25,6 @@ import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -40,10 +38,10 @@ import com.greenvenom.core_ui.theme.primaryContainerLight
 
 @Composable
 fun OtpInputField(
-    number: Int?,
+    number: String?,
     focusRequester: FocusRequester,
     onFocusChanged: (Boolean) -> Unit,
-    onNumberChanged: (Int?) -> Unit,
+    onNumberChanged: (String?) -> Unit,
     onKeyboardBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -73,21 +71,18 @@ fun OtpInputField(
         BasicTextField(
             value = text,
             onValueChange = { newText ->
-                val newNumber = newText.text
-                if(newNumber.length <= 1 && newNumber.isDigitsOnly()) {
-                    onNumberChanged(newNumber.toIntOrNull())
+                val newCharacter = newText.text
+                if(newCharacter.length <= 1) {
+                    onNumberChanged(newCharacter)
                 }
             },
             cursorBrush = SolidColor(onPrimaryContainerLight),
             singleLine = true,
             textStyle = TextStyle(
                 textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Light,
-                fontSize = 36.sp,
+                fontWeight = FontWeight.Medium,
+                fontSize = 24.sp,
                 color = onPrimaryContainerLight
-            ),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.NumberPassword
             ),
             modifier = Modifier
                 .padding(10.dp)
@@ -110,7 +105,7 @@ fun OtpInputField(
                         text = "-",
                         textAlign = TextAlign.Center,
                         color = onPrimaryContainerLight,
-                        fontSize = 36.sp,
+                        fontSize = 24.sp,
                         fontWeight = FontWeight.Light,
                         modifier = Modifier
                             .fillMaxSize()
@@ -127,7 +122,7 @@ fun OtpInputField(
 private fun OtpInputFieldPreview() {
     AppTheme {
         OtpInputField(
-            number = null,
+            number = "h",
             focusRequester = remember { FocusRequester() },
             onFocusChanged = {},
             onKeyboardBack = {},

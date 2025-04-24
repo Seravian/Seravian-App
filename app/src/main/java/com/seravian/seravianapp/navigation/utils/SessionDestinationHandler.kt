@@ -2,8 +2,8 @@ package com.seravian.seravianapp.navigation.utils
 
 import com.greenvenom.core_navigation.data.NavigationType
 import com.greenvenom.core_navigation.data.repository.NavigationStateRepository
-import com.seravian.feat_network.data.remote.repository.SessionDestinations
-import com.seravian.feat_network.data.remote.repository.SessionStateRepository
+import com.seravian.feat_network.data.repository.SessionDestinations
+import com.seravian.feat_network.data.repository.SessionStateRepository
 import com.seravian.feat_navigation.routes.SubGraph
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

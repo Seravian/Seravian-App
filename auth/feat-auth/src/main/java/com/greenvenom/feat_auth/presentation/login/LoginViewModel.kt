@@ -1,6 +1,8 @@
 package com.greenvenom.feat_auth.presentation.login
 
 import androidx.lifecycle.viewModelScope
+import com.greenvenom.core_auth.data.dto.request.LoginRequest
+import com.greenvenom.core_auth.data.repository.EmailStateRepository
 import com.greenvenom.core_auth.domain.repository.AuthRepository
 import com.greenvenom.core_ui.presentation.BaseViewModel
 import com.greenvenom.validation.ValidateInput
@@ -10,7 +12,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val emailStateRepository: EmailStateRepository
 ): BaseViewModel() {
     private val _loginState = MutableStateFlow(LoginState())
     val loginState = _loginState.asStateFlow()
@@ -31,6 +34,9 @@ class LoginViewModel(
                 email = action.email,
                 password = action.password
             )
+            is LoginAction.StoreReceivedEmail -> {
+                emailStateRepository.updateEmail(action.email)
+            }
             is LoginAction.ResetState -> resetState()
             is LoginAction.ResetNetworkResult -> resetNetworkResult()
         }
@@ -41,7 +47,12 @@ class LoginViewModel(
         password: String,
     ) {
         viewModelScope.launch {
-            val result = authRepository.loginUser(email, password)
+            val result = authRepository.loginUser(
+                LoginRequest(
+                    email = email,
+                    password = password
+                )
+            )
             _loginState.update { it.copy(loginNetworkResult = result) }
         }
     }

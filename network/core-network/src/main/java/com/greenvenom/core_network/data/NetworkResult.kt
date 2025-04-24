@@ -3,6 +3,7 @@ package com.greenvenom.core_network.data
 import com.greenvenom.core_network.domain.Error
 
 internal typealias DomainError = Error
+typealias EmptyResult<E> = NetworkResult<Unit, E>
 
 sealed interface NetworkResult<out D, out E: Error> {
     data class Success<out D>(val data: D): NetworkResult<D, Nothing>
@@ -14,6 +15,10 @@ inline fun <T, E: Error, R> NetworkResult<T, E>.map(map: (T) -> R): NetworkResul
         is NetworkResult.Error -> NetworkResult.Error(error)
         is NetworkResult.Success -> NetworkResult.Success(map(data))
     }
+}
+
+fun <T, E: Error> NetworkResult<T, E>.asEmptyDataResult(): EmptyResult<E> {
+    return map {  }
 }
 
 inline fun <T, E: Error> NetworkResult<T, E>.onSuccess(action: (T) -> Unit): NetworkResult<T, E> {

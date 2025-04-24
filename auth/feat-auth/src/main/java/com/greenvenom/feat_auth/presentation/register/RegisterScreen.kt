@@ -66,7 +66,6 @@ private fun RegisterContent(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    var username by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var confirmPassword by rememberSaveable { mutableStateOf("") }
@@ -88,7 +87,6 @@ private fun RegisterContent(
     DisposableEffect(Unit) {
         onDispose {
             registerActions(RegisterAction.ResetState)
-            username = ""
             email = ""
             password = ""
             confirmPassword = ""
@@ -113,22 +111,6 @@ private fun RegisterContent(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            // Username Field
-            Text(
-                text = stringResource(R.string.user_name),
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            CustomTextField(
-                value = username,
-                onValueChange = {
-                    username = it
-                    registerActions(RegisterAction.ValidateUsername(username))
-                },
-                label = stringResource(R.string.enter_your_username),
-                error = if (state.usernameValidity is ValidationResult.Error) state.usernameValidity.error.toString(context) else "",
-                isPasswordField = false,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
-            )
             // Email Field
             Text(
                 text = stringResource(R.string.email),
@@ -183,15 +165,13 @@ private fun RegisterContent(
                 onClick = {
                     registerActions(
                         RegisterAction.Register(
-                            username,
                             email,
                             password,
                         )
                     )
                     baseActions(BaseAction.ShowLoading)
                 },
-                enabled = state.usernameValidity is ValidationResult.Success &&
-                        state.emailValidity is ValidationResult.Success &&
+                enabled = state.emailValidity is ValidationResult.Success &&
                         state.passwordValidity is ValidationResult.Success &&
                         state.confirmPasswordValidity is ValidationResult.Success
             )
