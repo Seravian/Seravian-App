@@ -1,21 +1,20 @@
-package com.seravian.feat_network.data.features.onboarding
+package com.greenvenom.feat_onboarding.data
 
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
 import com.greenvenom.core_network.data.onSuccess
 import com.greenvenom.core_onboarding.data.dto.request.OnBoardingRequest
 import com.greenvenom.core_onboarding.data.dto.response.OnBoardingResponse
-import com.greenvenom.core_onboarding.domain.OnBoardingRepository
+import com.greenvenom.feat_onboarding.domain.OnBoardingRepository
 import com.seravian.core_local.domain.LocalDataSource
-import com.greenvenom.feat_tokens.domain.TokenDataSource
 import com.greenvenom.core_network.domain.RemoteDataSource
-import com.seravian.feat_network.util.extractProfile
-import com.seravian.feat_network.util.extractTokens
+import com.greenvenom.core_tokens.domain.Tokens
+import com.greenvenom.core_tokens.domain.repo.TokensRepository
 
 class OnBoardingRepositoryImpl(
     private val remoteDataSource: RemoteDataSource,
     private val roomDataSource: LocalDataSource,
-    private val tokenDataSource: com.greenvenom.feat_tokens.domain.TokenDataSource
+    private val tokensRepository: TokensRepository,
 ): OnBoardingRepository {
     override suspend fun updateUserDetails(
         onBoardingRequest: OnBoardingRequest
@@ -24,7 +23,7 @@ class OnBoardingRepositoryImpl(
 
         return response.onSuccess {
             roomDataSource.insertProfile(it.extractProfile().toProfileEntity())
-            tokenDataSource.saveTokensLocally(it.extractTokens())
+            tokensRepository.saveTokensLocally(it.tokens?.extractTokens() as Tokens)
         }
     }
 }

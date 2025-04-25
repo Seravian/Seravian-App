@@ -1,9 +1,7 @@
 package com.seravian.feat_network.di
 
 import com.greenvenom.core_auth.domain.repository.AuthRepository
-import com.greenvenom.core_onboarding.domain.OnBoardingRepository
 import com.seravian.feat_network.data.features.auth.AuthRepositoryImpl
-import com.seravian.feat_network.data.features.onboarding.OnBoardingRepositoryImpl
 import com.seravian.feat_network.data.SeravianDataSource
 import com.greenvenom.core_network.domain.RemoteDataSource
 import com.greenvenom.core_tokens.domain.repo.TokensRepository
@@ -40,14 +38,6 @@ val networkFeatureModule = module {
             roomDataSource = get(),
             tokenDataSource = get(),
             emailStateRepository = get()
-        )
-    }
-
-    single<OnBoardingRepository> {
-        OnBoardingRepositoryImpl(
-            remoteDataSource = get(),
-            roomDataSource = get(),
-            tokenDataSource = get()
         )
     }
 }

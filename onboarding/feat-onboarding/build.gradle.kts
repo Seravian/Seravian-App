@@ -36,6 +36,8 @@ android {
 dependencies {
 
     implementation(project(":network:core-network"))
+    implementation(project(":local:core-local"))
+    implementation(project(":tokens:core-tokens"))
     implementation(project(":validation"))
     implementation(project(":onboarding:core-onboarding"))
     implementation(project(":core-ui"))

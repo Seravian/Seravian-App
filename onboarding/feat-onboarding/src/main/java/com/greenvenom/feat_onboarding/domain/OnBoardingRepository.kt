@@ -1,4 +1,4 @@
-package com.greenvenom.core_onboarding.domain
+package com.greenvenom.feat_onboarding.domain
 
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
