@@ -2,8 +2,6 @@ package com.seravian.feat_local.di
 
 import androidx.room.Room
 import com.seravian.core_local.domain.LocalDataSource
-import com.seravian.core_local.domain.LocalTokenDataSource
-import com.seravian.feat_local.data.EncryptedTokenDataSource
 import com.seravian.feat_local.data.RoomDataSource
 import com.seravian.feat_local.data.db.SeravianDatabase
 import org.koin.android.ext.koin.androidContext
@@ -20,10 +18,6 @@ val localFeatureModule = module {
             SeravianDatabase::class.java,
             name = "seravian.db"
         ).build()
-    }
-
-    single<LocalTokenDataSource> {
-        EncryptedTokenDataSource(context = androidContext())
     }
 
     single<LocalDataSource> {

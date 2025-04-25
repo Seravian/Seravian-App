@@ -14,15 +14,15 @@ import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
 import com.greenvenom.core_network.data.onSuccess
 import com.seravian.core_local.domain.LocalDataSource
-import com.seravian.core_local.domain.LocalTokenDataSource
-import com.seravian.feat_network.domain.RemoteDataSource
+import com.greenvenom.feat_tokens.domain.TokenDataSource
+import com.greenvenom.core_network.domain.RemoteDataSource
 import com.seravian.feat_network.util.extractProfile
 import com.seravian.feat_network.util.extractTokens
 
 class AuthRepositoryImpl(
     private val remoteDataSource: RemoteDataSource,
     private val roomDataSource: LocalDataSource,
-    private val localTokenDataSource: LocalTokenDataSource,
+    private val tokenDataSource: com.greenvenom.feat_tokens.domain.TokenDataSource,
     private val emailStateRepository: EmailStateRepository
 ): AuthRepository {
     override suspend fun loginUser(
@@ -32,7 +32,7 @@ class AuthRepositoryImpl(
         return loginResponse.onSuccess { response ->
             if (response.isEmailVerified) {
                 roomDataSource.insertProfile(response.extractProfile().toProfileEntity())
-                localTokenDataSource.saveTokenLocally(response.extractTokens())
+                tokenDataSource.saveTokensLocally(response.extractTokens())
             }
         }
     }

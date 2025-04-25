@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.greenvenom.core_auth"
+    namespace = "com.greenvenom.core_tokens"
     compileSdk = 35
 
     defaultConfig {
@@ -17,7 +17,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -36,16 +36,11 @@ android {
 dependencies {
 
     implementation(project(":network:core-network"))
-    implementation(project(":tokens:core-tokens"))
-    implementation(project(":profile:core-profile"))
-    implementation(project(":validation"))
-
-    implementation(libs.androidx.core.ktx)
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
 
+    implementation(libs.androidx.core.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.androidx.ui.test.junit4)
 }

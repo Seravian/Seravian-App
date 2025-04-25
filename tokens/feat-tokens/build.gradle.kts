@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.greenvenom.core_auth"
+    namespace = "com.greenvenom.feat_tokens"
     compileSdk = 35
 
     defaultConfig {
@@ -17,7 +17,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -34,18 +34,19 @@ android {
 }
 
 dependencies {
+    val koin = "4.0.0"
 
     implementation(project(":network:core-network"))
     implementation(project(":tokens:core-tokens"))
-    implementation(project(":profile:core-profile"))
-    implementation(project(":validation"))
-
-    implementation(libs.androidx.core.ktx)
+    implementation(project(":crypto"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+    implementation("androidx.datastore:datastore-preferences:1.1.3")
+    implementation(platform("io.insert-koin:koin-bom:$koin"))
+    implementation("io.insert-koin:koin-androidx-compose")
 
+    implementation(libs.androidx.core.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.androidx.ui.test.junit4)
 }

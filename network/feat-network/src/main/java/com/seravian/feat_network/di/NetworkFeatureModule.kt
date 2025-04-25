@@ -1,13 +1,12 @@
 package com.seravian.feat_network.di
 
 import com.greenvenom.core_auth.domain.repository.AuthRepository
-import com.seravian.feat_network.domain.TokensRepository
 import com.greenvenom.core_onboarding.domain.OnBoardingRepository
 import com.seravian.feat_network.data.features.auth.AuthRepositoryImpl
 import com.seravian.feat_network.data.features.onboarding.OnBoardingRepositoryImpl
 import com.seravian.feat_network.data.SeravianDataSource
-import com.seravian.feat_network.data.features.tokens.TokensRepositoryImpl
-import com.seravian.feat_network.domain.RemoteDataSource
+import com.greenvenom.core_network.domain.RemoteDataSource
+import com.greenvenom.core_tokens.domain.repo.TokensRepository
 import com.seravian.feat_network.util.HttpClientFactory
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
@@ -35,18 +34,11 @@ val networkFeatureModule = module {
         )
     }
 
-    single<TokensRepository> {
-        TokensRepositoryImpl(
-            localTokenDataSource = get(),
-            publicHttpClient = get(named("publicClient"))
-        )
-    }
-
     single<AuthRepository> {
         AuthRepositoryImpl(
             remoteDataSource = get(),
             roomDataSource = get(),
-            localTokenDataSource = get(),
+            tokenDataSource = get(),
             emailStateRepository = get()
         )
     }
@@ -55,7 +47,7 @@ val networkFeatureModule = module {
         OnBoardingRepositoryImpl(
             remoteDataSource = get(),
             roomDataSource = get(),
-            localTokenDataSource = get()
+            tokenDataSource = get()
         )
     }
 }

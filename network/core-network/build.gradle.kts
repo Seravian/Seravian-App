@@ -54,6 +54,12 @@ dependencies {
     val ktor = "3.0.3"
     val koin = "4.0.0"
 
+    implementation(project(":tokens:core-tokens"))
+    implementation(project(":auth:core-auth"))
+    implementation(project(":profile:core-profile"))
+    implementation(project(":home:core-home"))
+    implementation(project(":onboarding:core-onboarding"))
+
     implementation(libs.androidx.core.ktx)
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
 

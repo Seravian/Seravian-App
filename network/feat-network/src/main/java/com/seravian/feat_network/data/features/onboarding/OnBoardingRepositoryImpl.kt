@@ -7,16 +7,15 @@ import com.greenvenom.core_onboarding.data.dto.request.OnBoardingRequest
 import com.greenvenom.core_onboarding.data.dto.response.OnBoardingResponse
 import com.greenvenom.core_onboarding.domain.OnBoardingRepository
 import com.seravian.core_local.domain.LocalDataSource
-import com.seravian.core_local.domain.LocalTokenDataSource
-import com.seravian.feat_network.domain.RemoteDataSource
-import com.seravian.feat_network.domain.TokensRepository
+import com.greenvenom.feat_tokens.domain.TokenDataSource
+import com.greenvenom.core_network.domain.RemoteDataSource
 import com.seravian.feat_network.util.extractProfile
 import com.seravian.feat_network.util.extractTokens
 
 class OnBoardingRepositoryImpl(
     private val remoteDataSource: RemoteDataSource,
     private val roomDataSource: LocalDataSource,
-    private val localTokenDataSource: LocalTokenDataSource
+    private val tokenDataSource: com.greenvenom.feat_tokens.domain.TokenDataSource
 ): OnBoardingRepository {
     override suspend fun updateUserDetails(
         onBoardingRequest: OnBoardingRequest
@@ -25,7 +24,7 @@ class OnBoardingRepositoryImpl(
 
         return response.onSuccess {
             roomDataSource.insertProfile(it.extractProfile().toProfileEntity())
-            localTokenDataSource.saveTokenLocally(it.extractTokens())
+            tokenDataSource.saveTokensLocally(it.extractTokens())
         }
     }
 }

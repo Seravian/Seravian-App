@@ -36,6 +36,8 @@ android {
 dependencies {
 
     implementation(project(":network:core-network"))
+    implementation(project(":tokens:core-tokens"))
+    implementation(project(":profile:core-profile"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
 
