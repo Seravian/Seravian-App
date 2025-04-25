@@ -90,16 +90,6 @@ class SeravianDataSource(
         }.onSuccess { authorizedHttpClient.authProvider<BearerAuthProvider>()?.clearToken() }
     }
 
-    override suspend fun refreshToken(
-        refreshTokenRequest: RefreshTokenRequest
-    ): NetworkResult<TokensResponse, NetworkError> {
-        return safeCall {
-            publicHttpClient.post(urlString = constructUrl("auth/refresh-token")) {
-                setBody(refreshTokenRequest)
-            }
-        }
-    }
-
     override suspend fun logoutUser(refreshToken: String): EmptyResult<NetworkError> {
         return safeCall<Unit> {
             authorizedHttpClient.post(urlString = constructUrl("auth/logout")) {

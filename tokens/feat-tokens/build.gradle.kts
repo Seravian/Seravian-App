@@ -42,6 +42,7 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
     implementation("androidx.datastore:datastore-preferences:1.1.3")
+    implementation("io.ktor:ktor-client-core:3.0.3")
     implementation(platform("io.insert-koin:koin-bom:$koin"))
     implementation("io.insert-koin:koin-androidx-compose")
 
