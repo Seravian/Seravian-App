@@ -39,7 +39,6 @@ dependencies {
 
     implementation(project(":local:core-local"))
     implementation(project(":profile:core-profile"))
-    implementation(project(":local:core-local"))
     implementation(project(":crypto"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")

@@ -6,7 +6,7 @@ import com.greenvenom.feat_onboarding.presentation.OnBoardingViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
-val onBoardingFeatureModule = module {
+val onBoardingModule = module {
     single<OnBoardingRepository> {
         OnBoardingRepositoryImpl(
             remoteDataSource = get(),

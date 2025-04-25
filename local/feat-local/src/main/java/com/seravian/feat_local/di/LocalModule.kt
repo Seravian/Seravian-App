@@ -7,7 +7,7 @@ import com.seravian.feat_local.data.db.SeravianDatabase
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
-val localFeatureModule = module {
+val localModule = module {
     single {
         get<SeravianDatabase>().profileDao
     }

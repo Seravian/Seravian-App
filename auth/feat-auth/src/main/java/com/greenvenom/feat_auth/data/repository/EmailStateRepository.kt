@@ -1,5 +1,6 @@
-package com.greenvenom.core_auth.data.repository
+package com.greenvenom.feat_auth.data.repository
 
+import com.greenvenom.feat_auth.data.EmailState
 import com.greenvenom.validation.domain.ValidationError
 import com.greenvenom.validation.domain.ValidationResult
 import kotlinx.coroutines.flow.MutableStateFlow

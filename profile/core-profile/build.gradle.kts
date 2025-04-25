@@ -44,8 +44,6 @@ dependencies {
     implementation("androidx.room:room-ktx:$room")
     implementation("androidx.room:room-paging:$room")
 
-    implementation(libs.bundles.dependency.injection)
-
     implementation(libs.androidx.core.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

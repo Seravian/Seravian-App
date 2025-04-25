@@ -16,7 +16,7 @@ import com.greenvenom.core_network.data.NetworkResult
 import com.greenvenom.core_network.data.onSuccess
 import com.greenvenom.core_onboarding.data.dto.request.OnBoardingRequest
 import com.greenvenom.core_onboarding.data.dto.response.OnBoardingResponse
-import com.greenvenom.core_network.domain.RemoteDataSource
+import com.greenvenom.core_network.domain.repository.RemoteDataSource
 import com.greenvenom.core_tokens.data.dto.request.RefreshTokenRequest
 import com.greenvenom.core_tokens.data.dto.response.TokensResponse
 import io.ktor.client.HttpClient

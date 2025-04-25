@@ -3,7 +3,7 @@ package com.seravian.feat_network.util
 import com.greenvenom.core_network.api.utils.applyBaseConfig
 import com.greenvenom.core_network.data.onError
 import com.greenvenom.core_network.data.onSuccess
-import com.greenvenom.core_tokens.domain.repo.TokensRepository
+import com.greenvenom.core_network.domain.repository.TokensRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.auth.Auth

@@ -7,9 +7,9 @@ import com.greenvenom.core_onboarding.data.dto.request.OnBoardingRequest
 import com.greenvenom.core_onboarding.data.dto.response.OnBoardingResponse
 import com.greenvenom.feat_onboarding.domain.OnBoardingRepository
 import com.seravian.core_local.domain.LocalDataSource
-import com.greenvenom.core_network.domain.RemoteDataSource
+import com.greenvenom.core_network.domain.repository.RemoteDataSource
+import com.greenvenom.core_network.domain.repository.TokensRepository
 import com.greenvenom.core_tokens.domain.Tokens
-import com.greenvenom.core_tokens.domain.repo.TokensRepository
 
 class OnBoardingRepositoryImpl(
     private val remoteDataSource: RemoteDataSource,

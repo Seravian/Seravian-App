@@ -1,4 +1,4 @@
-package com.greenvenom.core_tokens.domain.repo
+package com.greenvenom.core_network.domain.repository
 
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult

@@ -50,6 +50,8 @@ android {
 dependencies {
 
     implementation(project(":core-ui"))
+    implementation(project(":tokens:core-tokens"))
+    implementation(project(":tokens:feat-tokens"))
     implementation(project(":network:core-network"))
     implementation(project(":network:feat-network"))
     implementation(project(":local:core-local"))

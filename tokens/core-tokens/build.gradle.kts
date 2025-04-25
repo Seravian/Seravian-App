@@ -35,8 +35,6 @@ android {
 
 dependencies {
 
-    implementation(project(":network:core-network"))
-
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
 
     implementation(libs.androidx.core.ktx)

@@ -1,4 +1,4 @@
-package com.greenvenom.core_network.domain
+package com.greenvenom.core_network.domain.repository
 
 import com.greenvenom.core_auth.data.dto.request.SendOTPRequest
 import com.greenvenom.core_auth.data.dto.request.LoginRequest
@@ -14,7 +14,6 @@ import com.greenvenom.core_onboarding.data.dto.request.OnBoardingRequest
 import com.greenvenom.core_onboarding.data.dto.response.OnBoardingResponse
 import com.greenvenom.core_tokens.data.dto.request.RefreshTokenRequest
 import com.greenvenom.core_tokens.data.dto.response.TokensResponse
-import com.greenvenom.core_tokens.domain.Tokens
 
 interface RemoteDataSource {
     suspend fun registerUser(registerRequest: RegisterRequest): NetworkResult<RegisterResponse, NetworkError>

@@ -1,4 +1,4 @@
-package com.seravian.feat_network.data.features.auth
+package com.greenvenom.feat_auth.data.repository
 
 import com.greenvenom.core_auth.data.dto.request.SendOTPRequest
 import com.greenvenom.core_auth.data.dto.request.LoginRequest
@@ -7,22 +7,20 @@ import com.greenvenom.core_auth.data.dto.request.VerifyOTPRequest
 import com.greenvenom.core_auth.data.dto.request.RegisterRequest
 import com.greenvenom.core_auth.data.dto.response.LoginResponse
 import com.greenvenom.core_auth.data.dto.response.RegisterResponse
-import com.greenvenom.core_auth.data.repository.EmailStateRepository
-import com.greenvenom.core_auth.domain.repository.AuthRepository
+import com.greenvenom.feat_auth.domain.repository.AuthRepository
 import com.greenvenom.core_network.data.EmptyResult
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
 import com.greenvenom.core_network.data.onSuccess
 import com.seravian.core_local.domain.LocalDataSource
-import com.greenvenom.feat_tokens.domain.TokenDataSource
-import com.greenvenom.core_network.domain.RemoteDataSource
-import com.seravian.feat_network.util.extractProfile
-import com.seravian.feat_network.util.extractTokens
+import com.greenvenom.core_network.domain.repository.RemoteDataSource
+import com.greenvenom.core_network.domain.repository.TokensRepository
+import com.greenvenom.core_tokens.domain.Tokens
 
 class AuthRepositoryImpl(
     private val remoteDataSource: RemoteDataSource,
     private val roomDataSource: LocalDataSource,
-    private val tokenDataSource: com.greenvenom.feat_tokens.domain.TokenDataSource,
+    private val tokensRepository: TokensRepository,
     private val emailStateRepository: EmailStateRepository
 ): AuthRepository {
     override suspend fun loginUser(
@@ -32,7 +30,7 @@ class AuthRepositoryImpl(
         return loginResponse.onSuccess { response ->
             if (response.isEmailVerified) {
                 roomDataSource.insertProfile(response.extractProfile().toProfileEntity())
-                tokenDataSource.saveTokensLocally(response.extractTokens())
+                tokensRepository.saveTokensLocally(response.tokens?.extractTokens() as Tokens)
             }
         }
     }

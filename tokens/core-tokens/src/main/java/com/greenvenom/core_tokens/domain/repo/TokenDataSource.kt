@@ -1,4 +1,4 @@
-package com.greenvenom.feat_tokens.domain
+package com.greenvenom.core_tokens.domain.repo
 
 import com.greenvenom.core_tokens.domain.Tokens
 

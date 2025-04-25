@@ -1,4 +1,4 @@
-package com.greenvenom.core_auth.domain.repository
+package com.greenvenom.feat_auth.domain.repository
 
 import com.greenvenom.core_auth.data.dto.request.SendOTPRequest
 import com.greenvenom.core_auth.data.dto.request.LoginRequest

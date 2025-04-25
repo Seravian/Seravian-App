@@ -1,4 +1,4 @@
-package com.greenvenom.core_auth.data.repository
+package com.greenvenom.feat_auth.data
 
 import com.greenvenom.validation.domain.ValidationError
 import com.greenvenom.validation.domain.ValidationResult

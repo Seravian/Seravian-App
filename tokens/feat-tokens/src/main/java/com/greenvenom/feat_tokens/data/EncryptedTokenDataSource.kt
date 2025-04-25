@@ -2,7 +2,7 @@ package com.greenvenom.feat_tokens.data
 
 import android.content.Context
 import androidx.datastore.dataStore
-import com.greenvenom.feat_tokens.domain.TokenDataSource
+import com.greenvenom.core_tokens.domain.repo.TokenDataSource
 import com.greenvenom.core_tokens.domain.Tokens
 import com.greenvenom.feat_tokens.utils.TokensSerializer
 import kotlinx.coroutines.flow.firstOrNull

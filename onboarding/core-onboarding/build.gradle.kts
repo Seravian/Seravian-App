@@ -35,7 +35,6 @@ android {
 
 dependencies {
 
-    implementation(project(":network:core-network"))
     implementation(project(":tokens:core-tokens"))
     implementation(project(":profile:core-profile"))
 

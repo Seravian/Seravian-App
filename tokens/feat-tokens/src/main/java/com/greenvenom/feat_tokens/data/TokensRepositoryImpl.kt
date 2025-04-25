@@ -3,11 +3,11 @@ package com.greenvenom.feat_tokens.data
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
 import com.greenvenom.core_network.data.map
-import com.greenvenom.core_network.domain.RemoteDataSource
+import com.greenvenom.core_network.domain.repository.RemoteDataSource
 import com.greenvenom.core_tokens.data.dto.request.RefreshTokenRequest
 import com.greenvenom.core_tokens.domain.Tokens
-import com.greenvenom.feat_tokens.domain.TokenDataSource
-import com.greenvenom.core_tokens.domain.repo.TokensRepository
+import com.greenvenom.core_tokens.domain.repo.TokenDataSource
+import com.greenvenom.core_network.domain.repository.TokensRepository
 
 class TokensRepositoryImpl(
     private val tokenDataSource: TokenDataSource,
