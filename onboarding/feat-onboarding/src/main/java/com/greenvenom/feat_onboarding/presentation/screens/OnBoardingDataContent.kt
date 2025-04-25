@@ -41,7 +41,7 @@ import com.greenvenom.feat_onboarding.R
 fun OnBoardingDataContent(
     fullNameValidationResult: ValidationResult<Unit, ValidationError>?,
     validateFullName: (String) -> Unit,
-    onSubmitClicked: () -> Unit,
+    onSubmitClicked: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -95,7 +95,7 @@ fun OnBoardingDataContent(
 
         CustomButton(
             text = stringResource(R.string.submit),
-            onClick = { onSubmitClicked() },
+            onClick = { onSubmitClicked(birthDate ?: "") },
             enabled = fullNameValidationResult is ValidationResult.Success &&
                     !birthDate.isNullOrBlank()
         )

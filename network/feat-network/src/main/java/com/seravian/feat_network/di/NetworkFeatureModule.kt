@@ -52,6 +52,10 @@ val networkFeatureModule = module {
     }
 
     single<OnBoardingRepository> {
-        OnBoardingRepositoryImpl(remoteDataSource = get())
+        OnBoardingRepositoryImpl(
+            remoteDataSource = get(),
+            roomDataSource = get(),
+            localTokenDataSource = get()
+        )
     }
 }

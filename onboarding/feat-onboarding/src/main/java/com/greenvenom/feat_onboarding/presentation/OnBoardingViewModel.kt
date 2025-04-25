@@ -97,6 +97,10 @@ class OnBoardingViewModel(
                             updatedState.userDetails.gender != null
                 )
             }
+        }.let {
+            if (this.userDetailsState.value.isDataFull) {
+                uploadUserDetails(this.userDetailsState.value.userDetails)
+            }
         }
     }
 

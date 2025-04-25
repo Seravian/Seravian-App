@@ -82,11 +82,11 @@ class SeravianDataSource(
     override suspend fun updateUserDetails(
         onBoardingRequest: OnBoardingRequest
     ): NetworkResult<OnBoardingResponse, NetworkError> {
-        return safeCall {
-            publicHttpClient.post(urlString = constructUrl("auth/complete-profile-setup")) {
+        return safeCall<OnBoardingResponse> {
+            authorizedHttpClient.post(urlString = constructUrl("auth/complete-profile-setup")) {
                 setBody(onBoardingRequest)
             }
-        }
+        }.onSuccess { authorizedHttpClient.authProvider<BearerAuthProvider>()?.clearToken() }
     }
 
     override suspend fun logoutUser(refreshToken: String): EmptyResult<NetworkError> {

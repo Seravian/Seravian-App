@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -56,9 +57,9 @@ private fun OnBoardingContent(
 ) {
     val context = LocalContext.current
 
-    LaunchedEffect(state.isDataFull == true) {
-        detailsAction(OnBoardingAction.UploadDetailsAuth)
-    }
+//    LaunchedEffect(state.isDataFull == true) {
+//        detailsAction(OnBoardingAction.UploadDetailsAuth)
+//    }
 
     LaunchedEffect(state.uploadingDetailsResult) {
         baseAction(BaseAction.HideLoading)
@@ -83,61 +84,64 @@ private fun OnBoardingContent(
         detailsAction(OnBoardingAction.NavigateForm(false))
     }
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .background(MaterialTheme.colorScheme.background)
-    ) {
-        SectionedProgressIndicator(
-            currentStep = state.currentStep,
-            totalSteps = 3,
-            title = when (state.currentStep) {
-                1 -> stringResource(R.string.select_user_type)
-                2 -> stringResource(R.string.select_gender)
-                else -> stringResource(R.string.enter_details)
-            },
-        )
-
-        when (state.currentStep) {
-            1 -> OnBoardingTypeContent(
-                onOptionSelected = {
-                    detailsAction(OnBoardingAction.UpdateAuthUserType(it))
-                    detailsAction(OnBoardingAction.NavigateForm(true))
+    Scaffold { innerPadding ->
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(horizontal = 16.dp)
+                .background(MaterialTheme.colorScheme.background)
+        ) {
+            SectionedProgressIndicator(
+                currentStep = state.currentStep,
+                totalSteps = 3,
+                title = when (state.currentStep) {
+                    1 -> stringResource(R.string.select_user_type)
+                    2 -> stringResource(R.string.select_gender)
+                    else -> stringResource(R.string.enter_details)
                 },
-                options = listOf(
-                    stringResource(R.string.doctor) to R.drawable.doctor_ic,
-                    stringResource(R.string.patient) to R.drawable.patient_ic
-                ),
-                modifier = Modifier.fillMaxHeight(0.8f)
             )
 
-            2 -> OnBoardingTypeContent(
-                onOptionSelected = {
-                    detailsAction(OnBoardingAction.UpdateAuthUserGender(it))
-                    detailsAction(OnBoardingAction.NavigateForm(true))
-                },
-                options = listOf(
-                    stringResource(R.string.male) to R.drawable.male_ic,
-                    stringResource(R.string.female) to R.drawable.female_ic
-                ),
-                modifier = Modifier.fillMaxHeight(0.8f)
-            )
+            when (state.currentStep) {
+                1 -> OnBoardingTypeContent(
+                    onOptionSelected = {
+                        detailsAction(OnBoardingAction.UpdateAuthUserType(it))
+                        detailsAction(OnBoardingAction.NavigateForm(true))
+                    },
+                    options = listOf(
+                        stringResource(R.string.patient) to R.drawable.patient_ic,
+                        stringResource(R.string.doctor) to R.drawable.doctor_ic
+                    ),
+                    modifier = Modifier.fillMaxHeight(0.8f)
+                )
 
-            3 -> OnBoardingDataContent(
-                fullNameValidationResult = state.fullNameValidationResult,
-                validateFullName = { detailsAction(OnBoardingAction.ValidateFullName(it)) },
-                onSubmitClicked = {
-                    baseAction(BaseAction.ShowLoading)
-                    detailsAction(
-                        OnBoardingAction.UpdateOnBoardingData(
-                        fullName = state.userDetails.fullName ?: "",
-                        birthDate = state.userDetails.dateOfBirth ?: "",
-                    ))
-                },
-                modifier = Modifier.fillMaxHeight(0.9f)
-            )
+                2 -> OnBoardingTypeContent(
+                    onOptionSelected = {
+                        detailsAction(OnBoardingAction.UpdateAuthUserGender(it))
+                        detailsAction(OnBoardingAction.NavigateForm(true))
+                    },
+                    options = listOf(
+                        stringResource(R.string.male) to R.drawable.male_ic,
+                        stringResource(R.string.female) to R.drawable.female_ic
+                    ),
+                    modifier = Modifier.fillMaxHeight(0.8f)
+                )
+
+                3 -> OnBoardingDataContent(
+                    fullNameValidationResult = state.fullNameValidationResult,
+                    validateFullName = { detailsAction(OnBoardingAction.ValidateFullName(it)) },
+                    onSubmitClicked = { dateOfBirth ->
+                        baseAction(BaseAction.ShowLoading)
+                        detailsAction(
+                            OnBoardingAction.UpdateOnBoardingData(
+                                fullName = state.userDetails.fullName ?: "",
+                                birthDate = dateOfBirth,
+                            ))
+                    },
+                    modifier = Modifier.fillMaxHeight(0.9f)
+                )
+            }
         }
     }
 }
