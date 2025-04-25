@@ -92,10 +92,8 @@ private fun LoginContent(
             else {
                 if (response.role == null){
                     navigateToOnBoarding()
-                    Log.d("Login", "Role is null")
                 } else{
                     navigateToMainScreen()
-                    Log.d("Login", "Role is not null")
                 }
             }
         }

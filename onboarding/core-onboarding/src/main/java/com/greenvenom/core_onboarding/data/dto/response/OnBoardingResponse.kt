@@ -1,10 +1,10 @@
-package com.greenvenom.core_auth.data.dto.response
+package com.greenvenom.core_onboarding.data.dto.response
 
 import com.greenvenom.core_network.api.data.dto.response.TokensResponse
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class LoginResponse(
+data class OnBoardingResponse(
     val userId: String,
     val email: String,
     val fullName: String?,

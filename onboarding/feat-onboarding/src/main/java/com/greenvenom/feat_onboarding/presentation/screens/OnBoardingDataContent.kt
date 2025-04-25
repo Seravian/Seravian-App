@@ -28,6 +28,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.greenvenom.core_ui.components.CustomButton
 import com.greenvenom.core_ui.theme.AppTheme
 import com.greenvenom.validation.domain.ValidationError
 import com.greenvenom.validation.domain.ValidationResult
@@ -38,11 +39,9 @@ import com.greenvenom.feat_onboarding.R
 
 @Composable
 fun OnBoardingDataContent(
-    mobileNumberValidationResult: ValidationResult<String, ValidationError>?,
     fullNameValidationResult: ValidationResult<Unit, ValidationError>?,
     validateFullName: (String) -> Unit,
-    validatePhoneNumber: (String, String) -> Unit,
-    onSubmitClicked: () -> Unit,
+    onSubmitClicked: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -75,20 +74,12 @@ fun OnBoardingDataContent(
         )
         if (fullNameValidationResult is ValidationResult.Error) {
             val error = fullNameValidationResult.error
-            Text(text = error.toString(context), color = Color.Red, fontSize = 12.sp)
-        }
-
-        Spacer(modifier = Modifier.height(22.dp))
-
-        PhoneNumberField(
-            isMobileNumberValid = fullNameValidationResult is ValidationResult.Success,
-            retrievePhoneNumber = { mobileNumber, code ->
-                validatePhoneNumber(mobileNumber, code)
-            }
-        )
-        if (mobileNumberValidationResult is ValidationResult.Error) {
-            val error = mobileNumberValidationResult.error
-            Text(text = error.toString(context), color = Color.Red, fontSize = 12.sp)
+            Text(
+                text = error.toString(context),
+                color = MaterialTheme.colorScheme.error,
+                fontSize = 12.sp,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
 
         Spacer(modifier = Modifier.height(22.dp))
@@ -102,18 +93,12 @@ fun OnBoardingDataContent(
 
         Spacer(modifier = Modifier.height(90.dp))
 
-        Button(
-            onClick = { onSubmitClicked() },
-            enabled = mobileNumberValidationResult is ValidationResult.Success &&
-                    fullNameValidationResult is ValidationResult.Success &&
-                    !birthDate.isNullOrBlank(),
-            shape = RoundedCornerShape(8.dp),
-            modifier = Modifier
-                .padding(20.dp)
-                .fillMaxWidth(),
-        ) {
-            Text(text = stringResource(R.string.submit))
-        }
+        CustomButton(
+            text = stringResource(R.string.submit),
+            onClick = { onSubmitClicked(birthDate ?: "") },
+            enabled = fullNameValidationResult is ValidationResult.Success &&
+                    !birthDate.isNullOrBlank()
+        )
     }
 }
 
@@ -122,10 +107,8 @@ fun OnBoardingDataContent(
 private fun OnBoardingDataContentPreview() {
     AppTheme {
         OnBoardingDataContent(
-            mobileNumberValidationResult = ValidationResult.Success("Unit"),
             fullNameValidationResult = ValidationResult.Error(ValidationError.EMPTY_NAME),
             validateFullName = {},
-            validatePhoneNumber = { _, _ -> },
             onSubmitClicked = {}
         )
     }
