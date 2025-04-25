@@ -28,9 +28,10 @@ import com.greenvenom.feat_onboarding.R
 @Composable
 fun UserTypeOptionCard(
     label: String,
+    index: Int,
     iconRes: Int,
     isSelected: Boolean,
-    onOptionSelected: (String) -> Unit,
+    onOptionSelected: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -44,7 +45,7 @@ fun UserTypeOptionCard(
             .size(160.dp)
             .selectable(
                 selected = isSelected,
-                onClick = { onOptionSelected(label) }
+                onClick = { onOptionSelected(index) }
             )
     ) {
         Column(
@@ -77,6 +78,7 @@ private fun OptionCardPreview() {
     AppTheme {
         UserTypeOptionCard(
             label = "Patient",
+            index = 1,
             iconRes = R.drawable.female_ic,
             isSelected = false,
             onOptionSelected = {}

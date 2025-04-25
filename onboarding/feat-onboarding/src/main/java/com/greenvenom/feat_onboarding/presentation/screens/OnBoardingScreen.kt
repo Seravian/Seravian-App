@@ -56,7 +56,7 @@ private fun OnBoardingContent(
 ) {
     val context = LocalContext.current
 
-    LaunchedEffect(state.isDetailsFull) {
+    LaunchedEffect(state.isDataFull == true) {
         detailsAction(OnBoardingAction.UploadDetailsAuth)
     }
 
@@ -118,7 +118,6 @@ private fun OnBoardingContent(
                     detailsAction(OnBoardingAction.UpdateAuthUserGender(it))
                     detailsAction(OnBoardingAction.NavigateForm(true))
                 },
-                navigateBack = { detailsAction(OnBoardingAction.NavigateForm(false)) },
                 options = listOf(
                     stringResource(R.string.male) to R.drawable.male_ic,
                     stringResource(R.string.female) to R.drawable.female_ic
@@ -127,18 +126,14 @@ private fun OnBoardingContent(
             )
 
             3 -> OnBoardingDataContent(
-                mobileNumberValidationResult = state.mobileNumberValidationResult,
                 fullNameValidationResult = state.fullNameValidationResult,
                 validateFullName = { detailsAction(OnBoardingAction.ValidateFullName(it)) },
-                validatePhoneNumber = { mobileNumber, countryCode ->
-                    detailsAction(OnBoardingAction.ValidatePhoneNumber(mobileNumber, countryCode))
-                },
                 onSubmitClicked = {
                     baseAction(BaseAction.ShowLoading)
                     detailsAction(
                         OnBoardingAction.UpdateOnBoardingData(
                         fullName = state.userDetails.fullName ?: "",
-                        birthDate = state.userDetails.birthDate ?: "",
+                        birthDate = state.userDetails.dateOfBirth ?: "",
                     ))
                 },
                 modifier = Modifier.fillMaxHeight(0.9f)

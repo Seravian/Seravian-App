@@ -42,7 +42,7 @@ fun DatePickerField(
         value = selectedDate?.let { convertMillisToDate(it) } ?: "",
         onValueChange = {  },
         label = { Text(text = label) },
-        placeholder = { Text("DD/MM/YYYY") },
+        placeholder = { Text("") },
         trailingIcon = {
             Icon(Icons.Default.DateRange, contentDescription = "Select date")
         },
@@ -103,7 +103,7 @@ private fun DatePickerModal(
 }
 
 fun convertMillisToDate(millis: Long): String {
-    val formatter = SimpleDateFormat("dd/mm/yyyy", Locale.getDefault())
+    val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     return formatter.format(Date(millis))
 }
 

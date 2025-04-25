@@ -1,4 +1,4 @@
-package com.greenvenom.core_auth.data.dto.response
+package com.greenvenom.core_network.api.data.dto.response
 
 import kotlinx.serialization.Serializable
 

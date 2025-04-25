@@ -1,6 +1,7 @@
 package com.greenvenom.feat_onboarding.presentation
 
 import androidx.lifecycle.viewModelScope
+import com.greenvenom.core_onboarding.data.dto.request.OnBoardingRequest
 import com.greenvenom.validation.ValidateInput
 import com.greenvenom.validation.domain.onSuccess
 import com.greenvenom.core_onboarding.domain.OnBoardingRepository
@@ -30,12 +31,6 @@ class OnBoardingViewModel(
             }
             is OnBoardingAction.ValidateFullName -> {
                 validateFullName(action.fullName)
-            }
-            is OnBoardingAction.ValidatePhoneNumber -> {
-                validatePhoneNumber(
-                    phoneNumber = action.phoneNumber,
-                    countryCode = action.countryCode
-                )
             }
             is OnBoardingAction.UpdateOnBoardingData -> {
                 updateUserDetailsState(
@@ -78,48 +73,27 @@ class OnBoardingViewModel(
         }
     }
 
-    private fun validatePhoneNumber(
-        phoneNumber: String,
-        countryCode: String
-    ) {
-        val validationResult = ValidateInput.validateMobileNumber(phoneNumber, countryCode)
-        validationResult.onSuccess {
-            updateUserDetailsState(
-                phoneNumber = it
-            )
-        }
-
-        _onBoardingState.update {
-            it.copy(
-                mobileNumberValidationResult = validationResult
-            )
-        }
-    }
-
     private fun updateUserDetailsState(
         currentStep: Int? = null,
         fullName: String? = null,
-        userType: String? = null,
-        phoneNumber: String? = null,
+        userType: Int? = null,
         birthDate: String? = null,
-        gender: String? = null,
+        gender: Int? = null,
     ) {
         _onBoardingState.update { currentState ->
             currentState.copy(
                 currentStep = currentStep ?: currentState.currentStep,
                 userDetails = currentState.userDetails.copy(
                     fullName = fullName ?: currentState.userDetails.fullName,
-                    userType = userType ?: currentState.userDetails.userType,
-                    phoneNumber = phoneNumber ?: currentState.userDetails.phoneNumber,
-                    birthDate = birthDate ?: currentState.userDetails.birthDate,
+                    role = userType ?: currentState.userDetails.role,
+                    dateOfBirth = birthDate ?: currentState.userDetails.dateOfBirth,
                     gender = gender ?: currentState.userDetails.gender
                 )
             ).let { updatedState ->
                 updatedState.copy(
-                    isDetailsFull = updatedState.userDetails.fullName != null &&
-                            updatedState.userDetails.userType != null &&
-                            updatedState.userDetails.phoneNumber != null &&
-                            updatedState.userDetails.birthDate != null &&
+                    isDataFull = updatedState.userDetails.fullName != null &&
+                            updatedState.userDetails.role != null &&
+                            updatedState.userDetails.dateOfBirth != null &&
                             updatedState.userDetails.gender != null
                 )
             }
@@ -131,11 +105,12 @@ class OnBoardingViewModel(
     ) {
         viewModelScope.launch {
             val result = onBoardingRepository.updateUserDetails(
-                fullName = userDetails.fullName ?: "Unknown",
-                userType = userDetails.userType ?: "Unknown",
-                phoneNumber = userDetails.phoneNumber ?: "Unknown",
-                birthDate = userDetails.birthDate ?: "Unknown",
-                gender = userDetails.gender ?: "Unknown"
+                onBoardingRequest = OnBoardingRequest(
+                    fullName = userDetails.fullName ?: "",
+                    dateOfBirth = userDetails.dateOfBirth ?: "",
+                    gender = userDetails.gender ?: -1,
+                    role = userDetails.role ?: -1
+                )
             )
             _onBoardingState.update {
                 it.copy(

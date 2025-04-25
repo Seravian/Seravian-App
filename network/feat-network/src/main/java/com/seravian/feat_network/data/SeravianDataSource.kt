@@ -14,6 +14,8 @@ import com.greenvenom.core_network.data.EmptyResult
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
 import com.greenvenom.core_network.data.onSuccess
+import com.greenvenom.core_onboarding.data.dto.request.OnBoardingRequest
+import com.greenvenom.core_onboarding.data.dto.response.OnBoardingResponse
 import com.seravian.core_local.data.TokensInfo
 import com.seravian.feat_network.domain.RemoteDataSource
 import io.ktor.client.HttpClient
@@ -78,14 +80,13 @@ class SeravianDataSource(
     }
 
     override suspend fun updateUserDetails(
-        fullName: String,
-        userType: String,
-        phoneNumber: String,
-        birthDate: String,
-        gender: String
-    ): NetworkResult<Any, NetworkError> {
-        Log.d("SeravianDS", "Updating User Details")
-        return NetworkResult.Success(Unit)
+        onBoardingRequest: OnBoardingRequest
+    ): NetworkResult<OnBoardingResponse, NetworkError> {
+        return safeCall {
+            publicHttpClient.post(urlString = constructUrl("auth/complete-profile-setup")) {
+                setBody(onBoardingRequest)
+            }
+        }
     }
 
     override suspend fun logoutUser(refreshToken: String): EmptyResult<NetworkError> {

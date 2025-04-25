@@ -20,12 +20,11 @@ import com.greenvenom.feat_onboarding.presentation.components.UserTypeOptionCard
 
 @Composable
 fun OnBoardingTypeContent(
-    onOptionSelected: (String) -> Unit,
-    navigateBack: () -> Unit = {},
+    onOptionSelected: (Int) -> Unit,
     options: List<Pair<String, Int>>,
     modifier: Modifier = Modifier
 ) {
-    var selectedOption by rememberSaveable { mutableStateOf<String?>(null) }
+    var selectedOption by rememberSaveable { mutableStateOf<Int?>(null) }
 
     DisposableEffect(Unit) {
         onDispose {
@@ -44,10 +43,12 @@ fun OnBoardingTypeContent(
             modifier = Modifier.fillMaxWidth()
         ) {
             options.forEach { (label, iconRes) ->
+                val index = options.indexOf(label to iconRes)
                 UserTypeOptionCard(
                     label = label,
+                    index = index,
                     iconRes = iconRes,
-                    isSelected = label == selectedOption,
+                    isSelected = index == selectedOption,
                     onOptionSelected = {
                         selectedOption = it
                         onOptionSelected(it)
