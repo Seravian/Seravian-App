@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Track Hub</string>
+    <string name="logo_image">Logo Image</string>
+    <string name="sign_in_to_your_account">Sign in to your\nAccount</string>
+    <string name="don_t_have_an_account">Don\'t have an account? </string>
+    <string name="enter_the_sent_otp">Enter the sent OTP </string>
+    <string name="sign_up">Sign Up</string>
+    <string name="register">Register</string>
+    <string name="already_have_an_account">Already have an account? </string>
+    <string name="sign_in">Sign In</string>
+    <string name="enter_your_email">Enter Your Email</string>
+    <string name="email">Email</string>
+    <string name="Password">Password</string>
+    <string name="enter_your_password">Enter Your Password</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="log_in">Log In</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="confirm_your_password">Confirm Your Password</string>
+    <string name="user_name">Username</string>
+    <string name="enter_your_username">Enter your Username</string>
+    <string name="create_new_password">Create New Password</string>
+    <string name="next">Next</string>
+    <string name="confirm">Confirm</string>
+    <string name="back_button">Back Button</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="stars">Stars</string>
+</resources>

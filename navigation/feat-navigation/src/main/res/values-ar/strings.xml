@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home">الصفحة الرئيسية</string>
+    <string name="ai_chat">الجلسة الذكية</string>
+    <string name="sessions">الجلسات</string>
+    <string name="doctors">الأطباء</string>
+</resources>

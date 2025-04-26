@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "com.seravian.seravianapp"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.seravian.seravianapp"
-        minSdk = 24
-        targetSdk = 34
+        minSdk = 26
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -45,22 +45,37 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-    buildFeatures {
-        compose = true
-    }
 }
 
 dependencies {
 
+    implementation(project(":core-ui"))
+    implementation(project(":tokens:core-tokens"))
+    implementation(project(":tokens:feat-tokens"))
+    implementation(project(":network:core-network"))
+    implementation(project(":network:feat-network"))
+    implementation(project(":local:core-local"))
+    implementation(project(":local:feat-local"))
+    implementation(project(":navigation:core-navigation"))
+    implementation(project(":navigation:feat-navigation"))
+    implementation(project(":auth:feat-auth"))
+    implementation(project(":onboarding:feat-onboarding"))
+    implementation(project(":home:feat-home"))
+    implementation(project(":chat:feat-chat"))
+
+    val appcompatVersion = "1.7.0"
+
+    implementation("androidx.appcompat:appcompat:$appcompatVersion")
+    implementation("androidx.appcompat:appcompat-resources:$appcompatVersion")
+
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.bundles.jetpack.compose)
+    implementation(libs.bundles.compose)
     implementation(libs.bundles.networking)
-    implementation(libs.bundles.image.loading)
     implementation(libs.bundles.dependency.injection)
-    implementation(libs.bundles.data.persistence)
+    implementation(libs.androidx.compose.navigation)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.core.splashscreen)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

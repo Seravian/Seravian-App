@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_bad_request">الطلب غير صالح.</string>
+    <string name="error_unauthorized">أنت غير مصرح لك.</string>
+    <string name="error_forbidden">ليس لديك إذن للقيام بذلك.</string>
+    <string name="error_not_found">لم يتم العثور على المورد المطلوب.</string>
+    <string name="error_request_timeout">انتهت مهلة الطلب.</string>
+    <string name="error_conflict">يتعارض الطلب مع طلب آخر.</string>
+    <string name="error_serialization">تعذر تسلسل البيانات.</string>
+    <string name="error_too_many_requests">تم تجاوز الحصة المسموح بها.</string>
+    <string name="error_server">تعذر الاتصال بالخادم.</string>
+    <string name="error_no_internet">يرجى التحقق من اتصالك بالإنترنت.</string>
+    <string name="error_service_unavailable">الخدمة غير متوفرة.</string>
+    <string name="error_unknown">حدث خطأ غير معروف.</string>
+    <string name="successful_request">تم الطلب بنجاح.</string>
+</resources>

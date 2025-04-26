@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Track Hub</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="add">Add New</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="light_mode">Light Mode</string>
+    <string name="arabic">Arabic</string>
+    <string name="english">English</string>
+    <string name="back_button">Back Button</string>
+</resources>

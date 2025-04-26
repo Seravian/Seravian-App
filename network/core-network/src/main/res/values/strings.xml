@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_bad_request">The request is invalid.</string>
+    <string name="error_unauthorized">You are not authorized.</string>
+    <string name="error_forbidden">You don\'t have permission to do that.</string>
+    <string name="error_not_found">The requested resource was not found.</string>
+    <string name="error_request_timeout">The request time out.</string>
+    <string name="error_conflict">The request conflicts with another request.</string>
+    <string name="error_serialization">Couldn\'t serialize the data.</string>
+    <string name="error_too_many_requests">Your quota has been exceeded.</string>
+    <string name="error_server">Couldn\'t contact the server.</string>
+    <string name="error_no_internet">Please check your internet connection.</string>
+    <string name="error_service_unavailable">The service is unavailable.</string>
+    <string name="error_unknown">Unknown error happened.</string>
+    <string name="successful_request">The request was successful.</string>
+</resources>

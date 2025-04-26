@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="empty_user_name_error">لا يمكن أن يكون اسم المستخدم فارغاً</string>
+    <string name="empty_email_error">لا يمكن أن يكون البريد الإلكتروني فارغاً</string>
+    <string name="invalid_email_error">البريد الإلكتروني غير صالح</string>
+    <string name="empty_password_error">لا يمكن أن تكون كلمة المرور فارغة</string>
+    <string name="empty_confirm_password_error">لا يمكن أن يكون تأكيد كلمة المرور فارغاً</string>
+    <string name="minimum_6_characters_error">الحد الأدنى 6 أحرف</string>
+    <string name="minimum_8_characters_error">الحد الأدنى 8 أحرف</string>
+    <string name="at_least_one_number_error">رقم واحد على الأقل</string>
+    <string name="at_least_one_uppercase_letter_error">حرف كبير واحد على الأقل</string>
+    <string name="at_least_one_lowercase_letter_error">حرف صغير واحد على الأقل</string>
+    <string name="at_least_one_special_character_error">حرف خاص واحد على الأقل</string>
+    <string name="password_mismatch_error">كلمة المرور وتأكيد كلمة المرور غير متطابقين</string>
+    <string name="invalid_otp_error">رمز التحقق غير صالح</string>
+    <string name="name_cannot_be_empty">لا يمكن أن يكون الاسم فارغاً</string>
+    <string name="name_contains_invalid_characters">يحتوي الاسم على أحرف غير صالحة</string>
+    <string name="name_contains_insufficient_parts">يجب أن يتضمن الاسم اسم أول واسم أخير على الأقل</string>
+    <string name="invalid_phone_number">رقم الهاتف غير صالح</string>
+    <string name="mobile_number">رقم الهاتف المحمول</string>
+    <string name="ok">موافق</string>
+    <string name="cancel">إلغاء</string>
+</resources>

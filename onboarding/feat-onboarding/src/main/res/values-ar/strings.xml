@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="something_went_wrong">حدث خطأ ما</string>
+    <string name="select_user_type">اختر نوع المستخدم</string>
+    <string name="select_gender">اختر الجنس</string>
+    <string name="enter_details">أدخل التفاصيل</string>
+    <string name="doctor">طبيب</string>
+    <string name="patient">مريض</string>
+    <string name="male">ذكر</string>
+    <string name="female">أنثى</string>
+    <string name="submit">إرسال</string>
+    <string name="birth_date">تاريخ الميلاد</string>
+    <string name="full_name">الاسم الكامل</string>
+</resources>

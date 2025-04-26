@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="logo_image">صورة الشعار</string>
+    <string name="sign_in_to_your_account">تسجيل الدخول</string>
+    <string name="don_t_have_an_account">ليس لديك حساب؟ </string>
+    <string name="enter_the_sent_otp">أدخل رمز التحقق المرسل </string>
+    <string name="sign_up">اشترك</string>
+    <string name="register">إنشاء حساب</string>
+    <string name="already_have_an_account">لديك حساب بالفعل؟ </string>
+    <string name="sign_in">سجل دخولك</string>
+    <string name="enter_your_email">أدخل بريدك الإلكتروني</string>
+    <string name="email">البريد الإلكتروني</string>
+    <string name="Password">كلمة المرور</string>
+    <string name="enter_your_password">أدخل كلمة المرور</string>
+    <string name="forgot_password">نسيت كلمة المرور؟</string>
+    <string name="log_in">سجل دخولك</string>
+    <string name="confirm_password">تأكيد كلمة المرور</string>
+    <string name="confirm_your_password">تأكيد كلمة المرور الخاصة بك</string>
+    <string name="user_name">اسم المستخدم</string>
+    <string name="enter_your_username">أدخل اسم المستخدم الخاص بك</string>
+    <string name="create_new_password">إنشاء كلمة مرور جديدة</string>
+    <string name="next">التالي</string>
+    <string name="confirm">تأكيد</string>
+    <string name="back_button">زر الرجوع</string>
+    <string name="something_went_wrong">حدث شيء غير متوقع</string>
+    <string name="stars">نجوم</string>
+</resources>
