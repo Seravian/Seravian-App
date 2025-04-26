@@ -11,7 +11,7 @@ val onBoardingModule = module {
         OnBoardingRepositoryImpl(
             remoteDataSource = get(),
             roomDataSource = get(),
-            tokensRepository = get()
+            tokensDataSource = get()
         )
     }
 

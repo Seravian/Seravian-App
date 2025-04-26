@@ -17,7 +17,7 @@ val authModule = module {
         AuthRepositoryImpl(
             remoteDataSource = get(),
             roomDataSource = get(),
-            tokensRepository = get(),
+            tokensDataSource = get(),
             emailStateRepository = get()
         )
     }
