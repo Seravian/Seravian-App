@@ -18,7 +18,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -43,8 +43,6 @@ dependencies {
     ksp("androidx.room:room-compiler:$room")
     implementation("androidx.room:room-ktx:$room")
     implementation("androidx.room:room-paging:$room")
-
-    implementation(libs.bundles.dependency.injection)
 
     implementation(libs.androidx.core.ktx)
     testImplementation(libs.junit)

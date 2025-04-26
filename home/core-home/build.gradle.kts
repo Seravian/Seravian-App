@@ -34,8 +34,6 @@ android {
 
 dependencies {
 
-    implementation(project(":network:core-network"))
-
     implementation(libs.androidx.core.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

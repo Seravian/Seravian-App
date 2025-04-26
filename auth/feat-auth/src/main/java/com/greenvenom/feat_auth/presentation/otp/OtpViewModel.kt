@@ -2,8 +2,8 @@ package com.greenvenom.feat_auth.presentation.otp
 
 import androidx.lifecycle.viewModelScope
 import com.greenvenom.core_auth.data.dto.request.VerifyOTPRequest
-import com.greenvenom.core_auth.data.repository.EmailStateRepository
-import com.greenvenom.core_auth.domain.repository.AuthRepository
+import com.greenvenom.feat_auth.data.repository.EmailStateRepository
+import com.greenvenom.feat_auth.domain.repository.AuthRepository
 import com.greenvenom.core_ui.presentation.BaseAction
 import com.greenvenom.core_ui.presentation.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

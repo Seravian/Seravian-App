@@ -23,8 +23,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.greenvenom.feat_auth.R
-import com.greenvenom.core_auth.data.repository.EmailState
-import com.greenvenom.core_auth.data.repository.EmailStateRepository
+import com.greenvenom.feat_auth.data.EmailState
+import com.greenvenom.feat_auth.data.repository.EmailStateRepository
 import com.greenvenom.core_ui.components.CustomButton
 import com.greenvenom.feat_auth.presentation.component.AuthHeader
 import com.greenvenom.core_ui.components.CustomTextField

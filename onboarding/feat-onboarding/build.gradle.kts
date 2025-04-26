@@ -35,9 +35,12 @@ android {
 
 dependencies {
 
-    implementation(project(":network:core-network"))
-    implementation(project(":validation"))
     implementation(project(":onboarding:core-onboarding"))
+    implementation(project(":network:core-network"))
+    implementation(project(":local:core-local"))
+    implementation(project(":tokens:core-tokens"))
+    implementation(project(":profile:core-profile"))
+    implementation(project(":validation"))
     implementation(project(":core-ui"))
 
     implementation(libs.androidx.core.ktx)

@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.greenvenom.core_onboarding.data.dto.request.OnBoardingRequest
 import com.greenvenom.validation.ValidateInput
 import com.greenvenom.validation.domain.onSuccess
-import com.greenvenom.core_onboarding.domain.OnBoardingRepository
+import com.greenvenom.feat_onboarding.domain.OnBoardingRepository
 import com.greenvenom.core_ui.presentation.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

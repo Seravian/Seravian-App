@@ -18,7 +18,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -38,7 +38,6 @@ dependencies {
     val room = "2.6.1"
 
     implementation(project(":profile:core-profile"))
-    implementation(project(":crypto"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
 
@@ -48,8 +47,6 @@ dependencies {
     implementation("androidx.room:room-paging:$room")
 
     implementation("androidx.datastore:datastore-preferences:1.1.3")
-
-    implementation(libs.bundles.dependency.injection)
 
     implementation(libs.androidx.core.ktx)
     testImplementation(libs.junit)

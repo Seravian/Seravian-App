@@ -3,8 +3,8 @@ package com.greenvenom.feat_auth.presentation.reset_password
 import androidx.lifecycle.viewModelScope
 import com.greenvenom.core_auth.data.dto.request.SendOTPRequest
 import com.greenvenom.core_auth.data.dto.request.NewPasswordRequest
-import com.greenvenom.core_auth.data.repository.EmailStateRepository
-import com.greenvenom.core_auth.domain.repository.AuthRepository
+import com.greenvenom.feat_auth.data.repository.EmailStateRepository
+import com.greenvenom.feat_auth.domain.repository.AuthRepository
 import com.greenvenom.core_ui.presentation.BaseViewModel
 import com.greenvenom.validation.ValidateInput
 import com.greenvenom.validation.domain.onError

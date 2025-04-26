@@ -36,8 +36,7 @@ android {
 dependencies {
 
     implementation(project(":network:core-network"))
-    implementation(project(":local:core-local"))
-    implementation(project(":crypto"))
+    implementation(project(":tokens:core-tokens"))
     implementation(project(":auth:core-auth"))
     implementation(project(":profile:core-profile"))
     implementation(project(":home:core-home"))

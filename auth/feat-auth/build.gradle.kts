@@ -38,6 +38,9 @@ dependencies {
     val koin = "4.0.0"
 
     implementation(project(":network:core-network"))
+    implementation(project(":local:core-local"))
+    implementation(project(":tokens:core-tokens"))
+    implementation(project(":profile:core-profile"))
     implementation(project(":auth:core-auth"))
     implementation(project(":validation"))
     implementation(project(":core-ui"))
