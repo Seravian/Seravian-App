@@ -12,6 +12,8 @@ import androidx.navigation.compose.rememberNavController
 import com.greenvenom.core_navigation.data.NavigationType
 import com.greenvenom.core_navigation.data.repository.NavigationStateRepository
 import com.greenvenom.core_navigation.utils.AppNavigator
+import com.greenvenom.core_network.domain.SessionDestinations
+import com.greenvenom.core_network.domain.repository.SessionRepository
 import com.greenvenom.feat_auth.presentation.login.LoginScreen
 import com.greenvenom.feat_auth.presentation.otp.OtpScreen
 import com.greenvenom.feat_auth.presentation.register.RegisterScreen
@@ -30,21 +32,42 @@ fun AppNavHost(modifier: Modifier = Modifier) {
     val appNavigator = koinInject<AppNavigator>()
     val navigationStateRepository = koinInject<NavigationStateRepository>()
     val navigationState by navigationStateRepository.navigationState.collectAsStateWithLifecycle()
+    val sessionRepository = koinInject<SessionRepository>()
+    val sessionDestination by sessionRepository.sessionDestination.collectAsStateWithLifecycle()
 
     appNavigator.config(
         returnedDestination = Screen::class,
         navController = rememberNavController()
     )
 
+    when (sessionDestination) {
+        SessionDestinations.AUTH -> {
+            navigationStateRepository.navigate(
+                NavigationType.ClearBackStack(SubGraph.Auth)
+            )
+        }
+        SessionDestinations.ONBOARDING -> {
+            navigationStateRepository.navigate(
+                NavigationType.ClearBackStack(SubGraph.OnBoarding)
+            )
+        }
+        SessionDestinations.MAIN -> {
+            navigationStateRepository.navigate(
+                NavigationType.ClearBackStack(SubGraph.Main)
+            )
+        }
+        else -> {}
+    }
+
     NavHost(
         navController = appNavigator.navController,
-        startDestination = SubGraph.Auth,
+        startDestination = Screen.Splash,
         modifier = modifier
     ) {
         composable<Screen.Splash> {
             SplashScreen(
                 onStart = {
-
+                    sessionRepository.collectSessionStatus()
                 }
             )
         }
@@ -62,19 +85,9 @@ fun AppNavHost(modifier: Modifier = Modifier) {
                             NavigationType.Standard(Screen.VerifyEmail)
                         )
                     },
-                    navigateToOnBoarding = {
-                        navigationStateRepository.navigate(
-                            NavigationType.ClearBackStack(SubGraph.OnBoarding)
-                        )
-                    },
                     navigateToOTPScreen = {
                         navigationStateRepository.navigate(
                             NavigationType.Standard(Screen.OTP)
-                        )
-                    },
-                    navigateToMainScreen = {
-                        navigationStateRepository.navigate(
-                            NavigationType.ClearBackStack(SubGraph.Main)
                         )
                     }
                 )

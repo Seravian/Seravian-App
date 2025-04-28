@@ -2,8 +2,8 @@ package com.seravian.seravianapp.navigation.utils
 
 import com.greenvenom.core_navigation.data.NavigationType
 import com.greenvenom.core_navigation.data.repository.NavigationStateRepository
-import com.seravian.feat_network.data.repository.SessionDestinations
-import com.seravian.feat_network.data.repository.SessionStateRepository
+import com.greenvenom.core_network.domain.SessionDestinations
+import com.seravian.feat_network.data.repository.SeravianSessionRepository
 import com.seravian.feat_navigation.routes.SubGraph
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 class SessionDestinationHandler(
     private val navigationStateRepository: NavigationStateRepository,
-    private val sessionStateRepository: SessionStateRepository
+    private val seravianSessionRepository: SeravianSessionRepository
 ) {
     init {
         collectSessionDestinations()
@@ -19,7 +19,7 @@ class SessionDestinationHandler(
 
     fun collectSessionDestinations() {
         CoroutineScope(Dispatchers.Main).launch {
-            sessionStateRepository.userSessionDestination.collect { wantedDestination ->
+            seravianSessionRepository.sessionDestination.collect { wantedDestination ->
                 handleSessionStates(wantedDestination)
             }
         }
