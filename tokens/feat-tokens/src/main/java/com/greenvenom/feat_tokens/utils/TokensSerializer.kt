@@ -1,6 +1,7 @@
 package com.greenvenom.feat_tokens.utils
 
 import androidx.datastore.core.Serializer
+import com.greenvenom.core_tokens.domain.Tokens
 import com.greenvenom.crypto.Crypto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -9,17 +10,13 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.util.Base64
 
-object TokensSerializer : Serializer<com.greenvenom.core_tokens.domain.Tokens> {
+object TokensSerializer : Serializer<Tokens?> {
     private const val KEY_ALIAS = "Token"
 
-    override val defaultValue: com.greenvenom.core_tokens.domain.Tokens
-        get() = com.greenvenom.core_tokens.domain.Tokens(
-            accessToken = "",
-            refreshToken = "",
-            accessExpiresIn = ""
-        )
+    override val defaultValue: Tokens?
+        get() = null
 
-    override suspend fun readFrom(input: InputStream): com.greenvenom.core_tokens.domain.Tokens {
+    override suspend fun readFrom(input: InputStream): Tokens? {
         val encryptedBytes = withContext(Dispatchers.IO) {
             input.use { it.readBytes() }
         }
@@ -32,7 +29,7 @@ object TokensSerializer : Serializer<com.greenvenom.core_tokens.domain.Tokens> {
         return Json.decodeFromString(decodedJsonString)
     }
 
-    override suspend fun writeTo(t: com.greenvenom.core_tokens.domain.Tokens, output: OutputStream) {
+    override suspend fun writeTo(t: Tokens?, output: OutputStream) {
         val json = Json.encodeToString(t)
         val bytes = json.toByteArray()
         val encryptedBytes = Crypto.encrypt(

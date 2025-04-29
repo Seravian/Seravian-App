@@ -25,4 +25,5 @@ interface RemoteDataSource {
         onBoardingRequest: OnBoardingRequest
     ): NetworkResult<OnBoardingResponse, NetworkError>
     suspend fun logoutUser(refreshToken: String): EmptyResult<NetworkError>
+    suspend fun refreshTokens(refreshTokenRequest: RefreshTokenRequest): NetworkResult<TokensResponse, NetworkError>
 }
