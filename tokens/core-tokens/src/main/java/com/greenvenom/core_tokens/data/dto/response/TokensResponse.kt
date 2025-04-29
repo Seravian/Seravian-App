@@ -12,7 +12,7 @@ data class TokensResponse(
     fun extractTokens(): Tokens {
         return Tokens(
             accessToken = this.accessToken,
-            accessTokenExpirationUtc = this.accessTokenExpirationUtc,
+            accessTokenExpirationUtc = this.accessTokenExpirationUtc.substringBeforeLast(".") + "Z",
             refreshToken = this.refreshToken
         )
     }

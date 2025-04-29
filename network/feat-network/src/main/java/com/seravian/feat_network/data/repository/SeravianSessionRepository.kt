@@ -1,6 +1,10 @@
 package com.seravian.feat_network.data.repository
 
+import com.greenvenom.core_network.data.ErrorType
+import com.greenvenom.core_network.data.onError
+import com.greenvenom.core_network.data.onSuccess
 import com.greenvenom.core_network.domain.SessionDestinations
+import com.greenvenom.core_network.domain.repository.RemoteDataSource
 import com.greenvenom.core_network.domain.repository.SessionRepository
 import com.greenvenom.core_tokens.domain.repo.TokenDataSource
 import kotlinx.coroutines.CoroutineScope
@@ -12,7 +16,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SeravianSessionRepository(
-    private val tokenDataSource: TokenDataSource
+    private val tokenDataSource: TokenDataSource,
+    private val remoteDataSource: RemoteDataSource
 ): SessionRepository {
     private val scope = CoroutineScope(Dispatchers.IO)
 
@@ -26,7 +31,23 @@ class SeravianSessionRepository(
                 when {
                     tokens == null -> _sessionDestination.update { SessionDestinations.AUTH }
                     tokens.refreshToken.isNullOrEmpty() -> _sessionDestination.update { SessionDestinations.ONBOARDING }
-                    else -> _sessionDestination.update { SessionDestinations.MAIN }
+                    else -> {
+                        if (tokens.isAccessExpired()) {
+                            val tokensResponse = remoteDataSource.refreshTokens(tokens.toRefreshTokenRequest())
+                            tokensResponse
+                                .onSuccess {
+                                    tokenDataSource.saveTokensLocally(it.extractTokens())
+                                }
+                                .onError { error ->
+                                    if (error.errorType == ErrorType.NOT_FOUND) {
+                                        tokenDataSource.deleteTokens()
+                                    }
+                                }
+
+                        } else {
+                            _sessionDestination.update { SessionDestinations.MAIN }
+                        }
+                    }
                 }
             }
         }
