@@ -1,4 +1,4 @@
-package com.seravian.feat_network.data.repository
+package com.greenvenom.core_network.domain
 
 enum class SessionDestinations {
     INITIALIZE,

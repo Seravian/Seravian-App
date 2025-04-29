@@ -3,6 +3,7 @@ package com.seravian.feat_network.util
 import com.greenvenom.core_network.api.utils.applyBaseConfig
 import com.greenvenom.core_network.api.utils.constructUrl
 import com.greenvenom.core_network.api.utils.safeCall
+import com.greenvenom.core_network.data.ErrorType
 import com.greenvenom.core_network.data.map
 import com.greenvenom.core_network.data.onError
 import com.greenvenom.core_network.data.onSuccess
@@ -26,7 +27,6 @@ object HttpClientFactory {
     fun authorizedClient(
         engine: HttpClientEngine,
         tokensDataSource: TokenDataSource,
-        publicHttpClient: HttpClient
     ): HttpClient {
         return HttpClient(engine) {
             applyBaseConfig()
@@ -44,7 +44,7 @@ object HttpClientFactory {
                         val tokens = tokensDataSource.getStoredTokens() ?: return@refreshTokens null
 
                         val newTokensResult = safeCall<TokensResponse> {
-                            publicHttpClient.post(urlString = constructUrl("auth/refresh-token")) {
+                            this.client.post(urlString = constructUrl("auth/refresh-token")) {
                                 setBody(tokens.toRefreshTokenRequest())
                             }
                         }.map { it.extractTokens() }
@@ -55,7 +55,12 @@ object HttpClientFactory {
                                 tokensDataSource.saveTokensLocally(it)
                                 bearerTokens = BearerTokens(it.accessToken, it.refreshToken)
                             }
-                            .onError { bearerTokens = null }
+                            .onError { error ->
+                                if (error.errorType == ErrorType.BAD_REQUEST) {
+                                    bearerTokens = null
+                                    tokensDataSource.deleteTokens()
+                                }
+                            }
 
                         bearerTokens
                     }

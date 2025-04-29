@@ -46,9 +46,7 @@ import com.greenvenom.validation.util.toString
 fun LoginScreen(
     navigateToRegisterScreen: () -> Unit,
     navigateToEmailVerificationScreen: () -> Unit,
-    navigateToOnBoarding:() -> Unit,
     navigateToOTPScreen: () -> Unit,
-    navigateToMainScreen: () -> Unit
 ) {
     BaseScreen<LoginViewModel> { viewModel ->
         val state by viewModel.loginState.collectAsStateWithLifecycle()
@@ -59,9 +57,7 @@ fun LoginScreen(
             baseActions = viewModel::baseAction,
             navigateToRegisterScreen = navigateToRegisterScreen,
             navigateToEmailVerificationScreen = navigateToEmailVerificationScreen,
-            navigateToOnBoarding = navigateToOnBoarding,
             navigateToOTPScreen = navigateToOTPScreen,
-            navigateToMainScreen = navigateToMainScreen
         )
     }
 }
@@ -73,9 +69,7 @@ private fun LoginContent(
     baseActions: (BaseAction) -> Unit,
     navigateToRegisterScreen: () -> Unit,
     navigateToEmailVerificationScreen: () -> Unit,
-    navigateToOnBoarding: () -> Unit,
     navigateToOTPScreen: () -> Unit,
-    navigateToMainScreen: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -88,13 +82,8 @@ private fun LoginContent(
             if (!response.isEmailVerified) {
                 loginActions(LoginAction.StoreReceivedEmail(response.email))
                 navigateToOTPScreen()
-            }
-            else {
-                if (response.role == null){
-                    navigateToOnBoarding()
-                } else{
-                    navigateToMainScreen()
-                }
+            } else {
+                
             }
         }
 
@@ -198,9 +187,7 @@ private fun LoginContentsPreview() {
             baseActions = { },
             navigateToRegisterScreen = { },
             navigateToEmailVerificationScreen = { },
-            navigateToOnBoarding = {  },
             navigateToOTPScreen = { },
-            navigateToMainScreen = { }
         )
     }
 }

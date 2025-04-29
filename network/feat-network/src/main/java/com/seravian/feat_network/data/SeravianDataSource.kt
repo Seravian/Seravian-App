@@ -13,6 +13,7 @@ import com.greenvenom.core_network.api.utils.safeCall
 import com.greenvenom.core_network.data.EmptyResult
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
+import com.greenvenom.core_network.data.map
 import com.greenvenom.core_network.data.onSuccess
 import com.greenvenom.core_onboarding.data.dto.request.OnBoardingRequest
 import com.greenvenom.core_onboarding.data.dto.response.OnBoardingResponse
@@ -100,5 +101,13 @@ class SeravianDataSource(
                 )
             }
         }.onSuccess { authorizedHttpClient.authProvider<BearerAuthProvider>()?.clearToken() }
+    }
+
+    override suspend fun refreshTokens(refreshTokenRequest: RefreshTokenRequest): NetworkResult<TokensResponse, NetworkError> {
+        return safeCall<TokensResponse> {
+            publicHttpClient.post(urlString = constructUrl("auth/refresh-token")) {
+                setBody(refreshTokenRequest)
+            }
+        }
     }
 }
