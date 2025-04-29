@@ -39,11 +39,10 @@ class SeravianSessionRepository(
                                     tokenDataSource.saveTokensLocally(it.extractTokens())
                                 }
                                 .onError { error ->
-                                    if (error.errorType == ErrorType.NOT_FOUND) {
+                                    if (error.errorType == ErrorType.BAD_REQUEST) {
                                         tokenDataSource.deleteTokens()
                                     }
                                 }
-
                         } else {
                             _sessionDestination.update { SessionDestinations.MAIN }
                         }

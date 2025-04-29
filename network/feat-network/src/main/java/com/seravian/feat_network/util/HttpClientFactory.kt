@@ -56,7 +56,7 @@ object HttpClientFactory {
                                 bearerTokens = BearerTokens(it.accessToken, it.refreshToken)
                             }
                             .onError { error ->
-                                if (error.errorType == ErrorType.NOT_FOUND) {
+                                if (error.errorType == ErrorType.BAD_REQUEST) {
                                     bearerTokens = null
                                     tokensDataSource.deleteTokens()
                                 }
