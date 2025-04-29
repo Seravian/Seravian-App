@@ -34,7 +34,8 @@ val networkModule = module {
 
     single<SessionRepository> {
         SeravianSessionRepository(
-            tokenDataSource = get()
+            tokenDataSource = get(),
+            remoteDataSource = get()
         )
     }
 }
