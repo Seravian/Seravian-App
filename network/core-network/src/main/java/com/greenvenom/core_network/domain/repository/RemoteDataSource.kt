@@ -14,6 +14,11 @@ import com.greenvenom.core_onboarding.data.dto.request.OnBoardingRequest
 import com.greenvenom.core_onboarding.data.dto.response.OnBoardingResponse
 import com.greenvenom.core_tokens.data.dto.request.RefreshTokenRequest
 import com.greenvenom.core_tokens.data.dto.response.TokensResponse
+import com.seravian.core_chat.data.dto.request.CreateChatRequest
+import com.seravian.core_chat.data.dto.request.DeleteChatRequest
+import com.seravian.core_chat.data.dto.request.EditChatRequest
+import com.seravian.core_chat.data.dto.respose.CreateChatResponse
+import com.seravian.core_chat.data.dto.respose.EditChatResponse
 
 interface RemoteDataSource {
     suspend fun registerUser(registerRequest: RegisterRequest): NetworkResult<RegisterResponse, NetworkError>
@@ -26,4 +31,7 @@ interface RemoteDataSource {
     ): NetworkResult<OnBoardingResponse, NetworkError>
     suspend fun logoutUser(refreshToken: String): EmptyResult<NetworkError>
     suspend fun refreshTokens(refreshTokenRequest: RefreshTokenRequest): NetworkResult<TokensResponse, NetworkError>
+    suspend fun createChat(createChatRequest: CreateChatRequest): NetworkResult<CreateChatResponse,NetworkError>
+    suspend fun updateChat(editChatRequest: EditChatRequest):NetworkResult<EditChatResponse,NetworkError>
+    suspend fun deleteChat(deleteChatRequest: DeleteChatRequest):EmptyResult<NetworkError>
 }

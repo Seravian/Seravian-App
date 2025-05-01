@@ -13,17 +13,23 @@ import com.greenvenom.core_network.api.utils.safeCall
 import com.greenvenom.core_network.data.EmptyResult
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
-import com.greenvenom.core_network.data.map
 import com.greenvenom.core_network.data.onSuccess
 import com.greenvenom.core_onboarding.data.dto.request.OnBoardingRequest
 import com.greenvenom.core_onboarding.data.dto.response.OnBoardingResponse
 import com.greenvenom.core_network.domain.repository.RemoteDataSource
 import com.greenvenom.core_tokens.data.dto.request.RefreshTokenRequest
 import com.greenvenom.core_tokens.data.dto.response.TokensResponse
+import com.seravian.core_chat.data.dto.request.CreateChatRequest
+import com.seravian.core_chat.data.dto.request.DeleteChatRequest
+import com.seravian.core_chat.data.dto.request.EditChatRequest
+import com.seravian.core_chat.data.dto.respose.CreateChatResponse
+import com.seravian.core_chat.data.dto.respose.EditChatResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.auth.authProvider
 import io.ktor.client.plugins.auth.providers.BearerAuthProvider
+import io.ktor.client.request.delete
 import io.ktor.client.request.post
+import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 
 class SeravianDataSource(
@@ -107,6 +113,30 @@ class SeravianDataSource(
         return safeCall<TokensResponse> {
             publicHttpClient.post(urlString = constructUrl("auth/refresh-token")) {
                 setBody(refreshTokenRequest)
+            }
+        }
+    }
+
+    override suspend fun createChat(createChatRequest: CreateChatRequest): NetworkResult<CreateChatResponse, NetworkError> {
+        return safeCall {
+            authorizedHttpClient.post(urlString = constructUrl("chat/create")){
+                setBody(createChatRequest)
+            }
+        }
+    }
+
+    override suspend fun updateChat(editChatRequest: EditChatRequest): NetworkResult<EditChatResponse, NetworkError> {
+        return safeCall {
+            authorizedHttpClient.put(urlString = constructUrl("chat/update")){
+                setBody(editChatRequest)
+            }
+        }
+    }
+
+    override suspend fun deleteChat(deleteChatRequest: DeleteChatRequest): EmptyResult<NetworkError> {
+        return safeCall {
+            authorizedHttpClient.delete(urlString = constructUrl("chat/delete")){
+                setBody(deleteChatRequest)
             }
         }
     }
