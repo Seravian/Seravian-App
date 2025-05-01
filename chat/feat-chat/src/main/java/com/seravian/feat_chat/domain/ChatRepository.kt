@@ -6,13 +6,22 @@ import com.greenvenom.core_network.data.NetworkResult
 import com.seravian.core_chat.data.dto.request.CreateChatRequest
 import com.seravian.core_chat.data.dto.request.DeleteChatRequest
 import com.seravian.core_chat.data.dto.request.EditChatRequest
+import com.seravian.core_chat.data.dto.request.GetChatMessagesRequest
+import com.seravian.core_chat.data.dto.respose.ChatMessagesResponse
+import com.seravian.core_chat.data.dto.respose.ChatResponse
 import com.seravian.core_chat.data.dto.respose.CreateChatResponse
 import com.seravian.core_chat.data.dto.respose.EditChatResponse
 
 interface ChatRepository {
-    suspend fun createChat(createChatRequest: CreateChatRequest):NetworkResult<CreateChatResponse,NetworkError>
+    suspend fun createChat(createChatRequest: CreateChatRequest): NetworkResult<CreateChatResponse,NetworkError>
 
-    suspend fun updateChat(editChatRequest: EditChatRequest):NetworkResult<EditChatResponse,NetworkError>
+    suspend fun updateChat(editChatRequest: EditChatRequest): NetworkResult<EditChatResponse,NetworkError>
 
-    suspend fun deleteChat(deleteChatRequest: DeleteChatRequest):EmptyResult<NetworkError>
+    suspend fun deleteChat(deleteChatRequest: DeleteChatRequest): EmptyResult<NetworkError>
+
+    suspend fun getChats(): NetworkResult<List<ChatResponse>, NetworkError>
+
+    suspend fun getChatMessages(
+        getChatMessagesRequest: GetChatMessagesRequest
+    ): NetworkResult<ChatMessagesResponse, NetworkError>
 }

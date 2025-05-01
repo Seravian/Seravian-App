@@ -3,17 +3,15 @@ package com.seravian.feat_chat.presentation.models
 import com.seravian.core_chat.domain.models.Message
 
 data class MessageUI(
-    var id: String = "",
-    val senderName: String = "",
-    val senderId: String = "",
+    val id: Int = 0,
     val content: String = "",
-    val dateTime: String = ""
+    val timestamp: String = "",
+    val isAI: Boolean = false
 )
 
-fun Message.toMessageUI() = MessageUI(
+fun Message.toMessageUI(id: Int) = MessageUI(
     id = id,
-    senderName = senderName,
-    senderId = senderId,
     content = content,
-    dateTime = formatDateTime()
+    timestamp = formatDateTime(),
+    isAI = isAI
 )

@@ -14,5 +14,9 @@ val chatModule = module {
         )
     }
 
-    viewModel { ChatViewModel() }
+    viewModel {
+        ChatViewModel(
+            chatRepository = get()
+        )
+    }
 }

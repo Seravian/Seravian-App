@@ -19,7 +19,7 @@ enum class BottomDestination(
     AIChat(
         icon = R.drawable.chat_ic,
         label = R.string.ai_chat,
-        target = Screen.AIChat
+        target = Screen.ChatsList
     ),
     Sessions(
         icon = R.drawable.sessions_ic,
