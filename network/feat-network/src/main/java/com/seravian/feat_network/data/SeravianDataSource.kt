@@ -13,22 +13,42 @@ import com.greenvenom.core_network.api.utils.safeCall
 import com.greenvenom.core_network.data.EmptyResult
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
-import com.greenvenom.core_network.data.map
 import com.greenvenom.core_network.data.onSuccess
 import com.greenvenom.core_onboarding.data.dto.request.OnBoardingRequest
 import com.greenvenom.core_onboarding.data.dto.response.OnBoardingResponse
 import com.greenvenom.core_network.domain.repository.RemoteDataSource
 import com.greenvenom.core_tokens.data.dto.request.RefreshTokenRequest
 import com.greenvenom.core_tokens.data.dto.response.TokensResponse
+import com.seravian.core_chat.data.dto.request.ClientRequest
+import com.seravian.core_chat.data.dto.request.CreateChatRequest
+import com.seravian.core_chat.data.dto.request.DeleteChatRequest
+import com.seravian.core_chat.data.dto.request.EditChatRequest
+import com.seravian.core_chat.data.dto.request.GetChatMessagesRequest
+import com.seravian.core_chat.data.dto.request.JoinChatRequest
+import com.seravian.core_chat.data.dto.respose.AIResponse
+import com.seravian.core_chat.data.dto.respose.ChatMessagesResponse
+import com.seravian.core_chat.data.dto.respose.ChatResponse
+import com.seravian.core_chat.data.dto.respose.ClientResponse
+import com.seravian.core_chat.data.dto.respose.CreateChatResponse
+import com.seravian.core_chat.data.dto.respose.EditChatResponse
+import com.seravian.core_profile.data.remote.request.LogoutRequest
+import eu.lepicekmichal.signalrkore.HubConnection
+import eu.lepicekmichal.signalrkore.OnValue1
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.auth.authProvider
 import io.ktor.client.plugins.auth.providers.BearerAuthProvider
+import io.ktor.client.request.delete
+import io.ktor.client.request.get
 import io.ktor.client.request.post
+import io.ktor.client.request.put
 import io.ktor.client.request.setBody
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class SeravianDataSource(
-    val publicHttpClient: HttpClient,
-    val authorizedHttpClient: HttpClient
+    private val publicHttpClient: HttpClient,
+    private val authorizedHttpClient: HttpClient,
+    private val signalRClient: HubConnection
 ): RemoteDataSource {
     override suspend fun registerUser(
         registerRequest: RegisterRequest
@@ -91,14 +111,10 @@ class SeravianDataSource(
         }.onSuccess { authorizedHttpClient.authProvider<BearerAuthProvider>()?.clearToken() }
     }
 
-    override suspend fun logoutUser(refreshToken: String): EmptyResult<NetworkError> {
+    override suspend fun logoutUser(logoutRequest: LogoutRequest): EmptyResult<NetworkError> {
         return safeCall<Unit> {
             authorizedHttpClient.post(urlString = constructUrl("auth/logout")) {
-                setBody(
-                    mapOf(
-                        "refreshToken" to refreshToken
-                    )
-                )
+                setBody(logoutRequest)
             }
         }.onSuccess { authorizedHttpClient.authProvider<BearerAuthProvider>()?.clearToken() }
     }
@@ -108,6 +124,74 @@ class SeravianDataSource(
             publicHttpClient.post(urlString = constructUrl("auth/refresh-token")) {
                 setBody(refreshTokenRequest)
             }
+        }
+    }
+
+    override suspend fun createChat(createChatRequest: CreateChatRequest): NetworkResult<CreateChatResponse, NetworkError> {
+        return safeCall {
+            authorizedHttpClient.post(urlString = constructUrl("chat/create")){
+                setBody(createChatRequest)
+            }
+        }
+    }
+
+    override suspend fun updateChat(editChatRequest: EditChatRequest): NetworkResult<EditChatResponse, NetworkError> {
+        return safeCall {
+            authorizedHttpClient.put(urlString = constructUrl("chat/update")){
+                setBody(editChatRequest)
+            }
+        }
+    }
+
+    override suspend fun deleteChat(deleteChatRequest: DeleteChatRequest): EmptyResult<NetworkError> {
+        return safeCall {
+            authorizedHttpClient.delete(urlString = constructUrl("chat/delete")){
+                setBody(deleteChatRequest)
+            }
+        }
+    }
+
+    override suspend fun getChats(): NetworkResult<List<ChatResponse>, NetworkError> {
+        return safeCall {
+            authorizedHttpClient.get(urlString = constructUrl("chat/get-chats"))
+        }
+    }
+
+    override suspend fun getChatMessages(
+        getChatMessagesRequest: GetChatMessagesRequest
+    ): NetworkResult<ChatMessagesResponse, NetworkError> {
+        return safeCall {
+            authorizedHttpClient.get(urlString = constructUrl("chat/get-chat-messages")){
+                setBody(getChatMessagesRequest)
+            }
+        }
+    }
+
+    override suspend fun startSignalRConnection() {
+        signalRClient.start()
+    }
+
+    override suspend fun stopSignalRConnection() {
+        signalRClient.stop()
+    }
+
+    override fun joinChat(joinChatRequest: JoinChatRequest) {
+        signalRClient.send("join-chat", joinChatRequest)
+    }
+
+    override fun sendRequest(clientRequest: ClientRequest) {
+        signalRClient.send("send-client-request", clientRequest)
+    }
+
+    override fun receiveClientRequest(): Flow<ClientResponse> {
+        return signalRClient.on("receive-client-request", ClientResponse::class).map {
+            (clientResponse) -> clientResponse
+        }
+    }
+
+    override fun receiveAIResponse(): Flow<AIResponse> {
+        return signalRClient.on("receive-ai-response", AIResponse::class).map {
+            (aiResponse) -> aiResponse
         }
     }
 }

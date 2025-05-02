@@ -14,6 +14,20 @@ import com.greenvenom.core_onboarding.data.dto.request.OnBoardingRequest
 import com.greenvenom.core_onboarding.data.dto.response.OnBoardingResponse
 import com.greenvenom.core_tokens.data.dto.request.RefreshTokenRequest
 import com.greenvenom.core_tokens.data.dto.response.TokensResponse
+import com.seravian.core_chat.data.dto.request.ClientRequest
+import com.seravian.core_chat.data.dto.request.CreateChatRequest
+import com.seravian.core_chat.data.dto.request.DeleteChatRequest
+import com.seravian.core_chat.data.dto.request.EditChatRequest
+import com.seravian.core_chat.data.dto.request.GetChatMessagesRequest
+import com.seravian.core_chat.data.dto.request.JoinChatRequest
+import com.seravian.core_chat.data.dto.respose.AIResponse
+import com.seravian.core_chat.data.dto.respose.ChatMessagesResponse
+import com.seravian.core_chat.data.dto.respose.ChatResponse
+import com.seravian.core_chat.data.dto.respose.ClientResponse
+import com.seravian.core_chat.data.dto.respose.CreateChatResponse
+import com.seravian.core_chat.data.dto.respose.EditChatResponse
+import com.seravian.core_profile.data.remote.request.LogoutRequest
+import kotlinx.coroutines.flow.Flow
 
 interface RemoteDataSource {
     suspend fun registerUser(registerRequest: RegisterRequest): NetworkResult<RegisterResponse, NetworkError>
@@ -24,6 +38,19 @@ interface RemoteDataSource {
     suspend fun updateUserDetails(
         onBoardingRequest: OnBoardingRequest
     ): NetworkResult<OnBoardingResponse, NetworkError>
-    suspend fun logoutUser(refreshToken: String): EmptyResult<NetworkError>
+    suspend fun logoutUser(logoutRequest: LogoutRequest): EmptyResult<NetworkError>
     suspend fun refreshTokens(refreshTokenRequest: RefreshTokenRequest): NetworkResult<TokensResponse, NetworkError>
+    suspend fun createChat(createChatRequest: CreateChatRequest): NetworkResult<CreateChatResponse,NetworkError>
+    suspend fun updateChat(editChatRequest: EditChatRequest):NetworkResult<EditChatResponse,NetworkError>
+    suspend fun deleteChat(deleteChatRequest: DeleteChatRequest):EmptyResult<NetworkError>
+    suspend fun getChats(): NetworkResult<List<ChatResponse>, NetworkError>
+    suspend fun getChatMessages(
+        getChatMessagesRequest: GetChatMessagesRequest
+    ): NetworkResult<ChatMessagesResponse, NetworkError>
+    suspend fun startSignalRConnection()
+    suspend fun stopSignalRConnection()
+    fun joinChat(joinChatRequest: JoinChatRequest)
+    fun sendRequest(clientRequest: ClientRequest)
+    fun receiveClientRequest(): Flow<ClientResponse>
+    fun receiveAIResponse(): Flow<AIResponse>
 }

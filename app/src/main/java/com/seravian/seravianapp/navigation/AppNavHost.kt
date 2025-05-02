@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.greenvenom.core_navigation.data.NavigationType
 import com.greenvenom.core_navigation.data.repository.NavigationStateRepository
 import com.greenvenom.core_navigation.utils.AppNavigator
@@ -24,6 +25,7 @@ import com.seravian.feat_navigation.routes.Screen
 import com.seravian.feat_navigation.routes.SubGraph
 import com.seravian.feat_home.presentation.HomeScreen
 import com.greenvenom.feat_onboarding.presentation.screens.OnBoardingScreen
+import com.seravian.feat_chat.presentation.screen.ChatListScreen
 import com.seravian.feat_chat.presentation.screen.ChatScreen
 import org.koin.compose.koinInject
 
@@ -172,14 +174,24 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             composable<Screen.Home> {
                 HomeScreen()
             }
-            composable<Screen.AIChat> {
-               ChatScreen()
+            composable<Screen.ChatsList> {
+                ChatListScreen(
+                    navigateToChat = { chatId ->
+                        navigationStateRepository.navigate(
+                            NavigationType.Standard(Screen.Chat(chatId))
+                        )
+                    }
+                )
             }
             composable<Screen.Sessions> {
                 Text(text = "Sessions")
             }
             composable<Screen.Doctors> {
                 Text(text = "Doctors")
+            }
+            composable<Screen.Chat> {
+                val args = it.toRoute<Screen.Chat>()
+                ChatScreen(args.chatId)
             }
         }
     }

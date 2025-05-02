@@ -2,8 +2,8 @@ package com.seravian.feat_local.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.seravian.core_profile.data.ProfileDao
-import com.seravian.core_profile.data.ProfileEntity
+import com.seravian.core_profile.data.local.ProfileDao
+import com.seravian.core_profile.data.local.ProfileEntity
 
 @Database(
     entities = [ProfileEntity::class],

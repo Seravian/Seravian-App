@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
@@ -33,6 +32,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.greenvenom.core_ui.components.TopAppBar
 import com.greenvenom.core_ui.theme.AppTheme
 import com.seravian.core_chat.domain.models.Message
+import com.seravian.feat_chat.presentation.ChatAction
 import com.seravian.feat_chat.presentation.components.ChatInputTextField
 import com.seravian.feat_chat.presentation.components.ReceivedMessageCard
 import com.seravian.feat_chat.presentation.components.SentMessageCard
@@ -41,16 +41,15 @@ import com.seravian.feat_chat.presentation.viewModel.ChatState
 
 @Composable
 fun ChatScreen(
+    chatId: String,
     modifier: Modifier = Modifier
 ) {
-    val userId = "suid3"
-
     BaseScreen<ChatViewModel> { viewModel ->
+        viewModel.chatAction(ChatAction.GetChatMessages(chatId))
         val chatState by viewModel.chatState.collectAsStateWithLifecycle()
 
         ChatScreenContent(
             chatState = chatState,
-            userId = userId,
             modifier = modifier
         )
     }
@@ -59,7 +58,6 @@ fun ChatScreen(
 @Composable
 private fun ChatScreenContent(
     chatState: ChatState,
-    userId: String,
     modifier: Modifier = Modifier
 ) {
     var input by rememberSaveable { mutableStateOf("") }
@@ -119,10 +117,12 @@ private fun ChatScreenContent(
                 .fillMaxSize()
         ) {
             items(
-                items = chatState.messagesList.map { message -> message.toMessageUI() },
+                items = chatState.messagesList?.mapIndexed { index, message ->
+                    message.toMessageUI(index)
+                } ?: emptyList(),
                 key = { message -> message.id }
             ) { message ->
-                if (userId == message.senderId) {
+                if (!message.isAI) {
                     //sent
                     SentMessageCard(message = message)
 
@@ -141,13 +141,12 @@ private fun ChatScreenPreview() {
     AppTheme {
         ChatScreenContent(
             chatState = ChatState(
-                messagesList = listOf(
-                    Message(id = "uuid1", content = "Hello", senderName = "hossam", dateTime = 2333232),
-                    Message(id = "uuid3", content = "gfhgfhfggfdkjghfdgudfiuhgdfgiufdhigudrhduihjnifgudnhiufgnhuidfgnhiudfnsghfduhiugfdgfiuhf", senderName = "hossam", dateTime = 2333232),
-                    Message(id = "uuid2", content = "Hello", senderId = "suid3", dateTime = 2333232)
+                messagesList = mutableListOf(
+                    Message(isAI = false, content = "Hello", timestamp = "2023-06-05T14:30:40Z"),
+                    Message(isAI = true, content = "gfhgfhfggfdkjghfdgudfiuhgdfgiufdhigudrhduihjnifgudnhiufgnhuidfgnhiudfnsghfduhiugfdgfiuhf", timestamp = "2023-06-05T14:30:45Z"),
+                    Message(isAI = true, content = "Hello", timestamp = "2023-06-05T14:30:50Z")
                 )
             ),
-            userId = "suid3"
         )
     }
 }

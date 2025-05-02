@@ -1,4 +1,4 @@
-package com.seravian.core_profile.data
+package com.seravian.core_profile.data.local
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

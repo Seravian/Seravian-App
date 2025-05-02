@@ -1,19 +1,25 @@
 package com.seravian.core_chat.domain.models
 
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 data class Message(
-    var id: String = "",
-    val senderName: String = "",
-    val senderId: String = "",
     val content: String = "",
-    val dateTime: Long = 0
+    val timestamp: String = "",
+    val isAI: Boolean = false
 ) {
     fun formatDateTime(): String {
-        val date = Date(dateTime)
-        val simpleDateFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
-        return simpleDateFormat.format(date)
+        val cleanedTimestamp = if (timestamp.contains(".")) {
+            timestamp.substringBefore(".") + "Z"
+        } else {
+            if (!timestamp.endsWith("Z")) timestamp + "Z" else timestamp
+        }
+
+        val instant = Instant.parse(cleanedTimestamp)
+        return DateTimeFormatter
+            .ofPattern("dd/MM/yyyy h:mm a")  // 05/06/2023 2:30 PM
+            .withZone(ZoneId.systemDefault())
+            .format(instant)
     }
 }
