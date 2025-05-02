@@ -26,6 +26,7 @@ import com.seravian.core_chat.data.dto.respose.ChatResponse
 import com.seravian.core_chat.data.dto.respose.ClientResponse
 import com.seravian.core_chat.data.dto.respose.CreateChatResponse
 import com.seravian.core_chat.data.dto.respose.EditChatResponse
+import com.seravian.core_profile.data.remote.request.LogoutRequest
 import kotlinx.coroutines.flow.Flow
 
 interface RemoteDataSource {
@@ -37,7 +38,7 @@ interface RemoteDataSource {
     suspend fun updateUserDetails(
         onBoardingRequest: OnBoardingRequest
     ): NetworkResult<OnBoardingResponse, NetworkError>
-    suspend fun logoutUser(refreshToken: String): EmptyResult<NetworkError>
+    suspend fun logoutUser(logoutRequest: LogoutRequest): EmptyResult<NetworkError>
     suspend fun refreshTokens(refreshTokenRequest: RefreshTokenRequest): NetworkResult<TokensResponse, NetworkError>
     suspend fun createChat(createChatRequest: CreateChatRequest): NetworkResult<CreateChatResponse,NetworkError>
     suspend fun updateChat(editChatRequest: EditChatRequest):NetworkResult<EditChatResponse,NetworkError>

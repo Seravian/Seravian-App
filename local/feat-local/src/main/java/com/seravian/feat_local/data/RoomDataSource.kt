@@ -1,8 +1,8 @@
 package com.seravian.feat_local.data
 
 import com.seravian.core_local.domain.LocalDataSource
-import com.seravian.core_profile.data.ProfileDao
-import com.seravian.core_profile.data.ProfileEntity
+import com.seravian.core_profile.data.local.ProfileDao
+import com.seravian.core_profile.data.local.ProfileEntity
 
 class RoomDataSource(
     private val profileDao: ProfileDao

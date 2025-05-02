@@ -31,6 +31,7 @@ import com.seravian.core_chat.data.dto.respose.ChatResponse
 import com.seravian.core_chat.data.dto.respose.ClientResponse
 import com.seravian.core_chat.data.dto.respose.CreateChatResponse
 import com.seravian.core_chat.data.dto.respose.EditChatResponse
+import com.seravian.core_profile.data.remote.request.LogoutRequest
 import eu.lepicekmichal.signalrkore.HubConnection
 import eu.lepicekmichal.signalrkore.OnValue1
 import io.ktor.client.HttpClient
@@ -110,14 +111,10 @@ class SeravianDataSource(
         }.onSuccess { authorizedHttpClient.authProvider<BearerAuthProvider>()?.clearToken() }
     }
 
-    override suspend fun logoutUser(refreshToken: String): EmptyResult<NetworkError> {
+    override suspend fun logoutUser(logoutRequest: LogoutRequest): EmptyResult<NetworkError> {
         return safeCall<Unit> {
             authorizedHttpClient.post(urlString = constructUrl("auth/logout")) {
-                setBody(
-                    mapOf(
-                        "refreshToken" to refreshToken
-                    )
-                )
+                setBody(logoutRequest)
             }
         }.onSuccess { authorizedHttpClient.authProvider<BearerAuthProvider>()?.clearToken() }
     }
