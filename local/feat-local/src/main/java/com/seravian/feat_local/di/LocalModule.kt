@@ -23,7 +23,7 @@ val localModule = module {
     }
 
     single<PrefsDataSource> {
-        AppPrefsDataSource()
+        AppPrefsDataSource(androidContext())
     }
 
     single<LocalDataSource> {

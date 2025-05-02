@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.StateFlow
 interface PrefsDataSource {
     val appPrefsState: StateFlow<AppPrefsState>
 
-    suspend fun changeTheme(context: Context, isDarkTheme: Boolean)
-    fun getThemePreference(context: Context): Flow<Boolean>
+    suspend fun changeTheme(isDarkTheme: Boolean)
+    fun getThemePreference(): Flow<Boolean>
     fun changeLanguage(languageTag: String)
     fun getCurrentLanguage(): String
 }

@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import java.util.Locale
 
-class AppPrefsDataSource(): PrefsDataSource {
+class AppPrefsDataSource(private val context: Context): PrefsDataSource {
     private val _appPrefsState = MutableStateFlow(AppPrefsState())
     override val appPrefsState = _appPrefsState.asStateFlow()
 
@@ -30,7 +30,7 @@ class AppPrefsDataSource(): PrefsDataSource {
         }
     }
     
-    override suspend fun changeTheme(context: Context, isDarkTheme: Boolean) {
+    override suspend fun changeTheme( isDarkTheme: Boolean) {
         context.themeDataStore.edit { preferences ->
             preferences[darkThemeKey] = isDarkTheme
         }
@@ -42,7 +42,7 @@ class AppPrefsDataSource(): PrefsDataSource {
         }
     }
 
-    override fun getThemePreference(context: Context): Flow<Boolean> =
+    override fun getThemePreference(): Flow<Boolean> =
         context.themeDataStore.data.map { preferences ->
             preferences[darkThemeKey] ?: false
         }
