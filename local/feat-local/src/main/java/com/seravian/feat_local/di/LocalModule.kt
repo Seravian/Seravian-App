@@ -1,7 +1,9 @@
 package com.seravian.feat_local.di
 
 import androidx.room.Room
+import com.seravian.feat_local.data.AppPrefsDataSource
 import com.seravian.core_local.domain.LocalDataSource
+import com.seravian.core_local.domain.PrefsDataSource
 import com.seravian.feat_local.data.RoomDataSource
 import com.seravian.feat_local.data.db.SeravianDatabase
 import org.koin.android.ext.koin.androidContext
@@ -18,6 +20,10 @@ val localModule = module {
             SeravianDatabase::class.java,
             name = "seravian.db"
         ).build()
+    }
+
+    single<PrefsDataSource> {
+        AppPrefsDataSource()
     }
 
     single<LocalDataSource> {

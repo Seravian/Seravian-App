@@ -12,6 +12,7 @@ import com.seravian.feat_chat.di.chatModule
 import com.seravian.feat_local.di.localModule
 import com.seravian.feat_navigation.di.navigationFeatureModule
 import com.seravian.feat_network.di.networkModule
+import com.seravian.feat_profile.di.profileModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -34,7 +35,8 @@ class SeravianApp: Application() {
                 authModule,
                 onBoardingModule,
                 homeModule,
-                chatModule
+                chatModule,
+                profileModule
             )
         }
     }

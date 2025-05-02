@@ -1,12 +1,11 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.serialization)
-    id("com.google.devtools.ksp")
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
-    namespace = "com.seravian.core_local"
+    namespace = "com.seravian.feat_profile"
     compileSdk = 35
 
     defaultConfig {
@@ -35,22 +34,24 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.appcompat)
-    val room = "2.6.1"
 
     implementation(project(":profile:core-profile"))
-
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
-
-    implementation("androidx.room:room-runtime:$room")
-    ksp("androidx.room:room-compiler:$room")
-    implementation("androidx.room:room-ktx:$room")
-    implementation("androidx.room:room-paging:$room")
-
-    implementation("androidx.datastore:datastore-preferences:1.1.3")
+    implementation(project(":core-ui"))
+    implementation(project(":network:core-network"))
+    implementation(project(":local:core-local"))
+    implementation(project(":tokens:core-tokens"))
 
     implementation(libs.androidx.core.ktx)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.bundles.image.loading)
+    implementation(libs.bundles.dependency.injection)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
 }
