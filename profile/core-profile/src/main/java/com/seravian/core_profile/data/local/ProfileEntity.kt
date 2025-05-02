@@ -3,6 +3,7 @@ package com.seravian.core_profile.data.local
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.seravian.core_profile.domain.Profile
 
 @Entity(tableName = "profile")
 data class ProfileEntity(
@@ -26,3 +27,18 @@ data class ProfileEntity(
     @ColumnInfo(name = "is_profile_setup_complete")
     val isProfileSetupComplete: Boolean,
 )
+
+fun ProfileEntity.toProfile(): Profile {
+    return Profile(
+        id = id,
+        email = email,
+        fullName = fullName,
+        dateOfBirth = dateOfBirth,
+        gender = gender,
+        role = role,
+        isEmailVerified = isEmailVerified,
+        isDoctorVerified = isDoctorVerified,
+        isProfileSetupComplete = isProfileSetupComplete
+    )
+}
+

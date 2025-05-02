@@ -35,18 +35,24 @@ android {
 
 dependencies {
 
+    val koin = "4.0.0"
+
+
     implementation(project(":profile:core-profile"))
     implementation(project(":core-ui"))
     implementation(project(":network:core-network"))
     implementation(project(":local:core-local"))
     implementation(project(":tokens:core-tokens"))
 
+    implementation(platform("io.insert-koin:koin-bom:$koin"))
+    implementation("io.insert-koin:koin-androidx-compose")
+
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.bundles.image.loading)
-    implementation(libs.bundles.dependency.injection)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

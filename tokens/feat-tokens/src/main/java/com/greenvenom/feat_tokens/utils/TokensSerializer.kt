@@ -10,13 +10,15 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.util.Base64
 
-object TokensSerializer : Serializer<Tokens?> {
+object TokensSerializer : Serializer<Tokens> {
     private const val KEY_ALIAS = "Token"
 
-    override val defaultValue: Tokens?
-        get() = null
+    override val defaultValue: Tokens
+        get() = Tokens( accessToken = "",
+            accessTokenExpirationUtc = "",
+            refreshToken = "")
 
-    override suspend fun readFrom(input: InputStream): Tokens? {
+    override suspend fun readFrom(input: InputStream): Tokens {
         val encryptedBytes = withContext(Dispatchers.IO) {
             input.use { it.readBytes() }
         }
@@ -29,7 +31,7 @@ object TokensSerializer : Serializer<Tokens?> {
         return Json.decodeFromString(decodedJsonString)
     }
 
-    override suspend fun writeTo(t: Tokens?, output: OutputStream) {
+    override suspend fun writeTo(t: Tokens, output: OutputStream) {
         val json = Json.encodeToString(t)
         val bytes = json.toByteArray()
         val encryptedBytes = Crypto.encrypt(

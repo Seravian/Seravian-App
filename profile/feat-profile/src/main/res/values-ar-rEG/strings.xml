@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="logout">تسجيل خروج</string>
+    <string name="language">اللغة</string>
+    <string name="dark_theme">خلفية غامقة</string>
+    <string name="welcome">مرحبا, %1$s 👋</string>
+    <string name="user">مستخدم</string>
+    <string name="avatar">صورة رمزية</string>
+</resources>

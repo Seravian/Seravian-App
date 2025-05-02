@@ -6,6 +6,7 @@ import com.greenvenom.core_network.data.onSuccess
 import com.greenvenom.core_network.domain.SessionDestinations
 import com.greenvenom.core_network.domain.repository.RemoteDataSource
 import com.greenvenom.core_network.domain.repository.SessionRepository
+import com.greenvenom.core_tokens.domain.Tokens
 import com.greenvenom.core_tokens.domain.repo.TokenDataSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +30,7 @@ class SeravianSessionRepository(
         scope.launch {
             tokenDataSource.getStoredTokensFlow().collect { tokens ->
                 when {
-                    tokens == null -> _sessionDestination.update { SessionDestinations.AUTH }
+                    tokens == Tokens("","","") -> _sessionDestination.update { SessionDestinations.AUTH }
                     tokens.refreshToken.isNullOrEmpty() -> _sessionDestination.update { SessionDestinations.ONBOARDING }
                     else -> {
                         if (tokens.isAccessExpired()) {

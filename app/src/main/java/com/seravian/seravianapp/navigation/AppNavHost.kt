@@ -27,6 +27,7 @@ import com.seravian.feat_home.presentation.HomeScreen
 import com.greenvenom.feat_onboarding.presentation.screens.OnBoardingScreen
 import com.seravian.feat_chat.presentation.screen.ChatListScreen
 import com.seravian.feat_chat.presentation.screen.ChatScreen
+import com.seravian.feat_profile.presentation.screen.ProfileScreen
 import org.koin.compose.koinInject
 
 @Composable
@@ -192,6 +193,15 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             composable<Screen.Chat> {
                 val args = it.toRoute<Screen.Chat>()
                 ChatScreen(args.chatId)
+            }
+            composable<Screen.Profile> {
+                ProfileScreen(
+                    onLogoutNavigate = {
+                        navigationStateRepository.navigate(
+                            NavigationType.ClearBackStack(Screen.Login)
+                        )
+                    }
+                )
             }
         }
     }

@@ -47,8 +47,8 @@ class MainActivity : AppCompatActivity() {
 
             DisposableEffect (Unit) {
                 val themeJob = coroutineScope.launch {
-                    appPrefsDataSource.getThemePreference(context).collect {
-                        appPrefsDataSource.changeTheme(context, it)
+                    appPrefsDataSource.getThemePreference().collect {
+                        appPrefsDataSource.changeTheme(it)
                         WindowCompat.getInsetsController(window, window.decorView)
                             .isAppearanceLightStatusBars = !it
                     }

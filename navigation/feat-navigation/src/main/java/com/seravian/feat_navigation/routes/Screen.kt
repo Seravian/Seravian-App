@@ -67,6 +67,6 @@ sealed class Screen: Destination {
 
     @Serializable
     data object Profile: Screen() {
-        override val destinationType: DestinationType = DestinationType.SIDE
+        override val destinationType: DestinationType = DestinationType.MAIN
     }
 }

@@ -4,4 +4,6 @@
     <string name="ai_chat">الجلسة الذكية</string>
     <string name="sessions">الجلسات</string>
     <string name="doctors">الأطباء</string>
+    <string name="profile">الحساب</string>
+
 </resources>
