@@ -43,7 +43,7 @@ object ClientFactory {
                 bearer {
                     loadTokens {
                         val tokenInfo = tokensDataSource.getStoredTokens()
-                        tokenInfo?.let { info ->
+                        tokenInfo.let { info ->
                             BearerTokens(info.accessToken, info.refreshToken)
                         }
                     }
@@ -98,7 +98,7 @@ object ClientFactory {
             }
         }
 
-        return HubConnectionBuilder.create(url = constructUrl("hubs/chat")) {
+        return HubConnectionBuilder.create(constructUrl("hubs/chat")) {
             automaticReconnect = AutomaticReconnect.Active
             accessToken = tokens?.accessToken
         }

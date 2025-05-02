@@ -9,4 +9,5 @@ sealed interface ChatAction {
     data class JoinChat(val chatId: String) : ChatAction
     data object LeaveChat : ChatAction
     data class SendMessage(val message: String) : ChatAction
+    data object ClearChatResults : ChatAction
 }

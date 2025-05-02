@@ -59,6 +59,13 @@ fun ReceivedMessageCard(
                     .padding(12.dp)
                     .padding(start = 4.dp)
             )
+            Text(
+                text = message.timestamp,
+                style = MaterialTheme.typography.labelMedium,
+                modifier = Modifier
+                    .padding(start = 12.dp, end = 12.dp, bottom = 8.dp)
+                    .align(Alignment.End)
+            )
         }
         Spacer(
             modifier = Modifier

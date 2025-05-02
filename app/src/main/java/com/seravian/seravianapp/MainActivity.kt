@@ -32,7 +32,6 @@ class MainActivity : AppCompatActivity() {
         installSplashScreen()
         enableEdgeToEdge()
         setContent {
-            val context = LocalContext.current
             val coroutineScope = rememberCoroutineScope()
 
             val navigationRepository = koinInject<NavigationStateRepository>()
@@ -40,10 +39,6 @@ class MainActivity : AppCompatActivity() {
 
             val appPrefsDataSource = koinInject<PrefsDataSource>()
             val appPrefsState by appPrefsDataSource.appPrefsState.collectAsStateWithLifecycle()
-
-            BackHandler {
-                navigationRepository.navigate(NavigationType.Back)
-            }
 
             DisposableEffect (Unit) {
                 val themeJob = coroutineScope.launch {

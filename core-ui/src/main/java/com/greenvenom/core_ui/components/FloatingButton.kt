@@ -48,7 +48,7 @@ fun FloatingButton(
 
 @PreviewLightDark
 @Composable
-fun FloatingButtonPreview() {
+private fun FloatingButtonPreview() {
     AppTheme {
         FloatingButton(
             isVisible = true,

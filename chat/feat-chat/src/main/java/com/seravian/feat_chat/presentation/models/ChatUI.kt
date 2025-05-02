@@ -10,6 +10,6 @@ data class ChatUI(
 
 fun Chat.toChatUI() = ChatUI(
     id = id,
-    title = title,
+    title = title ?: "",
     createdAt = formatDateTime()
 )

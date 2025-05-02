@@ -30,6 +30,7 @@ class ChatViewModel(
             is ChatAction.JoinChat -> TODO()
             ChatAction.LeaveChat -> TODO()
             is ChatAction.SendMessage -> TODO()
+            is ChatAction.ClearChatResults -> clearChatResults()
         }
     }
 
@@ -59,9 +60,10 @@ class ChatViewModel(
             val result = chatRepository.getChatMessages(GetChatMessagesRequest(chatId))
             result.onSuccess { chatMessagesResponse ->
                 _chatState.update {
-                    it.copy(messagesList = chatMessagesResponse.messages.map { chatMessage ->
-                        chatMessage.extractMessage()
-                    }.toMutableList())
+                    it.copy(
+                        currentChat = chatMessagesResponse.first,
+                        messagesList = chatMessagesResponse.second.toMutableList()
+                    )
                 }
             }
             _chatState.update { it.copy(getChatMessagesResult = result) }
@@ -71,14 +73,24 @@ class ChatViewModel(
     private fun getChats() {
         viewModelScope.launch {
             val result = chatRepository.getChats()
-            result.onSuccess { chatResponses ->
+            result.onSuccess { chats ->
                 _chatState.update {
-                    it.copy(chatsList = chatResponses.map { chatResponse ->
-                        chatResponse.extractChat()
-                    })
+                    it.copy(chatsList = chats)
                 }
             }
             _chatState.update { it.copy(getChatsResult = result) }
+        }
+    }
+
+    private fun clearChatResults() {
+        _chatState.update {
+            it.copy(
+                createChatResult = null,
+                deleteChatResult = null,
+                editChatResult = null,
+                getChatMessagesResult = null,
+                getChatsResult = null
+            )
         }
     }
 }

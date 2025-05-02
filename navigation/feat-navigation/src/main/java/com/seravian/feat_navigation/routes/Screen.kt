@@ -46,7 +46,7 @@ sealed class Screen: Destination {
     }
 
     @Serializable
-    data class Chat(val chatId: String): Screen() {
+    data class Chat(val chatId: String = ""): Screen() {
         override val destinationType: DestinationType = DestinationType.SIDE
     }
 
