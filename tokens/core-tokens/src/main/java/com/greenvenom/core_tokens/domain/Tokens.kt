@@ -6,9 +6,9 @@ import java.time.Instant
 
 @Serializable
 data class Tokens(
-    val accessToken: String,
-    val accessTokenExpirationUtc: String,
-    val refreshToken: String?
+    val accessToken: String = "",
+    val accessTokenExpirationUtc: String = "",
+    val refreshToken: String ?= null
 ) {
     fun toRefreshTokenRequest(): RefreshTokenRequest {
         return RefreshTokenRequest(refreshToken = refreshToken ?: "")

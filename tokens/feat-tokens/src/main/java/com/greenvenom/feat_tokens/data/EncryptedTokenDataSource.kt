@@ -33,11 +33,7 @@ class EncryptedTokenDataSource(
 
     override suspend fun deleteTokens() {
         context.tokenDataStore.updateData {
-            Tokens(
-                accessToken = "",
-                accessTokenExpirationUtc = "",
-                refreshToken = ""
-            )
+            Tokens()
         }
     }
 }

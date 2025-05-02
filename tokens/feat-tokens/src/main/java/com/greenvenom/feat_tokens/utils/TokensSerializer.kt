@@ -14,9 +14,7 @@ object TokensSerializer : Serializer<Tokens> {
     private const val KEY_ALIAS = "Token"
 
     override val defaultValue: Tokens
-        get() = Tokens( accessToken = "",
-            accessTokenExpirationUtc = "",
-            refreshToken = "")
+        get() = Tokens()
 
     override suspend fun readFrom(input: InputStream): Tokens {
         val encryptedBytes = withContext(Dispatchers.IO) {

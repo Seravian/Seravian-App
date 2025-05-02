@@ -24,14 +24,15 @@ class SeravianSessionRepository(
 
     private val _sessionDestination = MutableStateFlow(SessionDestinations.INITIALIZE)
     override val sessionDestination = _sessionDestination
-        .stateIn(scope, SharingStarted.WhileSubscribed(5000), SessionDestinations.INITIALIZE)
+        .stateIn(scope, SharingStarted.Lazily, SessionDestinations.INITIALIZE)
 
     override fun collectSessionStatus() {
         scope.launch {
             tokenDataSource.getStoredTokensFlow().collect { tokens ->
                 when {
-                    tokens == Tokens("","","") -> _sessionDestination.update { SessionDestinations.AUTH }
-                    tokens.refreshToken.isNullOrEmpty() -> _sessionDestination.update { SessionDestinations.ONBOARDING }
+                    tokens == Tokens() -> _sessionDestination.update { SessionDestinations.AUTH }
+                    tokens.accessToken.isNotEmpty() && tokens.refreshToken.isNullOrEmpty() ->
+                        _sessionDestination.update { SessionDestinations.ONBOARDING }
                     else -> {
                         if (tokens.isAccessExpired()) {
                             val tokensResponse = remoteDataSource.refreshTokens(tokens.toRefreshTokenRequest())

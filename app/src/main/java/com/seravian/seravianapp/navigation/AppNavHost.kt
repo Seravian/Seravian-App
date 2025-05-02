@@ -28,6 +28,7 @@ import com.greenvenom.feat_onboarding.presentation.screens.OnBoardingScreen
 import com.seravian.feat_chat.presentation.screen.ChatListScreen
 import com.seravian.feat_chat.presentation.screen.ChatScreen
 import com.seravian.feat_profile.presentation.screen.ProfileScreen
+import com.seravian.seravianapp.navigation.utils.SessionDestinationHandler
 import org.koin.compose.koinInject
 
 @Composable
@@ -36,31 +37,12 @@ fun AppNavHost(modifier: Modifier = Modifier) {
     val navigationStateRepository = koinInject<NavigationStateRepository>()
     val navigationState by navigationStateRepository.navigationState.collectAsStateWithLifecycle()
     val sessionRepository = koinInject<SessionRepository>()
-    val sessionDestination by sessionRepository.sessionDestination.collectAsStateWithLifecycle()
+    val destinationHandler = koinInject<SessionDestinationHandler>()
 
     appNavigator.config(
         returnedDestination = Screen::class,
         navController = rememberNavController()
     )
-
-    when (sessionDestination) {
-        SessionDestinations.AUTH -> {
-            navigationStateRepository.navigate(
-                NavigationType.ClearBackStack(SubGraph.Auth)
-            )
-        }
-        SessionDestinations.ONBOARDING -> {
-            navigationStateRepository.navigate(
-                NavigationType.ClearBackStack(SubGraph.OnBoarding)
-            )
-        }
-        SessionDestinations.MAIN -> {
-            navigationStateRepository.navigate(
-                NavigationType.ClearBackStack(SubGraph.Main)
-            )
-        }
-        else -> {}
-    }
 
     NavHost(
         navController = appNavigator.navController,
@@ -71,6 +53,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             SplashScreen(
                 onStart = {
                     sessionRepository.collectSessionStatus()
+                    destinationHandler.collectSessionDestinations()
                 }
             )
         }
