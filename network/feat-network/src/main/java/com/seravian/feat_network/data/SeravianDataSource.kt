@@ -14,6 +14,7 @@ import com.greenvenom.core_network.data.EmptyResult
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
 import com.greenvenom.core_network.data.onSuccess
+import com.greenvenom.core_network.domain.ConnectionStatus
 import com.greenvenom.core_onboarding.data.dto.request.OnBoardingRequest
 import com.greenvenom.core_onboarding.data.dto.response.OnBoardingResponse
 import com.greenvenom.core_network.domain.repository.RemoteDataSource
@@ -29,11 +30,11 @@ import com.seravian.core_chat.data.dto.respose.AIResponse
 import com.seravian.core_chat.data.dto.respose.ChatMessagesResponse
 import com.seravian.core_chat.data.dto.respose.ChatResponse
 import com.seravian.core_chat.data.dto.respose.ClientResponse
+import com.seravian.core_chat.data.dto.respose.ConfirmedMessageResponse
 import com.seravian.core_chat.data.dto.respose.CreateChatResponse
 import com.seravian.core_chat.data.dto.respose.EditChatResponse
 import com.seravian.core_profile.data.remote.request.LogoutRequest
 import eu.lepicekmichal.signalrkore.HubConnection
-import eu.lepicekmichal.signalrkore.OnValue1
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.auth.authProvider
 import io.ktor.client.plugins.auth.providers.BearerAuthProvider
@@ -48,13 +49,18 @@ import kotlinx.coroutines.flow.map
 class SeravianDataSource(
     private val publicHttpClient: HttpClient,
     private val authorizedHttpClient: HttpClient,
-    private val signalRClient: HubConnection
+    private val signalRConnection: SignalRConnection
 ): RemoteDataSource {
+
+    /////////////////////////////////
+    /////////// AUTH METHODS
+    /////////////////////////////////
+
     override suspend fun registerUser(
         registerRequest: RegisterRequest
     ): NetworkResult<RegisterResponse, NetworkError> {
         return safeCall {
-            publicHttpClient.post(urlString = constructUrl("auth/register")) {
+            publicHttpClient.post(constructUrl("auth/register")) {
                 setBody(registerRequest)
             }
         }
@@ -64,7 +70,7 @@ class SeravianDataSource(
         loginRequest: LoginRequest
     ): NetworkResult<LoginResponse, NetworkError> {
         return safeCall {
-            publicHttpClient.post(urlString = constructUrl("auth/login")) {
+            publicHttpClient.post(constructUrl("auth/login")) {
                 setBody(loginRequest)
             }
         }
@@ -74,7 +80,7 @@ class SeravianDataSource(
         verifyOtpRequest: VerifyOTPRequest
     ): EmptyResult<NetworkError> {
         return safeCall {
-            publicHttpClient.post(urlString = constructUrl("auth/verify-otp")) {
+            publicHttpClient.post(constructUrl("auth/verify-otp")) {
                 setBody(verifyOtpRequest)
             }
         }
@@ -84,7 +90,7 @@ class SeravianDataSource(
         sendOTPRequest: SendOTPRequest
     ): EmptyResult<NetworkError> {
         return safeCall {
-            publicHttpClient.post(urlString = constructUrl("auth/resend-otp")) {
+            publicHttpClient.post(constructUrl("auth/resend-otp")) {
                 setBody(
                     mapOf(
                         "email" to sendOTPRequest.email
@@ -105,7 +111,7 @@ class SeravianDataSource(
         onBoardingRequest: OnBoardingRequest
     ): NetworkResult<OnBoardingResponse, NetworkError> {
         return safeCall<OnBoardingResponse> {
-            authorizedHttpClient.post(urlString = constructUrl("auth/complete-profile-setup")) {
+            authorizedHttpClient.post(constructUrl("auth/complete-profile-setup")) {
                 setBody(onBoardingRequest)
             }
         }.onSuccess { authorizedHttpClient.authProvider<BearerAuthProvider>()?.clearToken() }
@@ -113,7 +119,7 @@ class SeravianDataSource(
 
     override suspend fun logoutUser(logoutRequest: LogoutRequest): EmptyResult<NetworkError> {
         return safeCall<Unit> {
-            authorizedHttpClient.post(urlString = constructUrl("auth/logout")) {
+            authorizedHttpClient.post(constructUrl("auth/logout")) {
                 setBody(logoutRequest)
             }
         }.onSuccess { authorizedHttpClient.authProvider<BearerAuthProvider>()?.clearToken() }
@@ -121,15 +127,19 @@ class SeravianDataSource(
 
     override suspend fun refreshTokens(refreshTokenRequest: RefreshTokenRequest): NetworkResult<TokensResponse, NetworkError> {
         return safeCall<TokensResponse> {
-            publicHttpClient.post(urlString = constructUrl("auth/refresh-token")) {
+            publicHttpClient.post(constructUrl("auth/refresh-token")) {
                 setBody(refreshTokenRequest)
             }
         }
     }
 
+    /////////////////////////////////
+    /////////// CHAT METHODS
+    /////////////////////////////////
+
     override suspend fun createChat(createChatRequest: CreateChatRequest): NetworkResult<CreateChatResponse, NetworkError> {
         return safeCall {
-            authorizedHttpClient.post(urlString = constructUrl("chat/create")){
+            authorizedHttpClient.post(constructUrl("chat/create")) {
                 setBody(createChatRequest)
             }
         }
@@ -137,7 +147,7 @@ class SeravianDataSource(
 
     override suspend fun updateChat(editChatRequest: EditChatRequest): NetworkResult<EditChatResponse, NetworkError> {
         return safeCall {
-            authorizedHttpClient.put(urlString = constructUrl("chat/update")){
+            authorizedHttpClient.put(constructUrl("chat/update")) {
                 setBody(editChatRequest)
             }
         }
@@ -145,7 +155,7 @@ class SeravianDataSource(
 
     override suspend fun deleteChat(deleteChatRequest: DeleteChatRequest): EmptyResult<NetworkError> {
         return safeCall {
-            authorizedHttpClient.delete(urlString = constructUrl("chat/delete")){
+            authorizedHttpClient.delete(constructUrl("chat/delete")) {
                 setBody(deleteChatRequest)
             }
         }
@@ -153,7 +163,7 @@ class SeravianDataSource(
 
     override suspend fun getChats(): NetworkResult<List<ChatResponse>, NetworkError> {
         return safeCall {
-            authorizedHttpClient.get(urlString = constructUrl("chat/get-chats"))
+            authorizedHttpClient.get(constructUrl("chat/get-chats"))
         }
     }
 
@@ -161,37 +171,63 @@ class SeravianDataSource(
         getChatMessagesRequest: GetChatMessagesRequest
     ): NetworkResult<ChatMessagesResponse, NetworkError> {
         return safeCall {
-            authorizedHttpClient.get(urlString = constructUrl("chat/get-chat-messages")){
-                setBody(getChatMessagesRequest)
+            authorizedHttpClient.get(constructUrl("chat/get-chat-messages")) {
+                url {
+                    parameters.append("id", getChatMessagesRequest.id)
+                }
             }
         }
     }
 
+    /////////////////////////////////
+    ///////// REALTIME CHAT METHODS
+    /////////////////////////////////
+
     override suspend fun startSignalRConnection() {
-        signalRClient.start()
+        signalRConnection.connect()
+        signalRConnection.startCollectingConnectionStatus()
     }
 
     override suspend fun stopSignalRConnection() {
-        signalRClient.stop()
+        signalRConnection.disconnect()
     }
 
-    override fun joinChat(joinChatRequest: JoinChatRequest) {
-        signalRClient.send("join-chat", joinChatRequest)
+    override fun getSignalRConnectionStatus(): Flow<ConnectionStatus> {
+        return signalRConnection.connectionStatus
     }
 
-    override fun sendRequest(clientRequest: ClientRequest) {
-        signalRClient.send("send-client-request", clientRequest)
+    override suspend fun joinChat(joinChatRequest: JoinChatRequest) {
+        signalRConnection.hubConnection.invoke("join-chat", joinChatRequest)
+    }
+
+    override suspend fun sendRequest(clientRequest: ClientRequest) {
+        signalRConnection.hubConnection.invoke("send-client-request", clientRequest)
     }
 
     override fun receiveClientRequest(): Flow<ClientResponse> {
-        return signalRClient.on("receive-client-request", ClientResponse::class).map {
+        return signalRConnection.hubConnection.on(
+            "receive-client-request",
+            ClientResponse::class
+        ).map {
             (clientResponse) -> clientResponse
         }
     }
 
     override fun receiveAIResponse(): Flow<AIResponse> {
-        return signalRClient.on("receive-ai-response", AIResponse::class).map {
+        return signalRConnection.hubConnection.on(
+            "receive-ai-response",
+            AIResponse::class
+        ).map {
             (aiResponse) -> aiResponse
+        }
+    }
+
+    override fun receiveMessageConfirmation(): Flow<ConfirmedMessageResponse> {
+        return signalRConnection.hubConnection.on(
+            "confirm-client-request",
+            ConfirmedMessageResponse::class
+        ).map {
+                (confirmationResponse) -> confirmationResponse
         }
     }
 }

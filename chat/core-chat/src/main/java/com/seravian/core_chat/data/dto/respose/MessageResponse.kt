@@ -11,7 +11,7 @@ data class MessageResponse(
     val isAI: Boolean
 ) {
     fun extractMessage() = Message(
-        id = id,
+        id = Pair(id, null),
         content = content,
         timestamp = timestampUtc,
         isAI = isAI

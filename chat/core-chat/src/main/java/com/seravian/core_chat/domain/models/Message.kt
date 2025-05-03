@@ -5,7 +5,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 data class Message(
-    val id: Long = 0,
+    val id: Pair<Long?, String?> = Pair(null, null),
     val content: String = "",
     val timestamp: String = "",
     val isAI: Boolean = false

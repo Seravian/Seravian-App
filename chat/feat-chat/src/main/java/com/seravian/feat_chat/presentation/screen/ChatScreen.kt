@@ -1,5 +1,6 @@
 package com.seravian.feat_chat.presentation.screen
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -25,6 +27,7 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,16 +53,28 @@ import com.seravian.feat_chat.presentation.viewModel.ChatState
 @Composable
 fun ChatScreen(
     chatId: String,
+    navigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     BaseScreen<ChatViewModel> { viewModel ->
         val chatState by viewModel.chatState.collectAsStateWithLifecycle()
 
-        LaunchedEffect(Unit) { viewModel.chatAction(ChatAction.GetChatMessages(chatId)) }
+        LaunchedEffect(Unit) {
+            viewModel.chatAction(ChatAction.GetChatMessages(chatId))
+            viewModel.baseAction(BaseAction.ShowLoading)
+        }
+
+        DisposableEffect(Unit) { onDispose { viewModel.chatAction(ChatAction.LeaveChat) } }
 
         ChatScreenContent(
             chatState = chatState,
-            chatAction = viewModel::chatAction,
+            chatAction = {
+                when(it) {
+                    is ChatAction.NavigateBack -> navigateBack()
+                    else -> {}
+                }
+                viewModel.chatAction(it)
+            },
             baseAction = viewModel::baseAction,
             modifier = modifier
         )
@@ -74,13 +89,20 @@ private fun ChatScreenContent(
     modifier: Modifier = Modifier
 ) {
     var input by rememberSaveable { mutableStateOf("") }
+    val listState = rememberLazyListState()
 
-    chatState.getChatMessagesResult
+    LaunchedEffect(chatState.messagesList.size) {
+        if (chatState.messagesList.isEmpty()) return@LaunchedEffect
+        listState.animateScrollToItem(chatState.messagesList.lastIndex)
+    }
+
+    chatState.joinChatResult
         ?.onSuccess {
             chatAction(ChatAction.ClearChatResults)
+            baseAction(BaseAction.HideLoading)
         }
         ?.onError {
-
+            chatAction(ChatAction.NavigateBack)
         }
 
     Scaffold (
@@ -89,6 +111,7 @@ private fun ChatScreenContent(
                 isVisible = true,
                 isActionEnabled = false,
                 isSideDestination = false,
+                title = chatState.currentChat?.title ?: "Seravian",
             )
         }
     ) { innerPadding ->
@@ -98,21 +121,20 @@ private fun ChatScreenContent(
                 .padding(innerPadding)
         ) {
             LazyColumn(
+                state = listState,
+                verticalArrangement = Arrangement.Bottom,
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxSize()
                     .weight(1f)
             ) {
                 items(
-                    items = chatState.messagesList?.mapIndexed { index, message ->
-                        message.toMessageUI(index)
-                    } ?: emptyList(),
-                    key = { message -> message.id }
+                    items = chatState.messagesList.map { message -> message.toMessageUI() },
+                    key = { it.id }
                 ) { message ->
                     if (!message.isAI) {
                         //sent
                         SentMessageCard(message = message)
-
                     } else {
                         //received
                         ReceivedMessageCard(message = message)
@@ -144,11 +166,13 @@ private fun ChatScreenContent(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     FilledIconButton (
-                        modifier = Modifier.size(48.dp),
                         onClick = {
-                            //click to send a message
+                            chatAction(ChatAction.SendMessage(input))
+                            input = ""
                         },
+                        enabled = chatState.messagesList.lastOrNull()?.isAI ?: true,
                         shape = RoundedCornerShape(50),
+                        modifier = Modifier.size(48.dp)
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.send_ic),
@@ -170,9 +194,9 @@ private fun ChatScreenPreview() {
         ChatScreenContent(
             chatState = ChatState(
                 messagesList = mutableListOf(
-                    Message(isAI = false, content = "Hello", timestamp = "2023-06-05T14:30:40Z"),
-                    Message(isAI = true, content = "gfhgfhfggfdkjghfdgudfiuhgdfgiufdhigudrhduihjnifgudnhiufgnhuidfgnhiudfnsghfduhiugfdgfiuhf", timestamp = "2023-06-05T14:30:45Z"),
-                    Message(isAI = true, content = "Hello", timestamp = "2023-06-05T14:30:50Z")
+                    Message(id = Pair(1, null), isAI = false, content = "Hello", timestamp = "2023-06-05T14:30:40Z"),
+                    Message(id = Pair(2, null), isAI = true, content = "gfhgfhfggfdkjghfdgudfiuhgdfgiufdhigudrhduihjnifgudnhiufgnhuidfgnhiudfnsghfduhiugfdgfiuhf", timestamp = "2023-06-05T14:30:45Z"),
+                    Message(id = Pair(3, null), isAI = true, content = "Hello", timestamp = "2023-06-05T14:30:50Z")
                 )
             ),
             chatAction = {},

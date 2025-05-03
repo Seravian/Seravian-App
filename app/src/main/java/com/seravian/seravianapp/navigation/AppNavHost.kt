@@ -45,10 +45,6 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         navController = rememberNavController()
     )
 
-    BackHandler(enabled = true) {
-        navigationRepository.navigate(NavigationType.Back)
-    }
-
     NavHost(
         navController = appNavigator.navController,
         startDestination = Screen.Splash,
@@ -181,7 +177,10 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             composable<Screen.Chat> {
                 val args = it.toRoute<Screen.Chat>()
                 Log.d("ChatId", args.chatId)
-                ChatScreen(args.chatId)
+                ChatScreen(
+                    chatId = args.chatId,
+                    navigateBack = { navigationRepository.navigate(NavigationType.Back) }
+                )
             }
             composable<Screen.Profile> {
                 ProfileScreen(

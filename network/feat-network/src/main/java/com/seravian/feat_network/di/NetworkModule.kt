@@ -3,9 +3,9 @@ package com.seravian.feat_network.di
 import com.seravian.feat_network.data.SeravianDataSource
 import com.greenvenom.core_network.domain.repository.RemoteDataSource
 import com.greenvenom.core_network.domain.repository.SessionRepository
+import com.seravian.feat_network.data.SignalRConnection
 import com.seravian.feat_network.data.repository.SeravianSessionRepository
 import com.seravian.feat_network.util.ClientFactory
-import eu.lepicekmichal.signalrkore.HubConnection
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import org.koin.core.qualifier.named
@@ -25,8 +25,8 @@ val networkModule = module {
         )
     }
 
-    single<HubConnection> {
-        ClientFactory.signalRClient(
+    single<SignalRConnection> {
+        SignalRConnection(
             tokensDataSource = get(),
             httpClient = get(named("publicClient"))
         )
@@ -36,7 +36,7 @@ val networkModule = module {
         SeravianDataSource(
             publicHttpClient = get(named("publicClient")),
             authorizedHttpClient = get(named("authorizedClient")),
-            signalRClient = get()
+            signalRConnection = get()
         )
     }
 

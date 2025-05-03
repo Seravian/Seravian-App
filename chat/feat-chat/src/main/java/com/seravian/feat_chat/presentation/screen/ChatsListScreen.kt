@@ -65,6 +65,12 @@ private fun ChatListContent(
     var popupState by rememberSaveable { mutableStateOf(false) }
     var newChatTitle by rememberSaveable { mutableStateOf("") }
 
+    chatState.joinChatResult
+        ?.onError {
+            baseAction(BaseAction.HideLoading)
+            baseAction(BaseAction.ShowErrorMessage(it.errorType?.toString() ?: ""))
+        }
+
     chatState.getChatsResult
         ?.onSuccess {
             baseAction(BaseAction.HideLoading)
@@ -129,9 +135,8 @@ private fun ChatListContent(
                 .fillMaxSize()
         ) {
             items(
-                chatState.chatsList?.map { chat ->
-                    chat.toChatUI()
-                } ?: emptyList(),
+                items = chatState.chatsList.map { chat -> chat.toChatUI() },
+                key = { it.id }
             ) { chat ->
                 ChatListCard(
                     chat = chat,
