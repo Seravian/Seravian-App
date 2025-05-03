@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -90,46 +91,49 @@ private fun VerifyEmailContent(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        AuthHeader(
-            title = stringResource(R.string.enter_your_email),
-            navigateBack = navigateBack,
-            isLoginScreen = false
-        )
+    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
             modifier = Modifier
-                .padding(18.dp)
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(13.dp) // Adds spacing between items
+                .padding(innerPadding)
         ) {
-            Text(
-                text = stringResource(R.string.email),
-                color = MaterialTheme.colorScheme.onBackground
+            AuthHeader(
+                title = stringResource(R.string.enter_your_email),
+                navigateBack = navigateBack,
+                isLoginScreen = false
             )
-            CustomTextField(
-                value = email,
-                onValueChange = {
-                    email = it
-                    resetPasswordActions(ResetPasswordAction.UpdateEmail(email))
-                },
-                label = stringResource(R.string.enter_your_email),
-                error = if (emailState.emailValidity is ValidationResult.Error) {
-                    (emailState.emailValidity as ValidationResult.Error<ValidationError>).error.toString(context)
-                } else "",
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-            CustomButton(
-                text = stringResource(R.string.next),
-                enabled = emailState.emailValidity is ValidationResult.Success,
-                onClick = {
-                    baseActions(BaseAction.ShowLoading)
-                    resetPasswordActions(ResetPasswordAction.SendResetPasswordEmail(email))
-                }
-            )
+            Column(
+                modifier = Modifier
+                    .padding(18.dp)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(13.dp) // Adds spacing between items
+            ) {
+                Text(
+                    text = stringResource(R.string.email),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                CustomTextField(
+                    value = email,
+                    onValueChange = {
+                        email = it
+                        resetPasswordActions(ResetPasswordAction.UpdateEmail(email))
+                    },
+                    label = stringResource(R.string.enter_your_email),
+                    error = if (emailState.emailValidity is ValidationResult.Error) {
+                        (emailState.emailValidity as ValidationResult.Error<ValidationError>).error.toString(context)
+                    } else "",
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+                CustomButton(
+                    text = stringResource(R.string.next),
+                    enabled = emailState.emailValidity is ValidationResult.Success,
+                    onClick = {
+                        baseActions(BaseAction.ShowLoading)
+                        resetPasswordActions(ResetPasswordAction.SendResetPasswordEmail(email))
+                    }
+                )
+            }
         }
     }
 }
