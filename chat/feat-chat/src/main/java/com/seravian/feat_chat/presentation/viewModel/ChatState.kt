@@ -12,7 +12,7 @@ import com.seravian.core_chat.domain.models.Message
 
 data class ChatState(
     val currentChat: Chat ?= null,
-    val messagesList: MutableList<Message> = mutableListOf(),
+    val messagesList: List<Message> = listOf(),
     val chatsList: List<Chat> = emptyList(),
     val createChatResult: NetworkResult<Chat, NetworkError> ?= null,
     val editChatResult: NetworkResult<Chat, NetworkError> ?= null,

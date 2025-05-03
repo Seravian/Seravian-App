@@ -54,7 +54,7 @@ interface RemoteDataSource {
     fun getSignalRConnectionStatus(): Flow<ConnectionStatus>
     suspend fun joinChat(joinChatRequest: JoinChatRequest)
     suspend fun sendRequest(clientRequest: ClientRequest)
-    fun receiveClientRequest(): Flow<ClientResponse>
-    fun receiveAIResponse(): Flow<AIResponse>
-    fun receiveMessageConfirmation(): Flow<ConfirmedMessageResponse>
+    fun receiveClientResponse(callback: (ClientResponse) -> Unit)
+    fun receiveAIResponse(callback: (AIResponse) -> Unit)
+    fun receiveMessageConfirmation(callback: (ConfirmedMessageResponse) -> Unit)
 }

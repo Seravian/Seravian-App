@@ -204,30 +204,27 @@ class SeravianDataSource(
         signalRConnection.hubConnection.invoke("send-client-request", clientRequest)
     }
 
-    override fun receiveClientRequest(): Flow<ClientResponse> {
-        return signalRConnection.hubConnection.on(
+    override fun receiveClientResponse(callback: (ClientResponse) -> Unit) {
+        signalRConnection.hubConnection.on(
             "receive-client-request",
-            ClientResponse::class
-        ).map {
-            (clientResponse) -> clientResponse
+        ) { response: ClientResponse ->
+            callback(response)
         }
     }
 
-    override fun receiveAIResponse(): Flow<AIResponse> {
-        return signalRConnection.hubConnection.on(
+    override fun receiveAIResponse(callback: (AIResponse) -> Unit) {
+        signalRConnection.hubConnection.on(
             "receive-ai-response",
-            AIResponse::class
-        ).map {
-            (aiResponse) -> aiResponse
+        ) { response: AIResponse ->
+            callback(response)
         }
     }
 
-    override fun receiveMessageConfirmation(): Flow<ConfirmedMessageResponse> {
-        return signalRConnection.hubConnection.on(
-            "confirm-client-request",
-            ConfirmedMessageResponse::class
-        ).map {
-                (confirmationResponse) -> confirmationResponse
+    override fun receiveMessageConfirmation(callback: (ConfirmedMessageResponse) -> Unit) {
+        signalRConnection.hubConnection.on(
+            target = "confirm-client-request"
+        ) { confirmation: ConfirmedMessageResponse ->
+            callback(confirmation)
         }
     }
 }

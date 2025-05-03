@@ -83,19 +83,21 @@ class ChatRepositoryImpl(
         remoteDataSource.sendRequest(clientRequest)
     }
 
-    override fun receiveClientRequest(): Flow<Message> {
-        return remoteDataSource.receiveClientRequest().map { response ->
-            response.extractMessage()
+    override fun receiveClientResponse(callback: (Message) -> Unit) {
+       remoteDataSource.receiveClientResponse { response ->
+           callback(response.extractMessage())
+       }
+    }
+
+    override fun receiveAIResponse(callback: (Message) -> Unit) {
+        remoteDataSource.receiveAIResponse { response ->
+            callback(response.extractMessage())
         }
     }
 
-    override fun receiveAIResponse(): Flow<Message> {
-        return remoteDataSource.receiveAIResponse().map { response ->
-            response.extractMessage()
+    override fun receiveMessageConfirmation(callback: (ConfirmedMessageResponse) -> Unit) {
+        remoteDataSource.receiveMessageConfirmation { confirmation ->
+            callback(confirmation)
         }
-    }
-
-    override fun receiveMessageConfirmation(): Flow<ConfirmedMessageResponse> {
-        return remoteDataSource.receiveMessageConfirmation()
     }
 }

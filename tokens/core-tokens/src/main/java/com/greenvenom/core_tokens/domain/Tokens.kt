@@ -19,6 +19,6 @@ data class Tokens(
         val expirationInstant = Instant.parse(this.accessTokenExpirationUtc)
         val currentInstant = Instant.now()
 
-        return expirationInstant.minus(Duration.ofMinutes(2)).isBefore(currentInstant)
+        return expirationInstant.minus(Duration.ofMinutes(1)).isBefore(currentInstant)
     }
 }

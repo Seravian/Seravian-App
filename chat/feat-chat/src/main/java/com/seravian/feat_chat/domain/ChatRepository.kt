@@ -38,9 +38,9 @@ interface ChatRepository {
 
     suspend fun sendRequest(clientRequest: ClientRequest)
 
-    fun receiveClientRequest(): Flow<Message>
+    fun receiveClientResponse(callback: (Message) -> Unit)
 
-    fun receiveAIResponse(): Flow<Message>
+    fun receiveAIResponse(callback: (Message) -> Unit)
 
-    fun receiveMessageConfirmation(): Flow<ConfirmedMessageResponse>
+    fun receiveMessageConfirmation(callback: (ConfirmedMessageResponse) -> Unit)
 }
