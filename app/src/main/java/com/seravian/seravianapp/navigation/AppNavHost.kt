@@ -1,5 +1,7 @@
 package com.seravian.seravianapp.navigation
 
+import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -13,7 +15,6 @@ import androidx.navigation.toRoute
 import com.greenvenom.core_navigation.data.NavigationType
 import com.greenvenom.core_navigation.data.repository.NavigationStateRepository
 import com.greenvenom.core_navigation.utils.AppNavigator
-import com.greenvenom.core_network.domain.SessionDestinations
 import com.greenvenom.core_network.domain.repository.SessionRepository
 import com.greenvenom.feat_auth.presentation.login.LoginScreen
 import com.greenvenom.feat_auth.presentation.otp.OtpScreen
@@ -34,8 +35,8 @@ import org.koin.compose.koinInject
 @Composable
 fun AppNavHost(modifier: Modifier = Modifier) {
     val appNavigator = koinInject<AppNavigator>()
-    val navigationStateRepository = koinInject<NavigationStateRepository>()
-    val navigationState by navigationStateRepository.navigationState.collectAsStateWithLifecycle()
+    val navigationRepository = koinInject<NavigationStateRepository>()
+    val navigationState by navigationRepository.navigationState.collectAsStateWithLifecycle()
     val sessionRepository = koinInject<SessionRepository>()
     val destinationHandler = koinInject<SessionDestinationHandler>()
 
@@ -62,17 +63,17 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             composable<Screen.Login> {
                 LoginScreen(
                     navigateToRegisterScreen = {
-                        navigationStateRepository.navigate(
+                        navigationRepository.navigate(
                             NavigationType.Standard(Screen.Register)
                         )
                     },
                     navigateToEmailVerificationScreen = {
-                        navigationStateRepository.navigate(
+                        navigationRepository.navigate(
                             NavigationType.Standard(Screen.VerifyEmail)
                         )
                     },
                     navigateToOTPScreen = {
-                        navigationStateRepository.navigate(
+                        navigationRepository.navigate(
                             NavigationType.Standard(Screen.OTP)
                         )
                     }
@@ -81,10 +82,10 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             composable<Screen.Register> {
                 RegisterScreen(
                     navigateBack = {
-                        navigationStateRepository.navigate(NavigationType.Back)
+                        navigationRepository.navigate(NavigationType.Back)
                     },
                     navigateToAccountVerificationScreen = {
-                        navigationStateRepository.navigate(
+                        navigationRepository.navigate(
                             NavigationType.Standard(Screen.OTP)
                         )
                     }
@@ -93,10 +94,10 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             composable<Screen.VerifyEmail> {
                 VerifyEmailScreen(
                     navigateBack = {
-                        navigationStateRepository.navigate(NavigationType.Back)
+                        navigationRepository.navigate(NavigationType.Back)
                     },
                     navigateToOtpScreen = {
-                        navigationStateRepository.navigate(
+                        navigationRepository.navigate(
                             NavigationType.Standard(Screen.OTP)
                         )
                     }
@@ -105,22 +106,22 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             composable<Screen.OTP> {
                 OtpScreen(
                     navigateBack = {
-                        navigationStateRepository.navigate(NavigationType.Back)
+                        navigationRepository.navigate(NavigationType.Back)
                     },
                     navigateToNextScreen = {
                         when (navigationState.previousDestination) {
                             is Screen.Login -> {
-                                navigationStateRepository.navigate(
+                                navigationRepository.navigate(
                                     NavigationType.ClearBackStack(Screen.Login)
                                 )
                             }
                             is Screen.Register -> {
-                                navigationStateRepository.navigate(
+                                navigationRepository.navigate(
                                     NavigationType.ClearBackStack(Screen.Login)
                                 )
                             }
                             is Screen.VerifyEmail -> {
-                                navigationStateRepository.navigate(
+                                navigationRepository.navigate(
                                     NavigationType.ClearBackStack(Screen.NewPassword)
                                 )
                             }
@@ -131,10 +132,10 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             composable<Screen.NewPassword> {
                 NewPasswordScreen(
                     navigateBack = {
-                        navigationStateRepository.navigate(NavigationType.Back)
+                        navigationRepository.navigate(NavigationType.Back)
                     },
                     navigateToLoginScreen = {
-                        navigationStateRepository.navigate(
+                        navigationRepository.navigate(
                             NavigationType.ClearBackStack(Screen.Login)
                         )
                     }
@@ -146,7 +147,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             composable<Screen.OnBoarding> {
                 OnBoardingScreen(
                     navigateToNextScreen = {
-                        navigationStateRepository.navigate(
+                        navigationRepository.navigate(
                             NavigationType.ClearBackStack(SubGraph.Main)
                         )
                     }
@@ -161,7 +162,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             composable<Screen.ChatsList> {
                 ChatListScreen(
                     navigateToChat = { chatId ->
-                        navigationStateRepository.navigate(
+                        navigationRepository.navigate(
                             NavigationType.Standard(Screen.Chat(chatId))
                         )
                     }
@@ -175,12 +176,16 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             }
             composable<Screen.Chat> {
                 val args = it.toRoute<Screen.Chat>()
-                ChatScreen(args.chatId)
+                Log.d("ChatId", args.chatId)
+                ChatScreen(
+                    chatId = args.chatId,
+                    navigateBack = { navigationRepository.navigate(NavigationType.Back) }
+                )
             }
             composable<Screen.Profile> {
                 ProfileScreen(
                     onLogoutNavigate = {
-                        navigationStateRepository.navigate(
+                        navigationRepository.navigate(
                             NavigationType.ClearBackStack(Screen.Login)
                         )
                     }

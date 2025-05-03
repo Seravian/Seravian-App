@@ -1,6 +1,7 @@
 package com.seravian.seravianapp
 
 import android.os.Bundle
+import androidx.activity.addCallback
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -12,7 +13,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -32,7 +32,6 @@ class MainActivity : AppCompatActivity() {
         installSplashScreen()
         enableEdgeToEdge()
         setContent {
-            val context = LocalContext.current
             val coroutineScope = rememberCoroutineScope()
 
             val navigationRepository = koinInject<NavigationStateRepository>()
@@ -40,10 +39,6 @@ class MainActivity : AppCompatActivity() {
 
             val appPrefsDataSource = koinInject<PrefsDataSource>()
             val appPrefsState by appPrefsDataSource.appPrefsState.collectAsStateWithLifecycle()
-
-            BackHandler {
-                navigationRepository.navigate(NavigationType.Back)
-            }
 
             DisposableEffect (Unit) {
                 val themeJob = coroutineScope.launch {

@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class DeleteChatRequest(
-    val id : String
+    val id: String
 )

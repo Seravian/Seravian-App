@@ -5,6 +5,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 data class Message(
+    val id: Pair<Long?, String?> = Pair(null, null),
     val content: String = "",
     val timestamp: String = "",
     val isAI: Boolean = false
@@ -18,7 +19,7 @@ data class Message(
 
         val instant = Instant.parse(cleanedTimestamp)
         return DateTimeFormatter
-            .ofPattern("dd/MM/yyyy h:mm a")  // 05/06/2023 2:30 PM
+            .ofPattern("d MMM, yyyy  h:mm a")  // 2 May, 2025  2:30 PM
             .withZone(ZoneId.systemDefault())
             .format(instant)
     }

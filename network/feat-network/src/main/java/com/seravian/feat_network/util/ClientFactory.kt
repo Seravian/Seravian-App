@@ -43,7 +43,7 @@ object ClientFactory {
                 bearer {
                     loadTokens {
                         val tokenInfo = tokensDataSource.getStoredTokens()
-                        tokenInfo?.let { info ->
+                        tokenInfo.let { info ->
                             BearerTokens(info.accessToken, info.refreshToken)
                         }
                     }
@@ -74,33 +74,6 @@ object ClientFactory {
                     }
                 }
             }
-        }
-    }
-
-    fun signalRClient(tokensDataSource: TokenDataSource, httpClient: HttpClient): HubConnection {
-        val scope = CoroutineScope(Dispatchers.IO)
-        var tokens: Tokens? = null
-
-        scope.launch {
-            val tokensFlow = tokensDataSource.getStoredTokensFlow()
-            tokensFlow.collect() { newTokens -> tokens = newTokens }
-
-            if (tokens?.isAccessExpired() == true) {
-                val newTokensResult = safeCall<TokensResponse> {
-                    httpClient.post(urlString = constructUrl("auth/refresh-token")) {
-                        setBody(tokens?.toRefreshTokenRequest())
-                    }
-                }.map { it.extractTokens() }
-                newTokensResult.onSuccess {
-                    tokensDataSource.saveTokensLocally(it)
-                    tokens = it
-                }
-            }
-        }
-
-        return HubConnectionBuilder.create(url = constructUrl("hubs/chat")) {
-            automaticReconnect = AutomaticReconnect.Active
-            accessToken = tokens?.accessToken
         }
     }
 }

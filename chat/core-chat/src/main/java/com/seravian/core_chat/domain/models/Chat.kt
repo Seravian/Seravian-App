@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter
 
 data class Chat(
     val id: String,
-    val title: String,
+    val title: String?,
     val createdAt: String
 ) {
     fun formatDateTime(): String {

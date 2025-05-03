@@ -10,6 +10,7 @@ import com.greenvenom.core_auth.data.dto.response.RegisterResponse
 import com.greenvenom.core_network.data.EmptyResult
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
+import com.greenvenom.core_network.domain.ConnectionStatus
 import com.greenvenom.core_onboarding.data.dto.request.OnBoardingRequest
 import com.greenvenom.core_onboarding.data.dto.response.OnBoardingResponse
 import com.greenvenom.core_tokens.data.dto.request.RefreshTokenRequest
@@ -24,6 +25,7 @@ import com.seravian.core_chat.data.dto.respose.AIResponse
 import com.seravian.core_chat.data.dto.respose.ChatMessagesResponse
 import com.seravian.core_chat.data.dto.respose.ChatResponse
 import com.seravian.core_chat.data.dto.respose.ClientResponse
+import com.seravian.core_chat.data.dto.respose.ConfirmedMessageResponse
 import com.seravian.core_chat.data.dto.respose.CreateChatResponse
 import com.seravian.core_chat.data.dto.respose.EditChatResponse
 import com.seravian.core_profile.data.remote.request.LogoutRequest
@@ -49,8 +51,10 @@ interface RemoteDataSource {
     ): NetworkResult<ChatMessagesResponse, NetworkError>
     suspend fun startSignalRConnection()
     suspend fun stopSignalRConnection()
-    fun joinChat(joinChatRequest: JoinChatRequest)
-    fun sendRequest(clientRequest: ClientRequest)
-    fun receiveClientRequest(): Flow<ClientResponse>
-    fun receiveAIResponse(): Flow<AIResponse>
+    fun getSignalRConnectionStatus(): Flow<ConnectionStatus>
+    suspend fun joinChat(joinChatRequest: JoinChatRequest)
+    suspend fun sendRequest(clientRequest: ClientRequest)
+    fun receiveClientResponse(callback: (ClientResponse) -> Unit)
+    fun receiveAIResponse(callback: (AIResponse) -> Unit)
+    fun receiveMessageConfirmation(callback: (ConfirmedMessageResponse) -> Unit)
 }

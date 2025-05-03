@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class EditChatRequest(
-    val id : String,
-    val title : String ?= null
+    val id: String,
+    val title: String ?= null
 )

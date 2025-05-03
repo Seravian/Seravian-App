@@ -12,11 +12,12 @@ import com.seravian.core_chat.domain.models.Message
 
 data class ChatState(
     val currentChat: Chat ?= null,
-    val messagesList: MutableList<Message> ?= null,
-    val chatsList: List<Chat> ?= null,
-    val createChatResult: NetworkResult<CreateChatResponse, NetworkError> ?= null,
-    val editChatResult: NetworkResult<EditChatResponse, NetworkError> ?= null,
+    val messagesList: List<Message> = listOf(),
+    val chatsList: List<Chat> = emptyList(),
+    val createChatResult: NetworkResult<Chat, NetworkError> ?= null,
+    val editChatResult: NetworkResult<Chat, NetworkError> ?= null,
     val deleteChatResult: EmptyResult<NetworkError> ?= null,
-    val getChatsResult: NetworkResult<List<ChatResponse>, NetworkError> ?= null,
-    val getChatMessagesResult: NetworkResult<ChatMessagesResponse, NetworkError> ?= null
+    val getChatsResult: NetworkResult<List<Chat>, NetworkError> ?= null,
+    val getChatMessagesResult: NetworkResult<Pair<Chat, List<Message>>, NetworkError> ?= null,
+    val joinChatResult: NetworkResult<Unit, NetworkError> ?= null
 )
