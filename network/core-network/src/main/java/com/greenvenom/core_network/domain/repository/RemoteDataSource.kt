@@ -21,6 +21,7 @@ import com.seravian.core_chat.data.dto.request.DeleteChatRequest
 import com.seravian.core_chat.data.dto.request.EditChatRequest
 import com.seravian.core_chat.data.dto.request.GetChatMessagesRequest
 import com.seravian.core_chat.data.dto.request.JoinChatRequest
+import com.seravian.core_chat.data.dto.request.SyncMessagesRequest
 import com.seravian.core_chat.data.dto.respose.AIResponse
 import com.seravian.core_chat.data.dto.respose.ChatMessagesResponse
 import com.seravian.core_chat.data.dto.respose.ChatResponse
@@ -48,6 +49,9 @@ interface RemoteDataSource {
     suspend fun getChats(): NetworkResult<List<ChatResponse>, NetworkError>
     suspend fun getChatMessages(
         getChatMessagesRequest: GetChatMessagesRequest
+    ): NetworkResult<ChatMessagesResponse, NetworkError>
+    suspend fun syncMessages(
+        syncRequest: SyncMessagesRequest
     ): NetworkResult<ChatMessagesResponse, NetworkError>
     suspend fun startSignalRConnection()
     suspend fun stopSignalRConnection()

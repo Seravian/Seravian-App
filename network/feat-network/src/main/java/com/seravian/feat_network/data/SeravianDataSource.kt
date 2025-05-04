@@ -26,6 +26,7 @@ import com.seravian.core_chat.data.dto.request.DeleteChatRequest
 import com.seravian.core_chat.data.dto.request.EditChatRequest
 import com.seravian.core_chat.data.dto.request.GetChatMessagesRequest
 import com.seravian.core_chat.data.dto.request.JoinChatRequest
+import com.seravian.core_chat.data.dto.request.SyncMessagesRequest
 import com.seravian.core_chat.data.dto.respose.AIResponse
 import com.seravian.core_chat.data.dto.respose.ChatMessagesResponse
 import com.seravian.core_chat.data.dto.respose.ChatResponse
@@ -174,6 +175,22 @@ class SeravianDataSource(
             authorizedHttpClient.get(constructUrl("chat/get-chat-messages")) {
                 url {
                     parameters.append("id", getChatMessagesRequest.id)
+                }
+            }
+        }
+    }
+
+    override suspend fun syncMessages(
+        syncRequest: SyncMessagesRequest
+    ): NetworkResult<ChatMessagesResponse, NetworkError> {
+        return safeCall {
+            authorizedHttpClient.get(constructUrl("chat/sync-messages")) {
+                url {
+                    parameters.append(
+                        name = "lastMessageTimestampUtc",
+                        value = syncRequest.lastMessageTimestampUtc
+                    )
+                    parameters.append("chatId", syncRequest.chatId)
                 }
             }
         }

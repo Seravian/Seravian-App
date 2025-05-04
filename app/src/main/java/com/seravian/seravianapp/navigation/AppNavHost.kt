@@ -45,6 +45,8 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         navController = rememberNavController()
     )
 
+    BackHandler { navigationRepository.navigate(NavigationType.Back) }
+
     NavHost(
         navController = appNavigator.navController,
         startDestination = Screen.Splash,

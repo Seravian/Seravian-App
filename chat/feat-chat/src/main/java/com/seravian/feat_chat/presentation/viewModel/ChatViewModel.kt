@@ -125,7 +125,6 @@ class ChatViewModel(
         responseCollection?.start()
     }
 
-
     private fun createChat(title: String) {
         viewModelScope.launch {
             val result = chatRepository.createChat(CreateChatRequest(title))

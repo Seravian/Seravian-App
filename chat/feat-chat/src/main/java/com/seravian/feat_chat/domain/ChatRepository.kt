@@ -10,6 +10,8 @@ import com.seravian.core_chat.data.dto.request.DeleteChatRequest
 import com.seravian.core_chat.data.dto.request.EditChatRequest
 import com.seravian.core_chat.data.dto.request.GetChatMessagesRequest
 import com.seravian.core_chat.data.dto.request.JoinChatRequest
+import com.seravian.core_chat.data.dto.request.SyncMessagesRequest
+import com.seravian.core_chat.data.dto.respose.ChatMessagesResponse
 import com.seravian.core_chat.data.dto.respose.ConfirmedMessageResponse
 import com.seravian.core_chat.domain.models.Chat
 import com.seravian.core_chat.domain.models.Message
@@ -27,6 +29,10 @@ interface ChatRepository {
     suspend fun getChatMessages(
         getChatMessagesRequest: GetChatMessagesRequest
     ): NetworkResult<Pair<Chat, List<Message>>, NetworkError>
+
+    suspend fun syncMessages(
+        syncRequest: SyncMessagesRequest
+    ): NetworkResult<List<Message>, NetworkError>
 
     suspend fun startConnection()
 

@@ -12,6 +12,7 @@ import com.seravian.core_chat.data.dto.request.DeleteChatRequest
 import com.seravian.core_chat.data.dto.request.EditChatRequest
 import com.seravian.core_chat.data.dto.request.GetChatMessagesRequest
 import com.seravian.core_chat.data.dto.request.JoinChatRequest
+import com.seravian.core_chat.data.dto.request.SyncMessagesRequest
 import com.seravian.core_chat.data.dto.respose.AIResponse
 import com.seravian.core_chat.data.dto.respose.ClientResponse
 import com.seravian.core_chat.data.dto.respose.ConfirmedMessageResponse
@@ -57,6 +58,13 @@ class ChatRepositoryImpl(
     ): NetworkResult<Pair<Chat, List<Message>>, NetworkError> {
         val chatMessagesResponse = remoteDataSource.getChatMessages(getChatMessagesRequest)
         return chatMessagesResponse.map { response -> response.extractChat() to response.extractMessages() }
+    }
+
+    override suspend fun syncMessages(
+        syncRequest: SyncMessagesRequest
+    ): NetworkResult<List<Message>, NetworkError> {
+        val syncMessagesResponse = remoteDataSource.syncMessages(syncRequest)
+        return syncMessagesResponse.map { response -> response.extractMessages() }
     }
 
     /////////////////////////////////
