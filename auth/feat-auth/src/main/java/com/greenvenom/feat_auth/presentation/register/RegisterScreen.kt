@@ -44,7 +44,11 @@ fun RegisterScreen(
     navigateBack: () -> Unit,
     navigateToAccountVerificationScreen: () -> Unit,
 ) {
-    BaseScreen<RegisterViewModel> { viewModel ->
+    BaseScreen<RegisterViewModel>(
+        onPhysicalBack = {
+            navigateBack()
+        }
+    ) { viewModel ->
         val state by viewModel.registerState.collectAsStateWithLifecycle()
 
         RegisterContent(

@@ -39,7 +39,11 @@ fun OtpScreen(
     navigateToNextScreen: () -> Unit,
     navigateBack: () -> Unit
 ) {
-    BaseScreen<OtpViewModel> { viewModel ->
+    BaseScreen<OtpViewModel>(
+        onPhysicalBack = {
+            navigateBack()
+        }
+    ) { viewModel ->
         val otpState by viewModel.otpState.collectAsStateWithLifecycle()
         val focusRequesters = remember {
             List(8) { FocusRequester() }

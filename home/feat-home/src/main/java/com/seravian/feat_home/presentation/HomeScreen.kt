@@ -36,7 +36,9 @@ import com.seravian.feat_home.R
 
 @Composable
 fun HomeScreen() {
-    BaseScreen<HomeViewModel> { viewModel ->
+    BaseScreen<HomeViewModel>(
+        enableCustomBack = false
+    ) { viewModel ->
         HomeContent()
     }
 }

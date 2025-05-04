@@ -167,7 +167,8 @@ fun AppNavHost(modifier: Modifier = Modifier) {
                         navigationRepository.navigate(
                             NavigationType.Standard(Screen.Chat(chatId))
                         )
-                    }
+                    },
+                    navigateBack = { navigationRepository.navigate(NavigationType.Back) }
                 )
             }
             composable<Screen.Sessions> {

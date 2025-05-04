@@ -38,9 +38,16 @@ import com.seravian.feat_chat.presentation.viewModel.ChatViewModel
 @Composable
 fun ChatListScreen(
     navigateToChat: (String) -> Unit,
+    navigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    BaseScreen<ChatViewModel> { viewModel ->
+    BaseScreen<ChatViewModel>(
+        onPhysicalBack = { viewModel ->
+            navigateBack()
+            viewModel.chatAction(ChatAction.ClearChatResults)
+        },
+        modifier = modifier
+    ) { viewModel ->
         val state by viewModel.chatState.collectAsStateWithLifecycle()
 
         LaunchedEffect(Unit) { viewModel.chatAction(ChatAction.GetChats) }

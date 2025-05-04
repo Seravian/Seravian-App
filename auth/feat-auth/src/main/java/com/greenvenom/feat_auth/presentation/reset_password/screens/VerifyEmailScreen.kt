@@ -48,10 +48,14 @@ fun VerifyEmailScreen(
     navigateBack: () -> Unit,
     navigateToOtpScreen: () -> Unit
 ) {
-    val emailStateRepository: EmailStateRepository = koinInject()
+    val emailStateRepository = koinInject<EmailStateRepository>()
     val emailState by emailStateRepository.emailState.collectAsStateWithLifecycle()
 
-    BaseScreen<ResetPasswordViewModel> { resetPasswordViewModel ->
+    BaseScreen<ResetPasswordViewModel>(
+        onPhysicalBack = {
+            navigateBack()
+        }
+    ) { resetPasswordViewModel ->
         val resetPasswordState by resetPasswordViewModel.resetPasswordState.collectAsStateWithLifecycle()
 
         VerifyEmailContent(

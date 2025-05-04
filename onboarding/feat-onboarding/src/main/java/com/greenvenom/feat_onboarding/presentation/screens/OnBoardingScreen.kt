@@ -35,7 +35,9 @@ import com.greenvenom.core_ui.theme.AppTheme
 fun OnBoardingScreen(
     navigateToNextScreen: () -> Unit
 ) {
-    BaseScreen<OnBoardingViewModel> { viewModel ->
+    BaseScreen<OnBoardingViewModel>(
+        enableCustomBack = false
+    ) { viewModel ->
         val state by viewModel.userDetailsState.collectAsStateWithLifecycle()
 
         OnBoardingContent(
