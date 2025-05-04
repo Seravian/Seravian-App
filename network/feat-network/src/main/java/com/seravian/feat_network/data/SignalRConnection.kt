@@ -1,5 +1,6 @@
 package com.seravian.feat_network.data
 
+import android.util.Log
 import com.greenvenom.core_network.api.utils.constructUrl
 import com.greenvenom.core_network.api.utils.safeCall
 import com.greenvenom.core_network.data.map
@@ -23,6 +24,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -61,19 +63,23 @@ class SignalRConnection(
 
         val validToken = currentTokenFlow
             .filter { it.accessToken.isNotBlank() && !it.refreshToken.isNullOrEmpty() }
+            .onEach { Log.d("Creation", "Valid token: ${it.accessToken}, ${it.refreshToken}") }
             .first() // suspend until this condition is true
 
         // Create the hub connection
         hubConnection = HubConnectionBuilder.create(constructUrl("hubs/chat")) {
+            Log.d("Creation", "Creating hub connection ${currentTokenFlow.value.accessToken}")
             accessToken = validToken.accessToken
 
             automaticReconnect = AutomaticReconnect.Custom { previousRetryCount, _ ->
+                Log.d("Creation", "Reconnect")
+
                 // Attempt to refresh token on reconnect if needed
                 scope.launch {
                     tokenMutex.withLock {
                         val tokens = currentTokenFlow.value
                         val refreshedTokens = refreshTokenIfNeeded(tokens)
-                        currentTokenFlow.value = refreshedTokens
+                        accessToken = refreshedTokens.accessToken
                     }
                 }
 
@@ -83,6 +89,7 @@ class SignalRConnection(
 
         // Start the connection
         hubConnection.start()
+        hubConnection.connectionId
 
         return hubConnection
     }
@@ -106,14 +113,15 @@ class SignalRConnection(
     }
 
     suspend fun disconnect() {
-        if (::hubConnection.isInitialized) {
-            hubConnection.stop()
-        }
         statusCollectionJob?.cancel()
         statusCollectionJob = null
 
         tokenCollectionJob?.cancel()
         tokenCollectionJob = null
+
+        if (::hubConnection.isInitialized) {
+            hubConnection.stop()
+        }
 
         _connectionStatus.update { ConnectionStatus.IDLE }
     }
@@ -129,6 +137,7 @@ class SignalRConnection(
 
             newTokensResult.map { tokens ->
                 tokensDataSource.saveTokensLocally(tokens)
+                Log.d("Creation", "${tokens.accessToken}, ${tokens.refreshToken}")
                 return tokens
             }
         }

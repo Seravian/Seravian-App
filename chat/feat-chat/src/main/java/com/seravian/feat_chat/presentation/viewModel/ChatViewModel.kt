@@ -17,6 +17,7 @@ import com.seravian.core_chat.data.dto.request.JoinChatRequest
 import com.seravian.core_chat.domain.models.Message
 import com.seravian.feat_chat.domain.ChatRepository
 import com.seravian.feat_chat.presentation.ChatAction
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -28,6 +29,8 @@ class ChatViewModel(
 ): BaseViewModel() {
     private val _chatState: MutableStateFlow<ChatState> = MutableStateFlow(ChatState())
     val chatState = _chatState.asStateFlow()
+
+    private var responseCollection: Job? = null
 
     fun chatAction(action: ChatAction) {
         when(action) {
@@ -62,16 +65,22 @@ class ChatViewModel(
                         }
                     }
                     ConnectionStatus.RECONNECTING -> {
-
-                    }
-                    ConnectionStatus.DISCONNECTED -> {
+                        responseCollection?.cancel()
+                        responseCollection = null
                         _chatState.update {
                             it.copy(
-                                currentChat = null,
-                                messagesList = mutableListOf(),
-                                joinChatResult = NetworkResult.Error(NetworkError(ErrorType.SERVER_ERROR))
+                                joinChatResult = null
                             )
                         }
+                    }
+                    ConnectionStatus.DISCONNECTED -> {
+//                        _chatState.update {
+//                            it.copy(
+//                                currentChat = null,
+//                                messagesList = mutableListOf(),
+//                                joinChatResult = NetworkResult.Error(NetworkError(ErrorType.SERVER_ERROR))
+//                            )
+//                        }
                     }
                     else -> { Log.d("Status", "IDLE") }
                 }
@@ -87,7 +96,7 @@ class ChatViewModel(
     }
 
     private fun collectResponses() {
-        viewModelScope.launch {
+        responseCollection = viewModelScope.launch {
             chatRepository.receiveClientResponse { message ->
                 updateMessages { currentList -> currentList + message }
             }
@@ -113,6 +122,7 @@ class ChatViewModel(
                 }
             }
         }
+        responseCollection?.start()
     }
 
 

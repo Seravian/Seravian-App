@@ -40,6 +40,10 @@ class MainActivity : AppCompatActivity() {
             val appPrefsDataSource = koinInject<PrefsDataSource>()
             val appPrefsState by appPrefsDataSource.appPrefsState.collectAsStateWithLifecycle()
 
+            BackHandler {
+                navigationRepository.navigate(NavigationType.Back)
+            }
+
             DisposableEffect (Unit) {
                 val themeJob = coroutineScope.launch {
                     appPrefsDataSource.getThemePreference().collect {
