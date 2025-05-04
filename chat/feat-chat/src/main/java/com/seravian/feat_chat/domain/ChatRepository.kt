@@ -24,15 +24,17 @@ interface ChatRepository {
 
     suspend fun deleteChat(deleteChatRequest: DeleteChatRequest): EmptyResult<NetworkError>
 
-    suspend fun getChats(): NetworkResult<List<Chat>, NetworkError>
+    fun getChats(): Flow<NetworkResult<List<Chat>, NetworkError>>
 
-    suspend fun getChatMessages(
+    fun getChatMessages(
         getChatMessagesRequest: GetChatMessagesRequest
-    ): NetworkResult<Pair<Chat, List<Message>>, NetworkError>
+    ): Flow<NetworkResult<Pair<Chat, List<Message>>, NetworkError>>
 
     suspend fun syncMessages(
         syncRequest: SyncMessagesRequest
-    ): NetworkResult<List<Message>, NetworkError>
+    ): EmptyResult<NetworkError>
+
+    suspend fun insertConfirmedMessage(message: Message)
 
     suspend fun startConnection()
 
@@ -44,9 +46,9 @@ interface ChatRepository {
 
     suspend fun sendRequest(clientRequest: ClientRequest)
 
-    fun receiveClientResponse(callback: (Message) -> Unit)
+    fun receiveClientResponse()
 
-    fun receiveAIResponse(callback: (Message) -> Unit)
+    fun receiveAIResponse()
 
-    fun receiveMessageConfirmation(callback: (ConfirmedMessageResponse) -> Unit)
+    fun receiveMessageConfirmation(callback: suspend (ConfirmedMessageResponse) -> Unit)
 }

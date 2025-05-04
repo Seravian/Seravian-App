@@ -10,7 +10,8 @@ val chatModule = module {
 
     single<ChatRepository> {
         ChatRepositoryImpl(
-            remoteDataSource = get()
+            remoteDataSource = get(),
+            roomDataSource = get()
         )
     }
 

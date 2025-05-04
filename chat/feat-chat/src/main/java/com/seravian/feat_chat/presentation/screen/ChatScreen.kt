@@ -56,15 +56,21 @@ fun ChatScreen(
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    BaseScreen<ChatViewModel> { viewModel ->
+    BaseScreen<ChatViewModel>(
+        onPhysicalBack = { viewModel ->
+            navigateBack()
+            viewModel.chatAction(ChatAction.StopCollections)
+            viewModel.chatAction(ChatAction.LeaveChat)
+            viewModel.chatAction(ChatAction.ClearChatResults)
+        },
+    ) { viewModel ->
         val chatState by viewModel.chatState.collectAsStateWithLifecycle()
 
         LaunchedEffect(Unit) {
-            viewModel.chatAction(ChatAction.GetChatMessages(chatId))
             viewModel.baseAction(BaseAction.ShowLoading)
+            viewModel.chatAction(ChatAction.GetChatMessages(chatId))
+            viewModel.chatAction(ChatAction.JoinChat)
         }
-
-        DisposableEffect(Unit) { onDispose { viewModel.chatAction(ChatAction.LeaveChat) } }
 
         ChatScreenContent(
             chatState = chatState,
@@ -102,7 +108,11 @@ private fun ChatScreenContent(
             baseAction(BaseAction.HideLoading)
         }
         ?.onError {
-            chatAction(ChatAction.NavigateBack)
+            baseAction(BaseAction.HideLoading)
+            baseAction(BaseAction.ShowErrorMessage(
+                errorMessage = it.errorType?.toString() ?: "",
+                dismissAction = { chatAction(ChatAction.NavigateBack) }
+            ))
         }
 
     Scaffold (

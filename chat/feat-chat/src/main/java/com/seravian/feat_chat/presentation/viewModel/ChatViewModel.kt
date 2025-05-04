@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.greenvenom.core_network.data.ErrorType
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
+import com.greenvenom.core_network.data.onError
 import com.greenvenom.core_network.data.onSuccess
 import com.greenvenom.core_network.domain.ConnectionStatus
 import com.greenvenom.core_ui.presentation.BaseViewModel
@@ -20,6 +21,7 @@ import com.seravian.feat_chat.presentation.ChatAction
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -31,6 +33,7 @@ class ChatViewModel(
     val chatState = _chatState.asStateFlow()
 
     private var responseCollection: Job? = null
+    private var messagesCollection: Job? = null
 
     fun chatAction(action: ChatAction) {
         when(action) {
@@ -38,10 +41,12 @@ class ChatViewModel(
             is ChatAction.DeleteChat -> deleteChat(action.chatId)
             is ChatAction.EditChat -> editChat(action.chatId, action.title)
             ChatAction.GetChats -> getChats()
+            is ChatAction.JoinChat -> startConnection()
             is ChatAction.GetChatMessages -> getChatMessages(action.chatId)
             ChatAction.LeaveChat -> leaveChat()
             is ChatAction.SendMessage -> sendRequest(action.message)
             is ChatAction.ClearChatResults -> clearChatResults()
+            is ChatAction.StopCollections -> stopCollections()
             else -> {}
         }
     }
@@ -51,10 +56,15 @@ class ChatViewModel(
             chatRepository.getSignalRConnectionStatus().collect { status ->
                 when(status) {
                     ConnectionStatus.CONNECTING -> {
-
+                        _chatState.update {
+                            it.copy(
+                                joinChatResult = null
+                            )
+                        }
+                        stopCollections()
                     }
                     ConnectionStatus.CONNECTED -> {
-                        if (_chatState.value.joinChatResult == null || _chatState.value.joinChatResult is NetworkResult.Error) {
+                        if (_chatState.value.joinChatResult == null) {
                             joinChat(_chatState.value.currentChat?.id ?: "")
                             collectResponses()
                             _chatState.update {
@@ -65,8 +75,7 @@ class ChatViewModel(
                         }
                     }
                     ConnectionStatus.RECONNECTING -> {
-                        responseCollection?.cancel()
-                        responseCollection = null
+                        stopCollections()
                         _chatState.update {
                             it.copy(
                                 joinChatResult = null
@@ -74,13 +83,7 @@ class ChatViewModel(
                         }
                     }
                     ConnectionStatus.DISCONNECTED -> {
-//                        _chatState.update {
-//                            it.copy(
-//                                currentChat = null,
-//                                messagesList = mutableListOf(),
-//                                joinChatResult = NetworkResult.Error(NetworkError(ErrorType.SERVER_ERROR))
-//                            )
-//                        }
+
                     }
                     else -> { Log.d("Status", "IDLE") }
                 }
@@ -88,41 +91,30 @@ class ChatViewModel(
         }
     }
 
-    private fun updateMessages(updateFunction: (List<Message>) -> List<Message>) {
-        _chatState.update { currentState ->
-            val updatedList = updateFunction(currentState.messagesList)
-            currentState.copy(messagesList = updatedList)
-        }
-    }
-
     private fun collectResponses() {
         responseCollection = viewModelScope.launch {
-            chatRepository.receiveClientResponse { message ->
-                updateMessages { currentList -> currentList + message }
-            }
+            chatRepository.receiveClientResponse()
 
-            chatRepository.receiveAIResponse { message ->
-                updateMessages { currentList -> currentList + message }
-            }
+            chatRepository.receiveAIResponse()
 
             chatRepository.receiveMessageConfirmation { confirmation ->
-                updateMessages { currentList ->
-                    currentList.map { message ->
-                        if (message.id.second != null && message.id.second == confirmation.clientMessageId) {
-                            Message(
-                                id = Pair(confirmation.messageId, null),
-                                content = message.content,
-                                timestamp = confirmation.timestampUtc,
-                                isAI = message.isAI
-                            )
-                        } else {
-                            message
-                        }
-                    }
-                }
+                chatRepository.insertConfirmedMessage(
+                    _chatState.value.messagesList.find { message ->
+                        message.id.second == confirmation.clientMessageId
+                    }?.copy(
+                        id = Pair(confirmation.messageId, null),
+                        timestamp = confirmation.timestampUtc
+                    ) ?: Message()
+                )
             }
         }
         responseCollection?.start()
+    }
+
+    private fun startConnection() {
+        viewModelScope.launch {
+            chatRepository.startConnection()
+        }.invokeOnCompletion { collectConnectionStatus() }
     }
 
     private fun createChat(title: String) {
@@ -147,31 +139,43 @@ class ChatViewModel(
     }
 
     private fun getChatMessages(chatId: String) {
-        viewModelScope.launch {
-            val result = chatRepository.getChatMessages(GetChatMessagesRequest(chatId))
-            result.onSuccess { chatMessagesResponse ->
-                _chatState.update {
-                    it.copy(
-                        currentChat = chatMessagesResponse.first,
-                        messagesList = chatMessagesResponse.second
-                    )
-                }
-                chatRepository.startConnection()
-                collectConnectionStatus()
+        messagesCollection = viewModelScope.launch {
+            val messagesFlow = chatRepository.getChatMessages(GetChatMessagesRequest(chatId))
+            messagesFlow.collect { messagesResult ->
+                messagesResult
+                    .onSuccess { result ->
+                        _chatState.update { it.copy(
+                            currentChat = result.first,
+                            messagesList = result.second,
+                            getChatMessagesResult = messagesResult
+                        ) }
+                    }
+                    .onError {
+                        _chatState.update { it.copy(
+                            getChatMessagesResult = messagesResult
+                        ) }
+                    }
             }
-            _chatState.update { it.copy(getChatMessagesResult = result) }
         }
     }
 
     private fun getChats() {
         viewModelScope.launch {
-            val result = chatRepository.getChats()
-            result.onSuccess { chats ->
-                _chatState.update {
-                    it.copy(chatsList = chats)
-                }
+            val chatsFlow = chatRepository.getChats()
+            chatsFlow.collect { chatsResult ->
+                chatsResult
+                    .onSuccess { result ->
+                        _chatState.update { it.copy(
+                            chatsList = result,
+                            getChatsResult = chatsResult
+                        ) }
+                    }
+                    .onError {
+                        _chatState.update { it.copy(
+                            getChatsResult = chatsResult
+                        ) }
+                    }
             }
-            _chatState.update { it.copy(getChatsResult = result) }
         }
     }
 
@@ -182,6 +186,11 @@ class ChatViewModel(
     private fun leaveChat() {
         viewModelScope.launch {
             chatRepository.stopConnection()
+            _chatState.update { it.copy(
+                currentChat = null,
+                messagesList = emptyList(),
+                joinChatResult = null
+            ) }
         }
     }
 
@@ -191,7 +200,9 @@ class ChatViewModel(
                 messageClientId = UUID.randomUUID().toString(),
                 message = message
             )
-            updateMessages { currentList -> currentList + clientRequest.buildMessage() }
+            _chatState.update { it.copy(
+                messagesList = it.messagesList + clientRequest.buildMessage()
+            ) }
             chatRepository.sendRequest(clientRequest)
         }
     }
@@ -202,9 +213,15 @@ class ChatViewModel(
                 createChatResult = null,
                 deleteChatResult = null,
                 editChatResult = null,
-                getChatMessagesResult = null,
-                getChatsResult = null
+                getChatMessagesResult = null
             )
         }
+    }
+
+    private fun stopCollections() {
+        responseCollection?.cancel()
+        responseCollection = null
+        messagesCollection?.cancel()
+        messagesCollection = null
     }
 }

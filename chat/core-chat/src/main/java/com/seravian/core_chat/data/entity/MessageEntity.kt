@@ -3,7 +3,9 @@ package com.seravian.core_chat.data.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.seravian.core_chat.domain.models.Message
 
 @Entity(
     tableName = "messages",
@@ -14,7 +16,8 @@ import androidx.room.PrimaryKey
             childColumns = ["chatId"],
             onDelete = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [Index(value = ["chatId"])]
 )
 data class MessageEntity(
     @PrimaryKey
@@ -28,4 +31,11 @@ data class MessageEntity(
     val timestamp: String = "",
     @ColumnInfo(name = "isAI")
     val isAI: Boolean = false
-)
+) {
+    fun extractMessage() = Message(
+        id = Pair(id, null),
+        content = content,
+        timestamp = timestamp,
+        isAI = isAI
+    )
+}

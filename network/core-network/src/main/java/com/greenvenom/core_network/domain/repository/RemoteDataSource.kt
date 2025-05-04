@@ -29,6 +29,7 @@ import com.seravian.core_chat.data.dto.respose.ClientResponse
 import com.seravian.core_chat.data.dto.respose.ConfirmedMessageResponse
 import com.seravian.core_chat.data.dto.respose.CreateChatResponse
 import com.seravian.core_chat.data.dto.respose.EditChatResponse
+import com.seravian.core_chat.data.dto.respose.MessageResponse
 import com.seravian.core_profile.data.remote.request.LogoutRequest
 import kotlinx.coroutines.flow.Flow
 
@@ -52,13 +53,13 @@ interface RemoteDataSource {
     ): NetworkResult<ChatMessagesResponse, NetworkError>
     suspend fun syncMessages(
         syncRequest: SyncMessagesRequest
-    ): NetworkResult<ChatMessagesResponse, NetworkError>
+    ): NetworkResult<List<MessageResponse>, NetworkError>
     suspend fun startSignalRConnection()
     suspend fun stopSignalRConnection()
     fun getSignalRConnectionStatus(): Flow<ConnectionStatus>
     suspend fun joinChat(joinChatRequest: JoinChatRequest)
     suspend fun sendRequest(clientRequest: ClientRequest)
-    fun receiveClientResponse(callback: (ClientResponse) -> Unit)
-    fun receiveAIResponse(callback: (AIResponse) -> Unit)
-    fun receiveMessageConfirmation(callback: (ConfirmedMessageResponse) -> Unit)
+    fun receiveClientResponse(callback: suspend (ClientResponse) -> Unit)
+    fun receiveAIResponse(callback: suspend (AIResponse) -> Unit)
+    fun receiveMessageConfirmation(callback: suspend (ConfirmedMessageResponse) -> Unit)
 }

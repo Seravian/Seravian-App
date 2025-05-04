@@ -19,7 +19,7 @@ inline fun<reified VM: BaseViewModel> BaseScreen(
     crossinline onStartAction: (viewModel: VM) -> Unit = {},
     crossinline onStopAction: (viewModel: VM) -> Unit = {},
     crossinline onDestroyAction: (viewModel: VM) -> Unit = {},
-    crossinline onPhysicalBack: () -> Unit = {},
+    crossinline onPhysicalBack: (viewModel: VM) -> Unit = {},
     modifier: Modifier = Modifier,
     enableCustomBack: Boolean = true,
     enableLifecycleObservation: Boolean = false,
@@ -59,7 +59,7 @@ inline fun<reified VM: BaseViewModel> BaseScreen(
 
     if (enableCustomBack) {
         BackHandler {
-            onPhysicalBack()
+            onPhysicalBack(viewModel)
         }
     }
 

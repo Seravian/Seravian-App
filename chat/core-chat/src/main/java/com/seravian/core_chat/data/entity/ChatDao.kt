@@ -2,18 +2,21 @@ package com.seravian.core_chat.data.entity
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import androidx.room.Upsert
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ChatDao {
     @Query("SELECT * FROM chats WHERE id = :chatId")
     suspend fun getChat(chatId: String): ChatEntity
 
-    @Query("SELECT * FROM chats")
-    suspend fun getChats(): List<ChatEntity>
+    @Query("SELECT * FROM chats ORDER BY created_at DESC")
+    fun getChats(): Flow<List<ChatEntity>>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertChat(chatEntity: ChatEntity)
 
     @Update
@@ -22,10 +25,10 @@ interface ChatDao {
     @Query("DELETE FROM chats WHERE id = :chatId")
     suspend fun deleteChat(chatId: String)
 
-    @Query("SELECT * FROM messages WHERE chatId = :chatId")
-    suspend fun getChatMessages(chatId: String): List<MessageEntity>
+    @Query("SELECT * FROM messages WHERE chatId = :chatId ORDER BY timestamp ASC")
+    fun getChatMessages(chatId: String): Flow<List<MessageEntity>>
 
-    @Insert
+    @Upsert
     suspend fun insertMessage(message: MessageEntity)
 
     @Insert

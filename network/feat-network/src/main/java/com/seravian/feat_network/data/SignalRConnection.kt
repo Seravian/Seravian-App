@@ -36,7 +36,6 @@ class SignalRConnection(
     private val defaultRetryDelays = listOf(2_000L, 3_000L, 5_000L, 10_000L)
 
     private val currentTokenFlow = MutableStateFlow(Tokens())
-    private val tokenMutex = Mutex()
 
     private val _connectionStatus = MutableStateFlow(ConnectionStatus.IDLE)
     val connectionStatus: StateFlow<ConnectionStatus> = _connectionStatus.asStateFlow()
@@ -51,10 +50,8 @@ class SignalRConnection(
         if (tokenCollectionJob == null) {
             tokenCollectionJob = scope.launch {
                 tokensDataSource.getStoredTokensFlow().collectLatest { storedTokens ->
-                    tokenMutex.withLock {
-                        val refreshedTokens = refreshTokenIfNeeded(storedTokens)
-                        currentTokenFlow.value = refreshedTokens
-                    }
+                    val refreshedTokens = refreshTokenIfNeeded(storedTokens)
+                    currentTokenFlow.value = refreshedTokens
                 }
             }
         }
@@ -71,11 +68,9 @@ class SignalRConnection(
 
                 // Attempt to refresh token on reconnect if needed
                 scope.launch {
-                    tokenMutex.withLock {
-                        val tokens = currentTokenFlow.value
-                        val refreshedTokens = refreshTokenIfNeeded(tokens)
-                        accessToken = refreshedTokens.accessToken
-                    }
+                    val tokens = currentTokenFlow.value
+                    val refreshedTokens = refreshTokenIfNeeded(tokens)
+                    accessToken = refreshedTokens.accessToken
                 }
 
                 defaultRetryDelays.getOrNull(previousRetryCount)
@@ -105,15 +100,15 @@ class SignalRConnection(
     }
 
     suspend fun disconnect() {
+        if (::hubConnection.isInitialized) {
+            hubConnection.stop()
+        }
+
         statusCollectionJob?.cancel()
         statusCollectionJob = null
 
         tokenCollectionJob?.cancel()
         tokenCollectionJob = null
-
-        if (::hubConnection.isInitialized) {
-            hubConnection.stop()
-        }
 
         _connectionStatus.update { ConnectionStatus.IDLE }
     }
