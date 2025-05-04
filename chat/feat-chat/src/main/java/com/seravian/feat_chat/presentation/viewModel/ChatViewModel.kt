@@ -66,6 +66,7 @@ class ChatViewModel(
                     ConnectionStatus.CONNECTED -> {
                         if (_chatState.value.joinChatResult == null) {
                             joinChat(_chatState.value.currentChat?.id ?: "")
+                            getChatMessages(_chatState.value.currentChat?.id ?: "")
                             collectResponses()
                             _chatState.update {
                                 it.copy(
