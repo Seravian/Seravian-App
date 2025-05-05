@@ -3,7 +3,7 @@
     <string name="logout">Logout</string>
     <string name="language">Language</string>
     <string name="dark_theme">Dark Theme</string>
-    <string name="welcome">Welcome, %1$s 👋</string>
+    <string name="welcome">Welcome, %1$s</string>
     <string name="user">User</string>
     <string name="avatar">Avatar</string>
 </resources>

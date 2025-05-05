@@ -163,7 +163,7 @@ fun ProfileContent(
 
             // Logout Button
             CustomButton(
-                text = "Logout",
+                text = stringResource(R.string.logout),
                 enabled = true,
                 onClick = {
                     onLogoutClick()
