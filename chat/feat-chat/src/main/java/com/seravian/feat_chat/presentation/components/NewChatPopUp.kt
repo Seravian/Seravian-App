@@ -3,6 +3,8 @@ package com.seravian.feat_chat.presentation.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -10,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -30,9 +34,12 @@ import com.seravian.feat_chat.R
 fun NewChatPopUp(
     value: String,
     onValueChange: (String) -> Unit,
-    onSubmit: () -> Unit,
+    onCreateChat: () -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
+    isEdit: Boolean = false ,
+    onEditChat: () -> Unit = {},
+    onDelete: () -> Unit = {}
 ) {
     Box(
         contentAlignment = Alignment.Center,
@@ -63,12 +70,29 @@ fun NewChatPopUp(
                         onValueChange = onValueChange,
                         modifier = Modifier.fillMaxWidth()
                     )
-                    CustomButton(
-                        text = stringResource(R.string.create_chat),
-                        onClick = onSubmit,
-                        enabled = value.isNotEmpty(),
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier.fillMaxWidth()
-                    )
+                    ) {
+                        CustomButton(
+                            text = if (isEdit)stringResource(R.string.edit_chat) else stringResource(R.string.create_chat),
+                            onClick = if (isEdit) onEditChat else onCreateChat,
+                            enabled = value.isNotEmpty(),
+                            modifier = Modifier.weight(1f)
+                        )
+                        if (isEdit) {
+                            Spacer(modifier = Modifier.width(8.dp))
+                            CustomButton(
+                                text = stringResource(R.string.delete),
+                                onClick = onDelete,
+                                enabled = value.isNotEmpty(),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.error
+                                ),
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -80,10 +104,13 @@ fun NewChatPopUp(
 private fun PopUpPreview() {
     AppTheme {
         NewChatPopUp(
-            value = "",
+            value = "fdfh",
             onValueChange = {  },
-            onSubmit = {  },
-            onDismiss = {  }
+            onCreateChat = {  },
+            onEditChat = {  },
+            onDismiss = {  },
+            onDelete = {  },
+            isEdit = true
         )
     }
 }
