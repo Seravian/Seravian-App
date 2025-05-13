@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.greenvenom.core_navigation.data.NavigationType
 import com.greenvenom.core_navigation.domain.Destination
+import com.seravian.feat_navigation.R
 import com.seravian.feat_navigation.routes.Screen
 
 @Composable
@@ -50,13 +51,16 @@ private fun BottomBarContent(
                 icon = {
                     Icon(
                         painter = painterResource(destination.icon),
-                        contentDescription = "${destination.label} Navigation Icon"
+                        contentDescription = stringResource(
+                            R.string.navigation_icon,
+                            destination.label
+                        )
                     )
                 },
                 label = {
                     Text(
                         text = stringResource(destination.label),
-                        style = MaterialTheme.typography.labelLarge
+                        style = MaterialTheme.typography.labelMedium
                     )
                 },
                 selected = destination.target == currentDestination,

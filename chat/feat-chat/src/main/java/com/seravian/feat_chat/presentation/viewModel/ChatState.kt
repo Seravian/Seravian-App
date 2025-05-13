@@ -1,7 +1,23 @@
 package com.seravian.feat_chat.presentation.viewModel
 
+import com.greenvenom.core_network.data.EmptyResult
+import com.greenvenom.core_network.data.NetworkError
+import com.greenvenom.core_network.data.NetworkResult
+import com.seravian.core_chat.data.dto.respose.ChatMessagesResponse
+import com.seravian.core_chat.data.dto.respose.ChatResponse
+import com.seravian.core_chat.data.dto.respose.CreateChatResponse
+import com.seravian.core_chat.data.dto.respose.EditChatResponse
+import com.seravian.core_chat.domain.models.Chat
 import com.seravian.core_chat.domain.models.Message
 
 data class ChatState(
-    val messagesList: List<Message> = emptyList(),
+    val currentChat: Chat ?= null,
+    val messagesList: List<Message> = listOf(),
+    val chatsList: List<Chat> = emptyList(),
+    val createChatResult: NetworkResult<Chat, NetworkError> ?= null,
+    val editChatResult: NetworkResult<Chat, NetworkError> ?= null,
+    val deleteChatResult: EmptyResult<NetworkError> ?= null,
+    val getChatsResult: NetworkResult<List<Chat>, NetworkError> ?= null,
+    val getChatMessagesResult: NetworkResult<Pair<Chat, List<Message>>, NetworkError> ?= null,
+    val joinChatResult: NetworkResult<Unit, NetworkError> ?= null
 )

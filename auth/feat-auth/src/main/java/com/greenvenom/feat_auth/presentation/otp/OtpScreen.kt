@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -38,7 +39,11 @@ fun OtpScreen(
     navigateToNextScreen: () -> Unit,
     navigateBack: () -> Unit
 ) {
-    BaseScreen<OtpViewModel> { viewModel ->
+    BaseScreen<OtpViewModel>(
+        onPhysicalBack = {
+            navigateBack()
+        }
+    ) { viewModel ->
         val otpState by viewModel.otpState.collectAsStateWithLifecycle()
         val focusRequesters = remember {
             List(8) { FocusRequester() }
@@ -116,45 +121,48 @@ private fun OtpContent(
         }
     }
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-            .fillMaxSize()
-    ) {
-        AuthHeader(
-            title = stringResource(R.string.enter_the_sent_otp),
-            isLoginScreen = false,
-            navigateBack = navigateBack,
-            modifier = Modifier
-                .align(Alignment.Start)
-        )
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
-            modifier = Modifier
-                .fillMaxHeight(0.7f)
-                .fillMaxWidth()
-                .padding(8.dp)
+    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding)
         ) {
-            state.code.forEachIndexed { index, number ->
-                OtpInputField(
-                    number = number,
-                    focusRequester = focusRequesters[index],
-                    onFocusChanged = { isFocused ->
-                        if (isFocused) {
-                            otpActions(OtpAction.OnChangeFieldFocused(index))
-                        }
-                    },
-                    onNumberChanged = { newNumber ->
-                        otpActions(OtpAction.OnEnterNumber(newNumber, index))
-                    },
-                    onKeyboardBack = {
-                        otpActions(OtpAction.OnKeyboardBack)
-                    },
-                    modifier = Modifier
-                        .weight(1f)
-                        .aspectRatio(1f)
-                )
+            AuthHeader(
+                title = stringResource(R.string.enter_the_sent_otp),
+                isLoginScreen = false,
+                navigateBack = navigateBack,
+                modifier = Modifier
+                    .align(Alignment.Start)
+            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
+                modifier = Modifier
+                    .fillMaxHeight(0.7f)
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            ) {
+                state.code.forEachIndexed { index, number ->
+                    OtpInputField(
+                        number = number,
+                        focusRequester = focusRequesters[index],
+                        onFocusChanged = { isFocused ->
+                            if (isFocused) {
+                                otpActions(OtpAction.OnChangeFieldFocused(index))
+                            }
+                        },
+                        onNumberChanged = { newNumber ->
+                            otpActions(OtpAction.OnEnterNumber(newNumber, index))
+                        },
+                        onKeyboardBack = {
+                            otpActions(OtpAction.OnKeyboardBack)
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                            .aspectRatio(1f)
+                    )
+                }
             }
         }
     }

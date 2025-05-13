@@ -2,13 +2,14 @@ package com.greenvenom.core_tokens.domain
 
 import com.greenvenom.core_tokens.data.dto.request.RefreshTokenRequest
 import kotlinx.serialization.Serializable
+import java.time.Duration
 import java.time.Instant
 
 @Serializable
 data class Tokens(
-    val accessToken: String,
-    val accessTokenExpirationUtc: String,
-    val refreshToken: String?
+    val accessToken: String = "",
+    val accessTokenExpirationUtc: String = "",
+    val refreshToken: String ?= null
 ) {
     fun toRefreshTokenRequest(): RefreshTokenRequest {
         return RefreshTokenRequest(refreshToken = refreshToken ?: "")
@@ -18,6 +19,6 @@ data class Tokens(
         val expirationInstant = Instant.parse(this.accessTokenExpirationUtc)
         val currentInstant = Instant.now()
 
-        return expirationInstant.isBefore(currentInstant)
+        return expirationInstant.minus(Duration.ofMinutes(1)).isBefore(currentInstant)
     }
 }

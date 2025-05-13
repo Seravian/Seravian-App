@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="home">الصفحة الرئيسية</string>
-    <string name="ai_chat">الجلسة الذكية</string>
+    <string name="home">الرئيسية</string>
+    <string name="ai_chat">المحادثات</string>
     <string name="sessions">الجلسات</string>
     <string name="doctors">الأطباء</string>
+    <string name="profile">الحساب</string>
+    <string name="navigation_icon">%1$s أيكونة</string>
+
 </resources>

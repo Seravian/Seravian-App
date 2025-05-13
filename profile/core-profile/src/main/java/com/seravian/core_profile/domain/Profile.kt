@@ -1,6 +1,6 @@
 package com.seravian.core_profile.domain
 
-import com.seravian.core_profile.data.ProfileEntity
+import com.seravian.core_profile.data.local.ProfileEntity
 
 data class Profile(
     val id: String,

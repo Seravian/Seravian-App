@@ -10,6 +10,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -46,7 +47,9 @@ fun NewPasswordScreen(
     navigateBack: () -> Unit,
     navigateToLoginScreen: () -> Unit
 ) {
-    BaseScreen<ResetPasswordViewModel> { viewModel ->
+    BaseScreen<ResetPasswordViewModel>(
+        enableCustomBack = false
+    ) { viewModel ->
         val resetPasswordState by viewModel.resetPasswordState.collectAsStateWithLifecycle()
 
         NewPasswordContent(
@@ -93,62 +96,65 @@ private fun NewPasswordContent(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        AuthHeader(
-            title = stringResource(R.string.create_new_password),
-            navigateBack = navigateBack,
-            isLoginScreen = false,
-            isNavigationBackWanted = true
-        )
+    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
             modifier = Modifier
-                .padding(18.dp)
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(13.dp) // Adds spacing between items
+                .padding(innerPadding)
         ) {
-            Text(
-                text = stringResource(R.string.Password),
-                color = MaterialTheme.colorScheme.onBackground
+            AuthHeader(
+                title = stringResource(R.string.create_new_password),
+                navigateBack = navigateBack,
+                isLoginScreen = false,
+                isNavigationBackWanted = false
             )
-            CustomTextField(
-                value = password,
-                onValueChange = {
-                    password = it
-                    resetPasswordActions(ResetPasswordAction.ValidatePassword(password))
-                },
-                label = stringResource(R.string.enter_your_password),
-                error = if (state.passwordValidity is ValidationResult.Error) state.passwordValidity.error.toString(context) else "",
-                isPasswordField = true,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
-            )
-            // Confirm Password Field
-            Text(
-                text = stringResource(R.string.confirm_password),
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            CustomTextField(
-                value = confirmPassword,
-                onValueChange = {
-                    confirmPassword = it
-                    resetPasswordActions(ResetPasswordAction.ValidatePasswordConfirmation(password, confirmPassword))
-                },
-                label = stringResource(R.string.confirm_your_password),
-                error = if (state.confirmPasswordValidity is ValidationResult.Error) state.confirmPasswordValidity.error.toString(context) else "",
-                isPasswordField = true
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-            CustomButton(
-                text = stringResource(R.string.confirm),
-                enabled = state.passwordValidity is ValidationResult.Success && state.confirmPasswordValidity is ValidationResult.Success,
-                onClick = {
-                    baseActions(BaseAction.ShowLoading)
-                    resetPasswordActions(ResetPasswordAction.UpdatePassword(password))
-                }
-            )
+            Column(
+                modifier = Modifier
+                    .padding(18.dp)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(13.dp) // Adds spacing between items
+            ) {
+                Text(
+                    text = stringResource(R.string.Password),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                CustomTextField(
+                    value = password,
+                    onValueChange = {
+                        password = it
+                        resetPasswordActions(ResetPasswordAction.ValidatePassword(password))
+                    },
+                    label = stringResource(R.string.enter_your_password),
+                    error = if (state.passwordValidity is ValidationResult.Error) state.passwordValidity.error.toString(context) else "",
+                    isPasswordField = true,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+                )
+                // Confirm Password Field
+                Text(
+                    text = stringResource(R.string.confirm_password),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                CustomTextField(
+                    value = confirmPassword,
+                    onValueChange = {
+                        confirmPassword = it
+                        resetPasswordActions(ResetPasswordAction.ValidatePasswordConfirmation(password, confirmPassword))
+                    },
+                    label = stringResource(R.string.confirm_your_password),
+                    error = if (state.confirmPasswordValidity is ValidationResult.Error) state.confirmPasswordValidity.error.toString(context) else "",
+                    isPasswordField = true
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+                CustomButton(
+                    text = stringResource(R.string.confirm),
+                    enabled = state.passwordValidity is ValidationResult.Success && state.confirmPasswordValidity is ValidationResult.Success,
+                    onClick = {
+                        baseActions(BaseAction.ShowLoading)
+                        resetPasswordActions(ResetPasswordAction.UpdatePassword(password))
+                    }
+                )
+            }
         }
     }
 }

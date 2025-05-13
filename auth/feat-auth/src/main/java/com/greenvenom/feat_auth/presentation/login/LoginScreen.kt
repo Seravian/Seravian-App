@@ -1,6 +1,5 @@
 package com.greenvenom.feat_auth.presentation.login
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,6 +11,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -48,7 +48,9 @@ fun LoginScreen(
     navigateToEmailVerificationScreen: () -> Unit,
     navigateToOTPScreen: () -> Unit,
 ) {
-    BaseScreen<LoginViewModel> { viewModel ->
+    BaseScreen<LoginViewModel>(
+        enableCustomBack = false
+    ) { viewModel ->
         val state by viewModel.loginState.collectAsStateWithLifecycle()
 
         LoginContent(
@@ -104,75 +106,78 @@ private fun LoginContent(
         }
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-    ) {
-        // Header Section
-        AuthHeader(
-            title = stringResource(R.string.sign_in_to_your_account),
-            isLoginScreen = true,
-            isNavigationBackWanted = false,
-            navigateToRegister = navigateToRegisterScreen
-        )
-        // Input Fields Section
+    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
-            modifier = Modifier
-                .padding(18.dp)
+            modifier = modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(13.dp) // Adds spacing between items
+                .padding(innerPadding)
         ) {
-            //email field
-            Text(
-                text = stringResource(R.string.email),
-                color = MaterialTheme.colorScheme.onBackground
+            // Header Section
+            AuthHeader(
+                title = stringResource(R.string.sign_in_to_your_account),
+                isLoginScreen = true,
+                isNavigationBackWanted = false,
+                navigateToRegister = navigateToRegisterScreen
             )
-            CustomTextField(
-                value = email,
-                onValueChange = {
-                    email = it
-                    loginActions(LoginAction.ValidateEmail(email))
-                },
-                label = stringResource(R.string.enter_your_email),
-                error = if (state.emailValidity is ValidationResult.Error) state.emailValidity.error.toString(context) else "",
-                isPasswordField = false,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
-            )
-            //password field
-            Text(
-                text = stringResource(R.string.Password),
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            CustomTextField(
-                value = password,
-                onValueChange = {
-                    password = it
-                    loginActions(LoginAction.ValidatePassword(password))
-                },
-                label = stringResource(R.string.enter_your_password),
-                error = if (state.passwordValidity is ValidationResult.Error) state.passwordValidity.error.toString(context) else "",
-                isPasswordField = true
-            )
-            //forgot field
-            Text(
-                stringResource(R.string.forgot_password),
-                color = bluePrimary,
+            // Input Fields Section
+            Column(
                 modifier = Modifier
-                    .align(Alignment.End)
-                    .clickable(enabled = true) {
-                        navigateToEmailVerificationScreen()
-                    }
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-            CustomButton(
-                text = stringResource(R.string.log_in),
-                onClick = {
-                    baseActions(BaseAction.ShowLoading)
-                    loginActions(LoginAction.Login(email, password))
-                },
-                enabled = state.emailValidity is ValidationResult.Success && state.passwordValidity is ValidationResult.Success
-            )
+                    .padding(18.dp)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(13.dp) // Adds spacing between items
+            ) {
+                //email field
+                Text(
+                    text = stringResource(R.string.email),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                CustomTextField(
+                    value = email,
+                    onValueChange = {
+                        email = it
+                        loginActions(LoginAction.ValidateEmail(email))
+                    },
+                    label = stringResource(R.string.enter_your_email),
+                    error = if (state.emailValidity is ValidationResult.Error) state.emailValidity.error.toString(context) else "",
+                    isPasswordField = false,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+                )
+                //password field
+                Text(
+                    text = stringResource(R.string.Password),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                CustomTextField(
+                    value = password,
+                    onValueChange = {
+                        password = it
+                        loginActions(LoginAction.ValidatePassword(password))
+                    },
+                    label = stringResource(R.string.enter_your_password),
+                    error = if (state.passwordValidity is ValidationResult.Error) state.passwordValidity.error.toString(context) else "",
+                    isPasswordField = true
+                )
+                //forgot field
+                Text(
+                    stringResource(R.string.forgot_password),
+                    color = bluePrimary,
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .clickable(enabled = true) {
+                            navigateToEmailVerificationScreen()
+                        }
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+                CustomButton(
+                    text = stringResource(R.string.log_in),
+                    onClick = {
+                        baseActions(BaseAction.ShowLoading)
+                        loginActions(LoginAction.Login(email, password))
+                    },
+                    enabled = state.emailValidity is ValidationResult.Success && state.passwordValidity is ValidationResult.Success
+                )
+            }
         }
     }
 }

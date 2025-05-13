@@ -33,7 +33,7 @@ fun ChatInputTextField(
             unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurfaceVariant,
             focusedIndicatorColor = MaterialTheme.colorScheme.onSurfaceVariant
         ),
-        shape = RoundedCornerShape(topEnd = 20.dp),
+        shape = RoundedCornerShape(25.dp),
         placeholder = {
             Text(text = stringResource(R.string.type_a_message))
         },

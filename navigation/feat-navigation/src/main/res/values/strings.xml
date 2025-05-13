@@ -5,4 +5,7 @@
     <string name="ai_chat">AI Chat</string>
     <string name="sessions">Sessions</string>
     <string name="doctors">Doctors</string>
+    <string name="profile">Profile</string>
+    <string name="navigation_icon">%1$s Navigation Icon</string>
+
 </resources>

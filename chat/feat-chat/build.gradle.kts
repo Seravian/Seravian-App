@@ -38,6 +38,7 @@ dependencies {
     implementation(project(":chat:core-chat"))
     implementation(project(":core-ui"))
     implementation(project(":network:core-network"))
+    implementation(project(":local:core-local"))
 
     implementation(libs.androidx.core.ktx)
     implementation(platform(libs.androidx.compose.bom))

@@ -58,6 +58,7 @@ dependencies {
     implementation(project(":auth:core-auth"))
     implementation(project(":profile:core-profile"))
     implementation(project(":home:core-home"))
+    implementation(project(":chat:core-chat"))
     implementation(project(":onboarding:core-onboarding"))
 
     implementation(libs.androidx.core.ktx)

@@ -8,7 +8,11 @@ import com.greenvenom.core_network.data.map
 import com.greenvenom.core_network.data.onError
 import com.greenvenom.core_network.data.onSuccess
 import com.greenvenom.core_tokens.data.dto.response.TokensResponse
+import com.greenvenom.core_tokens.domain.Tokens
 import com.greenvenom.core_tokens.domain.repo.TokenDataSource
+import eu.lepicekmichal.signalrkore.AutomaticReconnect
+import eu.lepicekmichal.signalrkore.HubConnection
+import eu.lepicekmichal.signalrkore.HubConnectionBuilder
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.auth.Auth
@@ -16,8 +20,12 @@ import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
-object HttpClientFactory {
+object ClientFactory {
     fun publicClient(engine: HttpClientEngine): HttpClient {
         return HttpClient(engine) {
             applyBaseConfig()
@@ -35,7 +43,7 @@ object HttpClientFactory {
                 bearer {
                     loadTokens {
                         val tokenInfo = tokensDataSource.getStoredTokens()
-                        tokenInfo?.let { info ->
+                        tokenInfo.let { info ->
                             BearerTokens(info.accessToken, info.refreshToken)
                         }
                     }

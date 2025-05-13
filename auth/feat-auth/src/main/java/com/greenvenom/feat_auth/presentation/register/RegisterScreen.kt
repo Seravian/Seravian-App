@@ -10,6 +10,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -43,7 +44,11 @@ fun RegisterScreen(
     navigateBack: () -> Unit,
     navigateToAccountVerificationScreen: () -> Unit,
 ) {
-    BaseScreen<RegisterViewModel> { viewModel ->
+    BaseScreen<RegisterViewModel>(
+        onPhysicalBack = {
+            navigateBack()
+        }
+    ) { viewModel ->
         val state by viewModel.registerState.collectAsStateWithLifecycle()
 
         RegisterContent(
@@ -93,88 +98,91 @@ private fun RegisterContent(
         }
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-    ) {
-        // Header Section
-        AuthHeader(
-            title = stringResource(R.string.register),
-            isLoginScreen = false,
-            navigateBack = navigateBack
-        )
-        // Input Fields Section
+    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
-            verticalArrangement = Arrangement.spacedBy(13.dp),
-            modifier = Modifier
-                .padding(18.dp)
+            modifier = modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+                .padding(innerPadding)
         ) {
-            // Email Field
-            Text(
-                text = stringResource(R.string.email),
-                color = MaterialTheme.colorScheme.onBackground
+            // Header Section
+            AuthHeader(
+                title = stringResource(R.string.register),
+                isLoginScreen = false,
+                navigateBack = navigateBack
             )
-            CustomTextField(
-                value = email,
-                onValueChange = {
-                    email = it
-                    registerActions(RegisterAction.ValidateEmail(email))
-                },
-                label = stringResource(R.string.enter_your_email),
-                error = if (state.emailValidity is ValidationResult.Error) state.emailValidity.error.toString(context) else "",
-                isPasswordField = false,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
-            )
-            // Password Field
-            Text(
-                text = stringResource(R.string.Password),
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            CustomTextField(
-                value = password,
-                onValueChange = {
-                    password = it
-                    registerActions(RegisterAction.ValidatePassword(password))
-                },
-                label = stringResource(R.string.enter_your_password),
-                error = if (state.passwordValidity is ValidationResult.Error) state.passwordValidity.error.toString(context) else "",
-                isPasswordField = true,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
-            )
-            // Confirm Password Field
-            Text(
-                text = stringResource(R.string.confirm_password),
-                color = MaterialTheme.colorScheme.onBackground
+            // Input Fields Section
+            Column(
+                verticalArrangement = Arrangement.spacedBy(13.dp),
+                modifier = Modifier
+                    .padding(18.dp)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+            ) {
+                // Email Field
+                Text(
+                    text = stringResource(R.string.email),
+                    color = MaterialTheme.colorScheme.onBackground
                 )
-            CustomTextField(
-                value = confirmPassword,
-                onValueChange = {
-                    confirmPassword = it
-                    registerActions(RegisterAction.ValidatePasswordConfirmation(password, confirmPassword))
-                },
-                label = stringResource(R.string.confirm_your_password),
-                error = if (state.confirmPasswordValidity is ValidationResult.Error) state.confirmPasswordValidity.error.toString(context) else "",
-                isPasswordField = true
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-            // Register Button
-            CustomButton(
-                text = stringResource(R.string.register),
-                onClick = {
-                    registerActions(
-                        RegisterAction.Register(
-                            email,
-                            password,
+                CustomTextField(
+                    value = email,
+                    onValueChange = {
+                        email = it
+                        registerActions(RegisterAction.ValidateEmail(email))
+                    },
+                    label = stringResource(R.string.enter_your_email),
+                    error = if (state.emailValidity is ValidationResult.Error) state.emailValidity.error.toString(context) else "",
+                    isPasswordField = false,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+                )
+                // Password Field
+                Text(
+                    text = stringResource(R.string.Password),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                CustomTextField(
+                    value = password,
+                    onValueChange = {
+                        password = it
+                        registerActions(RegisterAction.ValidatePassword(password))
+                    },
+                    label = stringResource(R.string.enter_your_password),
+                    error = if (state.passwordValidity is ValidationResult.Error) state.passwordValidity.error.toString(context) else "",
+                    isPasswordField = true,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+                )
+                // Confirm Password Field
+                Text(
+                    text = stringResource(R.string.confirm_password),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                CustomTextField(
+                    value = confirmPassword,
+                    onValueChange = {
+                        confirmPassword = it
+                        registerActions(RegisterAction.ValidatePasswordConfirmation(password, confirmPassword))
+                    },
+                    label = stringResource(R.string.confirm_your_password),
+                    error = if (state.confirmPasswordValidity is ValidationResult.Error) state.confirmPasswordValidity.error.toString(context) else "",
+                    isPasswordField = true
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+                // Register Button
+                CustomButton(
+                    text = stringResource(R.string.register),
+                    onClick = {
+                        registerActions(
+                            RegisterAction.Register(
+                                email,
+                                password,
+                            )
                         )
-                    )
-                    baseActions(BaseAction.ShowLoading)
-                },
-                enabled = state.emailValidity is ValidationResult.Success &&
-                        state.passwordValidity is ValidationResult.Success &&
-                        state.confirmPasswordValidity is ValidationResult.Success
-            )
+                        baseActions(BaseAction.ShowLoading)
+                    },
+                    enabled = state.emailValidity is ValidationResult.Success &&
+                            state.passwordValidity is ValidationResult.Success &&
+                            state.confirmPasswordValidity is ValidationResult.Success
+                )
+            }
         }
     }
 }

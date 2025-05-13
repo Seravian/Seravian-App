@@ -35,14 +35,15 @@ android {
 
 dependencies {
 
+    val ktor = "3.0.3"
+
     implementation(project(":network:core-network"))
     implementation(project(":tokens:core-tokens"))
     implementation(project(":auth:core-auth"))
     implementation(project(":profile:core-profile"))
     implementation(project(":home:core-home"))
+    implementation(project(":chat:core-chat"))
     implementation(project(":onboarding:core-onboarding"))
-
-    val ktor = "3.0.3"
 
     implementation("io.ktor:ktor-client-cio:$ktor")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor")
@@ -52,6 +53,8 @@ dependencies {
     implementation("io.ktor:ktor-client-logging:$ktor")
     implementation("io.ktor:ktor-client-auth:$ktor")
     implementation("io.ktor:ktor-client-resources:$ktor")
+
+    implementation("eu.lepicekmichal.signalrkore:signalrkore:0.9.5")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
     implementation("androidx.datastore:datastore-preferences:1.1.3")

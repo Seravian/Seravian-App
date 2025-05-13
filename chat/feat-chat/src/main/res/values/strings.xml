@@ -4,4 +4,9 @@
     <string name="send_message_button_icon">send message icon</string>
     <string name="send">Send</string>
     <string name="chatbot_ic">Chatbot Icon</string>
+    <string name="chat_title_label">Title</string>
+    <string name="create_chat">Create Chat</string>
+    <string name="edit">Edit</string>
+    <string name="edit_chat">Edit Chat</string>
+    <string name="delete">Delete</string>
 </resources>

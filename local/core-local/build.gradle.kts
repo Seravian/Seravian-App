@@ -35,9 +35,11 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.appcompat)
     val room = "2.6.1"
 
     implementation(project(":profile:core-profile"))
+    implementation(project(":chat:core-chat"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
 

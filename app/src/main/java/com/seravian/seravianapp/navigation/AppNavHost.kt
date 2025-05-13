@@ -1,5 +1,7 @@
 package com.seravian.seravianapp.navigation
 
+import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -9,10 +11,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.greenvenom.core_navigation.data.NavigationType
 import com.greenvenom.core_navigation.data.repository.NavigationStateRepository
 import com.greenvenom.core_navigation.utils.AppNavigator
-import com.greenvenom.core_network.domain.SessionDestinations
 import com.greenvenom.core_network.domain.repository.SessionRepository
 import com.greenvenom.feat_auth.presentation.login.LoginScreen
 import com.greenvenom.feat_auth.presentation.otp.OtpScreen
@@ -24,40 +26,26 @@ import com.seravian.feat_navigation.routes.Screen
 import com.seravian.feat_navigation.routes.SubGraph
 import com.seravian.feat_home.presentation.HomeScreen
 import com.greenvenom.feat_onboarding.presentation.screens.OnBoardingScreen
+import com.seravian.feat_chat.presentation.screen.ChatListScreen
 import com.seravian.feat_chat.presentation.screen.ChatScreen
+import com.seravian.feat_profile.presentation.screen.ProfileScreen
+import com.seravian.seravianapp.navigation.utils.SessionDestinationHandler
 import org.koin.compose.koinInject
 
 @Composable
 fun AppNavHost(modifier: Modifier = Modifier) {
     val appNavigator = koinInject<AppNavigator>()
-    val navigationStateRepository = koinInject<NavigationStateRepository>()
-    val navigationState by navigationStateRepository.navigationState.collectAsStateWithLifecycle()
+    val navigationRepository = koinInject<NavigationStateRepository>()
+    val navigationState by navigationRepository.navigationState.collectAsStateWithLifecycle()
     val sessionRepository = koinInject<SessionRepository>()
-    val sessionDestination by sessionRepository.sessionDestination.collectAsStateWithLifecycle()
+    val destinationHandler = koinInject<SessionDestinationHandler>()
 
     appNavigator.config(
         returnedDestination = Screen::class,
         navController = rememberNavController()
     )
 
-    when (sessionDestination) {
-        SessionDestinations.AUTH -> {
-            navigationStateRepository.navigate(
-                NavigationType.ClearBackStack(SubGraph.Auth)
-            )
-        }
-        SessionDestinations.ONBOARDING -> {
-            navigationStateRepository.navigate(
-                NavigationType.ClearBackStack(SubGraph.OnBoarding)
-            )
-        }
-        SessionDestinations.MAIN -> {
-            navigationStateRepository.navigate(
-                NavigationType.ClearBackStack(SubGraph.Main)
-            )
-        }
-        else -> {}
-    }
+    BackHandler { navigationRepository.navigate(NavigationType.Back) }
 
     NavHost(
         navController = appNavigator.navController,
@@ -68,6 +56,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             SplashScreen(
                 onStart = {
                     sessionRepository.collectSessionStatus()
+                    destinationHandler.collectSessionDestinations()
                 }
             )
         }
@@ -76,17 +65,17 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             composable<Screen.Login> {
                 LoginScreen(
                     navigateToRegisterScreen = {
-                        navigationStateRepository.navigate(
+                        navigationRepository.navigate(
                             NavigationType.Standard(Screen.Register)
                         )
                     },
                     navigateToEmailVerificationScreen = {
-                        navigationStateRepository.navigate(
+                        navigationRepository.navigate(
                             NavigationType.Standard(Screen.VerifyEmail)
                         )
                     },
                     navigateToOTPScreen = {
-                        navigationStateRepository.navigate(
+                        navigationRepository.navigate(
                             NavigationType.Standard(Screen.OTP)
                         )
                     }
@@ -95,10 +84,10 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             composable<Screen.Register> {
                 RegisterScreen(
                     navigateBack = {
-                        navigationStateRepository.navigate(NavigationType.Back)
+                        navigationRepository.navigate(NavigationType.Back)
                     },
                     navigateToAccountVerificationScreen = {
-                        navigationStateRepository.navigate(
+                        navigationRepository.navigate(
                             NavigationType.Standard(Screen.OTP)
                         )
                     }
@@ -107,10 +96,10 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             composable<Screen.VerifyEmail> {
                 VerifyEmailScreen(
                     navigateBack = {
-                        navigationStateRepository.navigate(NavigationType.Back)
+                        navigationRepository.navigate(NavigationType.Back)
                     },
                     navigateToOtpScreen = {
-                        navigationStateRepository.navigate(
+                        navigationRepository.navigate(
                             NavigationType.Standard(Screen.OTP)
                         )
                     }
@@ -119,22 +108,22 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             composable<Screen.OTP> {
                 OtpScreen(
                     navigateBack = {
-                        navigationStateRepository.navigate(NavigationType.Back)
+                        navigationRepository.navigate(NavigationType.Back)
                     },
                     navigateToNextScreen = {
                         when (navigationState.previousDestination) {
                             is Screen.Login -> {
-                                navigationStateRepository.navigate(
+                                navigationRepository.navigate(
                                     NavigationType.ClearBackStack(Screen.Login)
                                 )
                             }
                             is Screen.Register -> {
-                                navigationStateRepository.navigate(
+                                navigationRepository.navigate(
                                     NavigationType.ClearBackStack(Screen.Login)
                                 )
                             }
                             is Screen.VerifyEmail -> {
-                                navigationStateRepository.navigate(
+                                navigationRepository.navigate(
                                     NavigationType.ClearBackStack(Screen.NewPassword)
                                 )
                             }
@@ -145,10 +134,10 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             composable<Screen.NewPassword> {
                 NewPasswordScreen(
                     navigateBack = {
-                        navigationStateRepository.navigate(NavigationType.Back)
+                        navigationRepository.navigate(NavigationType.Back)
                     },
                     navigateToLoginScreen = {
-                        navigationStateRepository.navigate(
+                        navigationRepository.navigate(
                             NavigationType.ClearBackStack(Screen.Login)
                         )
                     }
@@ -160,7 +149,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             composable<Screen.OnBoarding> {
                 OnBoardingScreen(
                     navigateToNextScreen = {
-                        navigationStateRepository.navigate(
+                        navigationRepository.navigate(
                             NavigationType.ClearBackStack(SubGraph.Main)
                         )
                     }
@@ -172,14 +161,38 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             composable<Screen.Home> {
                 HomeScreen()
             }
-            composable<Screen.AIChat> {
-               ChatScreen()
+            composable<Screen.ChatsList> {
+                ChatListScreen(
+                    navigateToChat = { chatId ->
+                        navigationRepository.navigate(
+                            NavigationType.Standard(Screen.Chat(chatId))
+                        )
+                    },
+                    navigateBack = { navigationRepository.navigate(NavigationType.Back) }
+                )
             }
             composable<Screen.Sessions> {
                 Text(text = "Sessions")
             }
             composable<Screen.Doctors> {
                 Text(text = "Doctors")
+            }
+            composable<Screen.Chat> {
+                val args = it.toRoute<Screen.Chat>()
+                Log.d("ChatId", args.chatId)
+                ChatScreen(
+                    chatId = args.chatId,
+                    navigateBack = { navigationRepository.navigate(NavigationType.Back) }
+                )
+            }
+            composable<Screen.Profile> {
+                ProfileScreen(
+                    onLogoutNavigate = {
+                        navigationRepository.navigate(
+                            NavigationType.ClearBackStack(Screen.Login)
+                        )
+                    }
+                )
             }
         }
     }

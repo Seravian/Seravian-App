@@ -1,7 +1,5 @@
 package com.seravian.feat_chat.presentation.components
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -61,6 +59,13 @@ fun ReceivedMessageCard(
                     .padding(12.dp)
                     .padding(start = 4.dp)
             )
+            Text(
+                text = message.timestamp,
+                style = MaterialTheme.typography.labelMedium,
+                modifier = Modifier
+                    .padding(start = 12.dp, end = 12.dp, bottom = 8.dp)
+                    .align(Alignment.End)
+            )
         }
         Spacer(
             modifier = Modifier
@@ -72,5 +77,5 @@ fun ReceivedMessageCard(
 @Preview(showSystemUi = true)
 @Composable
 private fun ReceivedMessageCardPreview() {
-    ReceivedMessageCard(MessageUI(content = "jghvchjcvbnbvnbvjmhjmjkhgfkhjgkghkghkjhghghjhghjg,hjkghjkhlhjlhjghkjhl", senderName = "Kareem", dateTime = "02:38 AM"))
+    ReceivedMessageCard(MessageUI(content = "jghvchjcvbnbvnbvjmhjmjkhgfkhjgkghkghkjhghghjhghjg,hjkghjkhlhjlhjghkjhl", timestamp = "02:38 AM"))
 }
