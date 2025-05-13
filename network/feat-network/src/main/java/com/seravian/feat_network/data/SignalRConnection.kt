@@ -68,20 +68,19 @@ class SignalRConnection(
             accessToken = validToken.accessToken
 
             automaticReconnect = AutomaticReconnect.Custom { previousRetryCount, _ ->
+
                 // Attempt to refresh token on reconnect if needed
                 scope.launch {
                     tokenMutex.withLock {
                         val tokens = currentTokenFlow.value
                         val refreshedTokens = refreshTokenIfNeeded(tokens)
-                        currentTokenFlow.value = refreshedTokens
+                        accessToken = refreshedTokens.accessToken
                     }
                 }
 
                 defaultRetryDelays.getOrNull(previousRetryCount)
             }
         }
-
-        // Start the connection
         hubConnection.start()
 
         return hubConnection
@@ -109,6 +108,7 @@ class SignalRConnection(
         if (::hubConnection.isInitialized) {
             hubConnection.stop()
         }
+
         statusCollectionJob?.cancel()
         statusCollectionJob = null
 

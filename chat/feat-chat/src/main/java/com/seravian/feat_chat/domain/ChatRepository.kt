@@ -10,6 +10,8 @@ import com.seravian.core_chat.data.dto.request.DeleteChatRequest
 import com.seravian.core_chat.data.dto.request.EditChatRequest
 import com.seravian.core_chat.data.dto.request.GetChatMessagesRequest
 import com.seravian.core_chat.data.dto.request.JoinChatRequest
+import com.seravian.core_chat.data.dto.request.SyncMessagesRequest
+import com.seravian.core_chat.data.dto.respose.ChatMessagesResponse
 import com.seravian.core_chat.data.dto.respose.ConfirmedMessageResponse
 import com.seravian.core_chat.domain.models.Chat
 import com.seravian.core_chat.domain.models.Message
@@ -22,11 +24,17 @@ interface ChatRepository {
 
     suspend fun deleteChat(deleteChatRequest: DeleteChatRequest): EmptyResult<NetworkError>
 
-    suspend fun getChats(): NetworkResult<List<Chat>, NetworkError>
+    fun getChats(): Flow<NetworkResult<List<Chat>, NetworkError>>
 
-    suspend fun getChatMessages(
+    fun getChatMessages(
         getChatMessagesRequest: GetChatMessagesRequest
-    ): NetworkResult<Pair<Chat, List<Message>>, NetworkError>
+    ): Flow<NetworkResult<Pair<Chat, List<Message>>, NetworkError>>
+
+    suspend fun syncMessages(
+        syncRequest: SyncMessagesRequest
+    ): EmptyResult<NetworkError>
+
+    suspend fun insertConfirmedMessage(message: Message)
 
     suspend fun startConnection()
 
@@ -38,9 +46,9 @@ interface ChatRepository {
 
     suspend fun sendRequest(clientRequest: ClientRequest)
 
-    fun receiveClientResponse(callback: (Message) -> Unit)
+    fun receiveClientResponse()
 
-    fun receiveAIResponse(callback: (Message) -> Unit)
+    fun receiveAIResponse()
 
-    fun receiveMessageConfirmation(callback: (ConfirmedMessageResponse) -> Unit)
+    fun receiveMessageConfirmation(callback: suspend (ConfirmedMessageResponse) -> Unit)
 }

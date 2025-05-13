@@ -11,15 +11,19 @@ import org.koin.dsl.module
 
 val localModule = module {
     single {
-        get<SeravianDatabase>().profileDao
-    }
-
-    single {
         Room.databaseBuilder(
             androidContext(),
             SeravianDatabase::class.java,
             name = "seravian.db"
         ).build()
+    }
+
+    single {
+        get<SeravianDatabase>().profileDao
+    }
+
+    single {
+        get<SeravianDatabase>().chatDao
     }
 
     single<PrefsDataSource> {
@@ -28,7 +32,8 @@ val localModule = module {
 
     single<LocalDataSource> {
         RoomDataSource(
-            profileDao = get()
+            profileDao = get(),
+            chatDao = get()
         )
     }
 }

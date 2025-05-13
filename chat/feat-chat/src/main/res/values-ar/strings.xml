@@ -6,4 +6,7 @@
     <string name="chatbot_ic">أيكونة الذكاء الاصطناعي</string>
     <string name="chat_title_label">العنوان</string>
     <string name="create_chat">إنشاء محادثة</string>
+    <string name="edit">تعديل</string>
+    <string name="edit_chat">تعديل المحادثة</string>
+    <string name="delete">حذف</string>
 </resources>

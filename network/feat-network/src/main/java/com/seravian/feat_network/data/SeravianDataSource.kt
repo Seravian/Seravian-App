@@ -26,6 +26,7 @@ import com.seravian.core_chat.data.dto.request.DeleteChatRequest
 import com.seravian.core_chat.data.dto.request.EditChatRequest
 import com.seravian.core_chat.data.dto.request.GetChatMessagesRequest
 import com.seravian.core_chat.data.dto.request.JoinChatRequest
+import com.seravian.core_chat.data.dto.request.SyncMessagesRequest
 import com.seravian.core_chat.data.dto.respose.AIResponse
 import com.seravian.core_chat.data.dto.respose.ChatMessagesResponse
 import com.seravian.core_chat.data.dto.respose.ChatResponse
@@ -33,8 +34,8 @@ import com.seravian.core_chat.data.dto.respose.ClientResponse
 import com.seravian.core_chat.data.dto.respose.ConfirmedMessageResponse
 import com.seravian.core_chat.data.dto.respose.CreateChatResponse
 import com.seravian.core_chat.data.dto.respose.EditChatResponse
+import com.seravian.core_chat.data.dto.respose.MessageResponse
 import com.seravian.core_profile.data.remote.request.LogoutRequest
-import eu.lepicekmichal.signalrkore.HubConnection
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.auth.authProvider
 import io.ktor.client.plugins.auth.providers.BearerAuthProvider
@@ -44,7 +45,7 @@ import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flow
 
 class SeravianDataSource(
     private val publicHttpClient: HttpClient,
@@ -179,6 +180,22 @@ class SeravianDataSource(
         }
     }
 
+    override suspend fun syncMessages(
+        syncRequest: SyncMessagesRequest
+    ): NetworkResult<List<MessageResponse>, NetworkError> {
+        return safeCall {
+            authorizedHttpClient.get(constructUrl("chat/sync-messages")) {
+                url {
+                    parameters.append(
+                        name = "lastMessageTimestampUtc",
+                        value = syncRequest.lastMessageTimestampUtc
+                    )
+                    parameters.append("chatId", syncRequest.chatId)
+                }
+            }
+        }
+    }
+
     /////////////////////////////////
     ///////// REALTIME CHAT METHODS
     /////////////////////////////////
@@ -204,7 +221,7 @@ class SeravianDataSource(
         signalRConnection.hubConnection.invoke("send-client-request", clientRequest)
     }
 
-    override fun receiveClientResponse(callback: (ClientResponse) -> Unit) {
+    override fun receiveClientResponse(callback: suspend (ClientResponse) -> Unit) {
         signalRConnection.hubConnection.on(
             "receive-client-request",
         ) { response: ClientResponse ->
@@ -212,7 +229,7 @@ class SeravianDataSource(
         }
     }
 
-    override fun receiveAIResponse(callback: (AIResponse) -> Unit) {
+    override fun receiveAIResponse(callback: suspend (AIResponse) -> Unit) {
         signalRConnection.hubConnection.on(
             "receive-ai-response",
         ) { response: AIResponse ->
@@ -220,7 +237,7 @@ class SeravianDataSource(
         }
     }
 
-    override fun receiveMessageConfirmation(callback: (ConfirmedMessageResponse) -> Unit) {
+    override fun receiveMessageConfirmation(callback: suspend (ConfirmedMessageResponse) -> Unit) {
         signalRConnection.hubConnection.on(
             target = "confirm-client-request"
         ) { confirmation: ConfirmedMessageResponse ->

@@ -45,6 +45,8 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         navController = rememberNavController()
     )
 
+    BackHandler { navigationRepository.navigate(NavigationType.Back) }
+
     NavHost(
         navController = appNavigator.navController,
         startDestination = Screen.Splash,
@@ -165,7 +167,8 @@ fun AppNavHost(modifier: Modifier = Modifier) {
                         navigationRepository.navigate(
                             NavigationType.Standard(Screen.Chat(chatId))
                         )
-                    }
+                    },
+                    navigateBack = { navigationRepository.navigate(NavigationType.Back) }
                 )
             }
             composable<Screen.Sessions> {

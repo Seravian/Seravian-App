@@ -1,5 +1,6 @@
 package com.seravian.core_chat.domain.models
 
+import com.seravian.core_chat.data.entity.ChatEntity
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -22,4 +23,6 @@ data class Chat(
             .withZone(ZoneId.systemDefault())
             .format(instant)
     }
+
+    fun toEntity() = ChatEntity(id, title, createdAt)
 }

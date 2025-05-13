@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Popup
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.greenvenom.core_network.data.onError
 import com.greenvenom.core_network.data.onSuccess
@@ -38,9 +37,16 @@ import com.seravian.feat_chat.presentation.viewModel.ChatViewModel
 @Composable
 fun ChatListScreen(
     navigateToChat: (String) -> Unit,
+    navigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    BaseScreen<ChatViewModel> { viewModel ->
+    BaseScreen<ChatViewModel>(
+        onPhysicalBack = { viewModel ->
+            navigateBack()
+            viewModel.chatAction(ChatAction.ClearChatResults)
+        },
+        modifier = modifier
+    ) { viewModel ->
         val state by viewModel.chatState.collectAsStateWithLifecycle()
 
         LaunchedEffect(Unit) { viewModel.chatAction(ChatAction.GetChats) }
@@ -63,6 +69,8 @@ private fun ChatListContent(
 ) {
     val context = LocalContext.current
     var popupState by rememberSaveable { mutableStateOf(false) }
+    var isEdit by rememberSaveable { mutableStateOf(false) }
+    var chatId by rememberSaveable { mutableStateOf("") }
     var newChatTitle by rememberSaveable { mutableStateOf("") }
 
     chatState.joinChatResult
@@ -88,6 +96,19 @@ private fun ChatListContent(
             baseAction(BaseAction.HideLoading)
             navigateToChat(response.id)
             chatAction(ChatAction.ClearChatResults)
+        }
+        ?.onError {
+            baseAction(BaseAction.HideLoading)
+            baseAction(BaseAction.ShowErrorMessage(it.errorType?.toString(context) ?: ""))
+        }
+
+    chatState.deleteChatResult
+        ?.onSuccess {
+            baseAction(BaseAction.HideLoading)
+            popupState = false
+            newChatTitle = ""
+            chatId = ""
+            isEdit = false
         }
         ?.onError {
             baseAction(BaseAction.HideLoading)
@@ -121,11 +142,22 @@ private fun ChatListContent(
             NewChatPopUp(
                 value = newChatTitle,
                 onValueChange = { newChatTitle = it },
-                onSubmit = {
+                onCreateChat = {
                     chatAction(ChatAction.CreateChat(newChatTitle))
                     baseAction(BaseAction.ShowLoading)
                 },
-                onDismiss = { popupState = false },
+                onEditChat = {
+                    chatAction(ChatAction.EditChat(chatId, newChatTitle))
+                    baseAction(BaseAction.ShowLoading)
+                },
+                onDelete = { chatAction(ChatAction.DeleteChat(chatId)) },
+                onDismiss = {
+                    popupState = false
+                    isEdit = false
+                    newChatTitle = ""
+                    chatId = ""
+                },
+                isEdit = isEdit
             )
         }
 
@@ -141,6 +173,12 @@ private fun ChatListContent(
                 ChatListCard(
                     chat = chat,
                     onClick = { navigateToChat(chat.id) },
+                    onEdit = { id, title ->
+                        isEdit = true
+                        newChatTitle = title
+                        chatId = id
+                        popupState = true
+                    },
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
             }

@@ -23,11 +23,9 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -56,15 +54,21 @@ fun ChatScreen(
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    BaseScreen<ChatViewModel> { viewModel ->
+    BaseScreen<ChatViewModel>(
+        onPhysicalBack = { viewModel ->
+            navigateBack()
+            viewModel.chatAction(ChatAction.StopCollections)
+            viewModel.chatAction(ChatAction.LeaveChat)
+            viewModel.chatAction(ChatAction.ClearChatResults)
+        },
+    ) { viewModel ->
         val chatState by viewModel.chatState.collectAsStateWithLifecycle()
 
         LaunchedEffect(Unit) {
-            viewModel.chatAction(ChatAction.GetChatMessages(chatId))
             viewModel.baseAction(BaseAction.ShowLoading)
+            viewModel.chatAction(ChatAction.GetChatMessages(chatId))
+            viewModel.chatAction(ChatAction.JoinChat)
         }
-
-        DisposableEffect(Unit) { onDispose { viewModel.chatAction(ChatAction.LeaveChat) } }
 
         ChatScreenContent(
             chatState = chatState,
@@ -102,7 +106,11 @@ private fun ChatScreenContent(
             baseAction(BaseAction.HideLoading)
         }
         ?.onError {
-            chatAction(ChatAction.NavigateBack)
+            baseAction(BaseAction.HideLoading)
+            baseAction(BaseAction.ShowErrorMessage(
+                errorMessage = it.errorType?.toString() ?: "",
+                dismissAction = { chatAction(ChatAction.NavigateBack) }
+            ))
         }
 
     Scaffold (

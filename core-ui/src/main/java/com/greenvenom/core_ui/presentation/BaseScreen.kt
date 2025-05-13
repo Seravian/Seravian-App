@@ -1,6 +1,7 @@
 package com.greenvenom.core_ui.presentation
 
 import androidx.compose.runtime.Composable
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -17,8 +18,11 @@ inline fun<reified VM: BaseViewModel> BaseScreen(
     crossinline onCreateAction: (viewModel: VM) -> Unit = {},
     crossinline onStartAction: (viewModel: VM) -> Unit = {},
     crossinline onStopAction: (viewModel: VM) -> Unit = {},
+    crossinline onDestroyAction: (viewModel: VM) -> Unit = {},
+    crossinline onPhysicalBack: (viewModel: VM) -> Unit = {},
     modifier: Modifier = Modifier,
-    enableLifecycleObservation: Boolean = true,
+    enableCustomBack: Boolean = true,
+    enableLifecycleObservation: Boolean = false,
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
     content: @Composable (viewModel: VM) -> Unit
 ) {
@@ -30,13 +34,16 @@ inline fun<reified VM: BaseViewModel> BaseScreen(
             val observer = LifecycleEventObserver { _, event ->
                 when (event) {
                     Lifecycle.Event.ON_CREATE -> {
+                        onCreateAction(viewModel)
+                    }
+                    Lifecycle.Event.ON_START -> {
                         onStartAction(viewModel)
                     }
                     Lifecycle.Event.ON_STOP -> {
                         onStopAction(viewModel)
                     }
-                    Lifecycle.Event.ON_START -> {
-                        onStartAction(viewModel)
+                    Lifecycle.Event.ON_DESTROY -> {
+                        onDestroyAction(viewModel)
                     }
                     else -> { /* Ignore other events */ }
                 }
@@ -47,6 +54,12 @@ inline fun<reified VM: BaseViewModel> BaseScreen(
             onDispose {
                 lifecycleOwner.lifecycle.removeObserver(observer)
             }
+        }
+    }
+
+    if (enableCustomBack) {
+        BackHandler {
+            onPhysicalBack(viewModel)
         }
     }
 

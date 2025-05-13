@@ -47,7 +47,9 @@ fun NewPasswordScreen(
     navigateBack: () -> Unit,
     navigateToLoginScreen: () -> Unit
 ) {
-    BaseScreen<ResetPasswordViewModel> { viewModel ->
+    BaseScreen<ResetPasswordViewModel>(
+        enableCustomBack = false
+    ) { viewModel ->
         val resetPasswordState by viewModel.resetPasswordState.collectAsStateWithLifecycle()
 
         NewPasswordContent(
@@ -104,7 +106,7 @@ private fun NewPasswordContent(
                 title = stringResource(R.string.create_new_password),
                 navigateBack = navigateBack,
                 isLoginScreen = false,
-                isNavigationBackWanted = true
+                isNavigationBackWanted = false
             )
             Column(
                 modifier = Modifier

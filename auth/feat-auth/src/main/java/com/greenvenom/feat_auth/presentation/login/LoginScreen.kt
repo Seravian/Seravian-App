@@ -1,6 +1,5 @@
 package com.greenvenom.feat_auth.presentation.login
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -49,7 +48,9 @@ fun LoginScreen(
     navigateToEmailVerificationScreen: () -> Unit,
     navigateToOTPScreen: () -> Unit,
 ) {
-    BaseScreen<LoginViewModel> { viewModel ->
+    BaseScreen<LoginViewModel>(
+        enableCustomBack = false
+    ) { viewModel ->
         val state by viewModel.loginState.collectAsStateWithLifecycle()
 
         LoginContent(

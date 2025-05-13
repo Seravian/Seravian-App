@@ -32,7 +32,7 @@ enum class BottomDestination(
         target = Screen.Doctors
     ),
     Profile(
-        icon = R.drawable.person_circle_ic,
+        icon = R.drawable.person_ic,
         label = R.string.profile,
         target = Screen.Profile
     )
