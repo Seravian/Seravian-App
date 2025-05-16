@@ -187,11 +187,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             }
             composable<Screen.Profile> {
                 ProfileScreen(
-                    onLogoutNavigate = {
-                        navigationRepository.navigate(
-                            NavigationType.ClearBackStack(Screen.Login)
-                        )
-                    }
+
                 )
             }
         }

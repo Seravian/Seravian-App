@@ -1,10 +1,7 @@
 package com.seravian.feat_network.di
 
-import com.seravian.feat_network.data.SeravianDataSource
-import com.greenvenom.core_network.domain.repository.RemoteDataSource
-import com.greenvenom.core_network.domain.repository.SessionRepository
-import com.seravian.feat_network.data.SignalRConnection
-import com.seravian.feat_network.data.repository.SeravianSessionRepository
+import com.greenvenom.core_network.domain.RealtimeConnection
+import com.seravian.feat_network.util.SignalRConnection
 import com.seravian.feat_network.util.ClientFactory
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
@@ -25,25 +22,9 @@ val networkModule = module {
         )
     }
 
-    single<SignalRConnection> {
+    single<RealtimeConnection> {
         SignalRConnection(
-            tokensDataSource = get(),
-            httpClient = get(named("publicClient"))
-        )
-    }
-
-    single<RemoteDataSource> {
-        SeravianDataSource(
-            publicHttpClient = get(named("publicClient")),
-            authorizedHttpClient = get(named("authorizedClient")),
-            signalRConnection = get()
-        )
-    }
-
-    single<SessionRepository> {
-        SeravianSessionRepository(
-            tokenDataSource = get(),
-            remoteDataSource = get()
+            tokensDataSource = get()
         )
     }
 }

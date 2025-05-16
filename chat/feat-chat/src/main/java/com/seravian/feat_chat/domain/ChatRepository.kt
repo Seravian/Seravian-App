@@ -3,7 +3,7 @@ package com.seravian.feat_chat.domain
 import com.greenvenom.core_network.data.EmptyResult
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
-import com.greenvenom.core_network.domain.ConnectionStatus
+import com.greenvenom.core_network.data.ConnectionStatus
 import com.seravian.core_chat.data.dto.request.ClientRequest
 import com.seravian.core_chat.data.dto.request.CreateChatRequest
 import com.seravian.core_chat.data.dto.request.DeleteChatRequest
@@ -11,7 +11,6 @@ import com.seravian.core_chat.data.dto.request.EditChatRequest
 import com.seravian.core_chat.data.dto.request.GetChatMessagesRequest
 import com.seravian.core_chat.data.dto.request.JoinChatRequest
 import com.seravian.core_chat.data.dto.request.SyncMessagesRequest
-import com.seravian.core_chat.data.dto.respose.ChatMessagesResponse
 import com.seravian.core_chat.data.dto.respose.ConfirmedMessageResponse
 import com.seravian.core_chat.domain.models.Chat
 import com.seravian.core_chat.domain.models.Message

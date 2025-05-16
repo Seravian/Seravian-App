@@ -48,6 +48,9 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.bundles.dependency.injection)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.auth)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

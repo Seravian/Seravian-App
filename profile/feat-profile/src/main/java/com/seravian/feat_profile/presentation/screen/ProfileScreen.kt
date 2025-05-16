@@ -1,9 +1,7 @@
 package com.seravian.feat_profile.presentation.screen
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -21,72 +19,67 @@ import androidx.compose.ui.unit.sp
 import com.seravian.feat_profile.presentation.model.ProfileUI
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import com.greenvenom.core_network.data.onError
+import com.greenvenom.core_network.data.onSuccess
 import com.greenvenom.core_ui.components.CustomButton
 import com.greenvenom.core_ui.presentation.BaseScreen
 import com.seravian.feat_profile.R
 import com.seravian.feat_profile.presentation.viewModel.ProfileViewModel
 import com.greenvenom.core_ui.components.TopAppBar
-
+import com.greenvenom.core_ui.presentation.BaseAction
+import com.seravian.feat_profile.presentation.ProfileAction
+import com.seravian.feat_profile.presentation.ProfileState
+import com.seravian.feat_profile.presentation.model.toProfileUI
 
 @Composable
-fun ProfileScreen(
-    onLogoutNavigate: () -> Unit
-) {
+fun ProfileScreen() {
     BaseScreen<ProfileViewModel> { viewModel ->
-
-        val profileUI by viewModel.profileUI
-        val isDarkTheme by viewModel.isDarkTheme
-        val currentLanguage by viewModel.currentLanguage
+        val profileState by viewModel.profileState.collectAsState()
 
         ProfileContent(
-            profileUI = profileUI,
-            isDarkTheme = isDarkTheme,
-            currentLanguage = currentLanguage,
-            onThemeToggle = { viewModel.updateTheme( it) },
-            onLanguageChange = { viewModel.updateLanguage(it) },
-            onLogoutClick = {
-                viewModel.logout {
-                    onLogoutNavigate() // navigate to login or splash
-                }
-            }
+            profileState = profileState,
+            profileAction = viewModel::profileAction,
+            baseAction = viewModel::baseAction
         )
     }
 }
 
-
-
 @Composable
 fun ProfileContent(
-    profileUI: ProfileUI?,
-    isDarkTheme: Boolean,
-    currentLanguage: String,
-    onThemeToggle: (Boolean) -> Unit,
-    onLanguageChange: (String) -> Unit,
-    onLogoutClick: () -> Unit
-
+    profileState: ProfileState,
+    profileAction: (ProfileAction) -> Unit,
+    baseAction: (BaseAction) -> Unit
 ) {
+    val profileUI = profileState.profile?.toProfileUI() ?: ProfileUI()
     val languages = listOf("en" to "English", "ar" to "العربية")
-    var expanded by remember { mutableStateOf(false) }
-    var selectedLang by remember { mutableStateOf(currentLanguage) }
+    var isLanguageSelectorExpanded by remember { mutableStateOf(false) }
+
+    profileState.logoutResult
+        ?.onSuccess {
+            baseAction(BaseAction.HideLoading)
+        }
+        ?.onError {
+            baseAction(BaseAction.HideLoading)
+            baseAction(BaseAction.ShowErrorMessage(it.errorType?.toString() ?: ""))
+        }
 
     Scaffold(
-            topBar = {
-                TopAppBar(
-                    isVisible = true,
-                    isSideDestination = false,
-                    isActionEnabled = false
-                )
-            }
-
-    ) {innerPadding->
+        topBar = {
+            TopAppBar(
+                isVisible = true,
+                isSideDestination = false,
+                isActionEnabled = false
+            )
+        }
+    ) { innerPadding ->
         val modifiedPadding = PaddingValues(
             top = innerPadding.calculateTopPadding(),
             bottom = 0.dp,
             start = 24.dp,
             end = 24.dp
         )
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -106,18 +99,20 @@ fun ProfileContent(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = stringResource(R.string.welcome, profileUI?.fullName ?: stringResource(R.string.user)),
+                text = stringResource(
+                    R.string.welcome,
+                    profileUI.fullName
+                ),
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = profileUI?.email ?: "",
+                text = profileUI.email,
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-
 
             Spacer(modifier = Modifier.height(32.dp))
 
@@ -129,8 +124,8 @@ fun ProfileContent(
             ) {
                 Text(stringResource(R.string.dark_theme), fontSize = 16.sp)
                 Switch(
-                    checked = isDarkTheme,
-                    onCheckedChange = { onThemeToggle(it) }
+                    checked = profileState.isDarkTheme,
+                    onCheckedChange = { profileAction(ProfileAction.UpdateTheme(it)) }
                 )
             }
 
@@ -140,19 +135,21 @@ fun ProfileContent(
             Text(stringResource(R.string.language), fontSize = 16.sp)
             Box(modifier = Modifier.fillMaxWidth()) {
                 OutlinedButton(
-                    onClick = { expanded = true },
+                    onClick = { isLanguageSelectorExpanded = true },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(languages.first { it.first == selectedLang }.second)
+                    Text(languages.first { it.first == profileState.currentLanguage }.second)
                 }
-                DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                DropdownMenu(
+                    expanded = isLanguageSelectorExpanded,
+                    onDismissRequest = { isLanguageSelectorExpanded = false }
+                ) {
                     languages.forEach { (code, label) ->
                         DropdownMenuItem(
                             text = { Text(label) },
                             onClick = {
-                                selectedLang = code
-                                onLanguageChange(code)
-                                expanded = false
+                                profileAction(ProfileAction.UpdateLanguage(code))
+                                isLanguageSelectorExpanded = false
                             }
                         )
                     }
@@ -164,13 +161,14 @@ fun ProfileContent(
             // Logout Button
             CustomButton(
                 text = stringResource(R.string.logout),
-                enabled = true,
                 onClick = {
-                    onLogoutClick()
+                    baseAction(BaseAction.ShowLoading)
+                    profileAction(ProfileAction.Logout)
                 },
                 colors = ButtonDefaults.buttonColors(
                     contentColor = MaterialTheme.colorScheme.onErrorContainer,
-                    containerColor = MaterialTheme.colorScheme.errorContainer)
+                    containerColor = MaterialTheme.colorScheme.errorContainer
+                )
             )
         }
     }
@@ -180,11 +178,8 @@ fun ProfileContent(
 @Composable
 fun ProfileScreenPreview(){
     ProfileContent(
-        profileUI = ProfileUI(fullName = "Kareem", email = "kareem@example.com"),
-        isDarkTheme = false,
-        currentLanguage = "en",
-        onThemeToggle = {},
-        onLanguageChange = {},
-        onLogoutClick = {}
+        profileState = ProfileState(),
+        profileAction = {},
+        baseAction = {}
     )
 }

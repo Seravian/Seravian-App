@@ -2,12 +2,10 @@ package com.seravian.feat_chat.presentation.viewModel
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.greenvenom.core_network.data.ErrorType
-import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
 import com.greenvenom.core_network.data.onError
 import com.greenvenom.core_network.data.onSuccess
-import com.greenvenom.core_network.domain.ConnectionStatus
+import com.greenvenom.core_network.data.ConnectionStatus
 import com.greenvenom.core_ui.presentation.BaseViewModel
 import com.seravian.core_chat.data.dto.request.ClientRequest
 import com.seravian.core_chat.data.dto.request.CreateChatRequest
@@ -21,7 +19,6 @@ import com.seravian.feat_chat.presentation.ChatAction
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID

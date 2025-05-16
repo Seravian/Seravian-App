@@ -37,10 +37,12 @@ dependencies {
     val koin = "4.0.0"
 
     implementation(project(":tokens:core-tokens"))
+    implementation(project(":network:core-network"))
     implementation(project(":crypto"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
-    implementation("androidx.datastore:datastore-preferences:1.1.3")
+    implementation(libs.bundles.data.persistence)
+    implementation(libs.ktor.client.core)
     implementation(platform("io.insert-koin:koin-bom:$koin"))
     implementation("io.insert-koin:koin-androidx-compose")
 

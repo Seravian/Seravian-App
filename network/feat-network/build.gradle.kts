@@ -39,11 +39,6 @@ dependencies {
 
     implementation(project(":network:core-network"))
     implementation(project(":tokens:core-tokens"))
-    implementation(project(":auth:core-auth"))
-    implementation(project(":profile:core-profile"))
-    implementation(project(":home:core-home"))
-    implementation(project(":chat:core-chat"))
-    implementation(project(":onboarding:core-onboarding"))
 
     implementation("io.ktor:ktor-client-cio:$ktor")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor")

@@ -5,8 +5,7 @@ import com.greenvenom.core_network.data.NetworkResult
 import com.greenvenom.core_onboarding.data.dto.request.OnBoardingRequest
 import com.greenvenom.core_onboarding.data.dto.response.OnBoardingResponse
 
-
-interface OnBoardingRepository {
+interface OnBoardingRemoteDataSource {
     suspend fun updateUserDetails(
         onBoardingRequest: OnBoardingRequest
     ): NetworkResult<OnBoardingResponse, NetworkError>

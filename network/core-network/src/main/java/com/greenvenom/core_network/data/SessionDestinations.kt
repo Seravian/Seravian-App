@@ -1,4 +1,4 @@
-package com.greenvenom.core_network.domain
+package com.greenvenom.core_network.data
 
 enum class SessionDestinations {
     INITIALIZE,
