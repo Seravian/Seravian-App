@@ -46,6 +46,8 @@ dependencies {
     implementation(libs.bundles.image.loading)
     implementation(libs.bundles.dependency.injection)
     implementation("com.valentinilk.shimmer:compose-shimmer:1.3.2")
+    implementation(libs.ktor.client.core)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -8,11 +8,7 @@ import com.greenvenom.core_network.data.map
 import com.greenvenom.core_network.data.onError
 import com.greenvenom.core_network.data.onSuccess
 import com.greenvenom.core_tokens.data.dto.response.TokensResponse
-import com.greenvenom.core_tokens.domain.Tokens
-import com.greenvenom.core_tokens.domain.repo.TokenDataSource
-import eu.lepicekmichal.signalrkore.AutomaticReconnect
-import eu.lepicekmichal.signalrkore.HubConnection
-import eu.lepicekmichal.signalrkore.HubConnectionBuilder
+import com.greenvenom.core_tokens.domain.repo.TokensDataSource
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.auth.Auth
@@ -20,10 +16,6 @@ import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 
 object ClientFactory {
     fun publicClient(engine: HttpClientEngine): HttpClient {
@@ -34,7 +26,7 @@ object ClientFactory {
 
     fun authorizedClient(
         engine: HttpClientEngine,
-        tokensDataSource: TokenDataSource,
+        tokensDataSource: TokensDataSource,
     ): HttpClient {
         return HttpClient(engine) {
             applyBaseConfig()
@@ -49,19 +41,15 @@ object ClientFactory {
                     }
 
                     refreshTokens {
-                        val tokens = tokensDataSource.getStoredTokens() ?: return@refreshTokens null
+                        var tokens = tokensDataSource.getStoredTokens()
 
-                        val newTokensResult = safeCall<TokensResponse> {
-                            this.client.post(urlString = constructUrl("auth/refresh-token")) {
-                                setBody(tokens.toRefreshTokenRequest())
-                            }
-                        }.map { it.extractTokens() }
+                        val newTokensResult = tokensDataSource.refreshTokens(tokens.toRefreshTokenRequest())
 
                         var bearerTokens: BearerTokens? = null
                         newTokensResult
                             .onSuccess {
-                                tokensDataSource.saveTokensLocally(it)
-                                bearerTokens = BearerTokens(it.accessToken, it.refreshToken)
+                                tokens = tokensDataSource.getStoredTokens()
+                                bearerTokens = BearerTokens(tokens.accessToken, tokens.refreshToken)
                             }
                             .onError { error ->
                                 if (error.errorType == ErrorType.BAD_REQUEST) {

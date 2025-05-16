@@ -46,6 +46,9 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.bundles.image.loading)
     implementation(libs.bundles.dependency.injection)
+    implementation(libs.ktor.client.core)
+    implementation(libs.signalrkore)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -31,11 +31,8 @@ import com.greenvenom.core_ui.components.TopAppBar
 
 
 @Composable
-fun ProfileScreen(
-    onLogoutNavigate: () -> Unit
-) {
+fun ProfileScreen() {
     BaseScreen<ProfileViewModel> { viewModel ->
-
         val profileUI by viewModel.profileUI
         val isDarkTheme by viewModel.isDarkTheme
         val currentLanguage by viewModel.currentLanguage
@@ -44,18 +41,14 @@ fun ProfileScreen(
             profileUI = profileUI,
             isDarkTheme = isDarkTheme,
             currentLanguage = currentLanguage,
-            onThemeToggle = { viewModel.updateTheme( it) },
+            onThemeToggle = { viewModel.updateTheme(it) },
             onLanguageChange = { viewModel.updateLanguage(it) },
             onLogoutClick = {
-                viewModel.logout {
-                    onLogoutNavigate() // navigate to login or splash
-                }
+                viewModel.logout()
             }
         )
     }
 }
-
-
 
 @Composable
 fun ProfileContent(
@@ -65,28 +58,27 @@ fun ProfileContent(
     onThemeToggle: (Boolean) -> Unit,
     onLanguageChange: (String) -> Unit,
     onLogoutClick: () -> Unit
-
 ) {
     val languages = listOf("en" to "English", "ar" to "العربية")
     var expanded by remember { mutableStateOf(false) }
     var selectedLang by remember { mutableStateOf(currentLanguage) }
 
     Scaffold(
-            topBar = {
-                TopAppBar(
-                    isVisible = true,
-                    isSideDestination = false,
-                    isActionEnabled = false
-                )
-            }
-
-    ) {innerPadding->
+        topBar = {
+            TopAppBar(
+                isVisible = true,
+                isSideDestination = false,
+                isActionEnabled = false
+            )
+        }
+    ) { innerPadding->
         val modifiedPadding = PaddingValues(
             top = innerPadding.calculateTopPadding(),
             bottom = 0.dp,
             start = 24.dp,
             end = 24.dp
         )
+
         Column(
             modifier = Modifier
                 .fillMaxSize()

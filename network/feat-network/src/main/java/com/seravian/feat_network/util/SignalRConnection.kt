@@ -1,12 +1,16 @@
-package com.seravian.feat_network.data
+package com.seravian.feat_network.util
 
 import com.greenvenom.core_network.api.utils.constructUrl
 import com.greenvenom.core_network.api.utils.safeCall
 import com.greenvenom.core_network.data.map
-import com.greenvenom.core_network.domain.ConnectionStatus
+import com.greenvenom.core_network.data.ConnectionStatus
+import com.greenvenom.core_network.data.ErrorType
+import com.greenvenom.core_network.data.onError
+import com.greenvenom.core_network.data.onSuccess
+import com.greenvenom.core_network.domain.RealtimeConnection
 import com.greenvenom.core_tokens.data.dto.response.TokensResponse
 import com.greenvenom.core_tokens.domain.Tokens
-import com.greenvenom.core_tokens.domain.repo.TokenDataSource
+import com.greenvenom.core_tokens.domain.repo.TokensDataSource
 import eu.lepicekmichal.signalrkore.AutomaticReconnect
 import eu.lepicekmichal.signalrkore.HubConnection
 import eu.lepicekmichal.signalrkore.HubConnectionBuilder
@@ -29,9 +33,8 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 class SignalRConnection(
-    private val tokensDataSource: TokenDataSource,
-    private val httpClient: HttpClient,
-) {
+    private val tokensDataSource: TokensDataSource,
+): RealtimeConnection {
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO)
     private val defaultRetryDelays = listOf(2_000L, 3_000L, 5_000L, 10_000L)
 
@@ -39,21 +42,21 @@ class SignalRConnection(
     private val tokenMutex = Mutex()
 
     private val _connectionStatus = MutableStateFlow(ConnectionStatus.IDLE)
-    val connectionStatus: StateFlow<ConnectionStatus> = _connectionStatus.asStateFlow()
+    override val connectionStatus: StateFlow<ConnectionStatus> = _connectionStatus.asStateFlow()
 
     private var tokenCollectionJob: Job? = null
     private var statusCollectionJob: Job? = null
 
-    lateinit var hubConnection: HubConnection
+    override lateinit var connection: HubConnection
 
-    suspend fun connect(): HubConnection {
+    override suspend fun connect() {
         // Start the token collection if not already started
         if (tokenCollectionJob == null) {
             tokenCollectionJob = scope.launch {
                 tokensDataSource.getStoredTokensFlow().collectLatest { storedTokens ->
                     tokenMutex.withLock {
                         val refreshedTokens = refreshTokenIfNeeded(storedTokens)
-                        currentTokenFlow.value = refreshedTokens
+                        currentTokenFlow.update { refreshedTokens }
                     }
                 }
             }
@@ -64,7 +67,7 @@ class SignalRConnection(
             .first() // suspend until this condition is true
 
         // Create the hub connection
-        hubConnection = HubConnectionBuilder.create(constructUrl("hubs/chat")) {
+        connection = HubConnectionBuilder.create(constructUrl("hubs/chat")) {
             accessToken = validToken.accessToken
 
             automaticReconnect = AutomaticReconnect.Custom { previousRetryCount, _ ->
@@ -81,15 +84,13 @@ class SignalRConnection(
                 defaultRetryDelays.getOrNull(previousRetryCount)
             }
         }
-        hubConnection.start()
-
-        return hubConnection
+        connection.start()
     }
 
-    fun startCollectingConnectionStatus() {
+    override fun startCollectingConnectionStatus() {
         if (statusCollectionJob == null) {
             statusCollectionJob = scope.launch {
-                hubConnection.connectionState.collect { connectionState ->
+                connection.connectionState.collect { connectionState ->
                     _connectionStatus.update {
                         when (connectionState) {
                             HubConnectionState.CONNECTED -> ConnectionStatus.CONNECTED
@@ -104,9 +105,9 @@ class SignalRConnection(
         }
     }
 
-    suspend fun disconnect() {
-        if (::hubConnection.isInitialized) {
-            hubConnection.stop()
+    override suspend fun disconnect() {
+        if (::connection.isInitialized) {
+            connection.stop()
         }
 
         statusCollectionJob?.cancel()
@@ -120,17 +121,16 @@ class SignalRConnection(
 
     private suspend fun refreshTokenIfNeeded(currentTokens: Tokens): Tokens {
         if (currentTokens.isAccessExpired() && !currentTokens.refreshToken.isNullOrEmpty()) {
-            val refreshRequest = currentTokens.toRefreshTokenRequest()
-            val newTokensResult = safeCall<TokensResponse> {
-                httpClient.post(constructUrl("auth/refresh-token")) {
-                    setBody(refreshRequest)
-                }
-            }.map { it.extractTokens() }
+            val newTokensResult = tokensDataSource.refreshTokens(currentTokens.toRefreshTokenRequest())
 
-            newTokensResult.map { tokens ->
-                tokensDataSource.saveTokensLocally(tokens)
-                return tokens
-            }
+            newTokensResult
+                .onSuccess {
+                    return tokensDataSource.getStoredTokens()
+                }
+                .onError {
+                    if (it.errorType == ErrorType.NO_INTERNET) refreshTokenIfNeeded(currentTokens)
+                    else if (it.errorType == ErrorType.BAD_REQUEST) tokensDataSource.deleteTokens()
+                }
         }
         return currentTokens
     }

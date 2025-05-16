@@ -1,8 +1,7 @@
 package com.seravian.feat_profile.presentation.viewModel
 
 import com.greenvenom.core_ui.presentation.BaseViewModel
-import com.seravian.feat_profile.domain.ProfileRepository
-import android.content.Context
+import com.seravian.feat_profile.domain.repository.ProfileRepository
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
@@ -12,7 +11,7 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val profileRepository: ProfileRepository
-) : BaseViewModel() {
+): BaseViewModel() {
 
     val profileUI = mutableStateOf<ProfileUI?>(null)
     val isDarkTheme = mutableStateOf(false)
@@ -39,25 +38,21 @@ class ProfileViewModel(
         currentLanguage.value = if (profileRepository.isCurrentLanguageArabic()) "ar" else "en"
     }
 
-    fun updateTheme( isDark: Boolean) {
+    fun updateTheme(isDark: Boolean) {
         viewModelScope.launch {
             profileRepository.changeTheme( isDark)
             isDarkTheme.value = isDark
         }
     }
 
-    // Update language
     fun updateLanguage(languageTag: String) {
         profileRepository.changeLanguage(languageTag)
         currentLanguage.value = languageTag
     }
 
-    fun logout( onComplete: () -> Unit) {
+    fun logout() {
         viewModelScope.launch {
             profileRepository.logoutUser()
-            onComplete()
         }
     }
-
-
 }
