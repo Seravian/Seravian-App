@@ -27,7 +27,7 @@ class ProfileRepositoryImpl(
         return appPrefsDataSource.appPrefsState.value.currentLanguageTag == "ar"
     }
 
-    override suspend fun changeTheme( isDarkTheme: Boolean) {
+    override suspend fun changeTheme(isDarkTheme: Boolean) {
         appPrefsDataSource.changeTheme(
             isDarkTheme = isDarkTheme
         )
@@ -37,12 +37,8 @@ class ProfileRepositoryImpl(
         appPrefsDataSource.changeLanguage(languageTag)
     }
 
-    override suspend fun getLocalProfile(): Profile {
+    override suspend fun getProfile(): Profile {
         return roomDataSource.getProfile().extractProfile()
-    }
-
-    override suspend fun getStoredTokens(): Tokens {
-        return tokensDataSource.getStoredTokens()
     }
 
     override suspend fun logoutUser(): EmptyResult<NetworkError> {
@@ -51,6 +47,10 @@ class ProfileRepositoryImpl(
                 roomDataSource.deleteProfile()
                 tokensDataSource.deleteTokens()
             }
+    }
+
+    private suspend fun getStoredTokens(): Tokens {
+        return tokensDataSource.getStoredTokens()
     }
 }
 

@@ -2,57 +2,69 @@ package com.seravian.feat_profile.presentation.viewModel
 
 import com.greenvenom.core_ui.presentation.BaseViewModel
 import com.seravian.feat_profile.domain.repository.ProfileRepository
-import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
-import com.seravian.feat_profile.presentation.model.ProfileUI
-import com.seravian.feat_profile.presentation.model.toProfileUI
+import com.seravian.feat_profile.presentation.ProfileAction
+import com.seravian.feat_profile.presentation.ProfileState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val profileRepository: ProfileRepository
 ): BaseViewModel() {
+    private val _profileState = MutableStateFlow(ProfileState())
+    val profileState = _profileState.asStateFlow()
 
-    val profileUI = mutableStateOf<ProfileUI?>(null)
-    val isDarkTheme = mutableStateOf(false)
-    val currentLanguage = mutableStateOf("en")
-
-    init {
-        loadUserData()
-        loadSettings()
+    fun profileAction(action: ProfileAction) {
+        when (action) {
+            is ProfileAction.LoadInfo -> loadInfo()
+            is ProfileAction.UpdateTheme -> updateTheme(action.isDark)
+            is ProfileAction.UpdateLanguage -> updateLanguage(action.languageTag)
+            is ProfileAction.Logout -> logout()
+            is ProfileAction.ClearState -> clearState()
+        }
     }
 
-    private fun loadUserData() {
+    private fun loadInfo() {
         viewModelScope.launch {
-            try {
-                val profile = profileRepository.getLocalProfile()
-                profileUI.value = profile.toProfileUI()
-            } catch (e: Exception) {
-                Log.e("TAG", "loadUserData: Error to get user data", )
+            _profileState.update {
+                it.copy(
+                    profile = profileRepository.getProfile(),
+                    isDarkTheme = profileRepository.isCurrentThemeDark(),
+                    currentLanguage = if (profileRepository.isCurrentLanguageArabic()) "ar" else "en"
+                )
             }
         }
     }
 
-    private fun loadSettings() {
-        isDarkTheme.value = profileRepository.isCurrentThemeDark()
-        currentLanguage.value = if (profileRepository.isCurrentLanguageArabic()) "ar" else "en"
-    }
-
-    fun updateTheme(isDark: Boolean) {
+    private fun updateTheme(isDark: Boolean) {
         viewModelScope.launch {
-            profileRepository.changeTheme( isDark)
-            isDarkTheme.value = isDark
+            profileRepository.changeTheme(isDark)
+            _profileState.update {
+                it.copy(isDarkTheme = isDark)
+            }
         }
     }
 
-    fun updateLanguage(languageTag: String) {
+    private fun updateLanguage(languageTag: String) {
         profileRepository.changeLanguage(languageTag)
-        currentLanguage.value = languageTag
+        _profileState.update {
+            it.copy(currentLanguage = languageTag)
+        }
     }
 
-    fun logout() {
+    private fun logout() {
         viewModelScope.launch {
-            profileRepository.logoutUser()
+            _profileState.update {
+                it.copy(
+                    logoutResult = profileRepository.logoutUser()
+                )
+            }
         }
+    }
+
+    private fun clearState() {
+        _profileState.value = ProfileState()
     }
 }
