@@ -11,6 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -26,7 +27,7 @@ class SeravianSessionRepository(
 
     override fun collectSessionStatus() {
         scope.launch {
-            tokensDataSource.getStoredTokensFlow().collect { tokens ->
+            tokensDataSource.getStoredTokensFlow().collectLatest { tokens ->
                 when {
                     tokens == Tokens() -> _sessionDestination.update { SessionDestinations.AUTH }
                     tokens.accessToken.isNotEmpty() && tokens.refreshToken.isNullOrEmpty() ->

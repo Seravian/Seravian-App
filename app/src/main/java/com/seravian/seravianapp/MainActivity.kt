@@ -29,7 +29,6 @@ import org.koin.compose.koinInject
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        installSplashScreen()
         enableEdgeToEdge()
         setContent {
             val coroutineScope = rememberCoroutineScope()
@@ -40,7 +39,7 @@ class MainActivity : AppCompatActivity() {
             val appPrefsDataSource = koinInject<PrefsDataSource>()
             val appPrefsState by appPrefsDataSource.appPrefsState.collectAsStateWithLifecycle()
 
-            DisposableEffect (Unit) {
+            DisposableEffect(Unit) {
                 val themeJob = coroutineScope.launch {
                     appPrefsDataSource.getThemePreference().collect {
                         appPrefsDataSource.changeTheme(it)

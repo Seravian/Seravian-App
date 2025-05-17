@@ -20,6 +20,7 @@ import com.seravian.feat_profile.presentation.model.ProfileUI
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.greenvenom.core_network.data.onError
 import com.greenvenom.core_network.data.onSuccess
 import com.greenvenom.core_ui.components.CustomButton
@@ -34,8 +35,13 @@ import com.seravian.feat_profile.presentation.model.toProfileUI
 
 @Composable
 fun ProfileScreen() {
-    BaseScreen<ProfileViewModel> { viewModel ->
-        val profileState by viewModel.profileState.collectAsState()
+    BaseScreen<ProfileViewModel>(
+        enableLifecycleObservation = true,
+        onCreateAction = { viewModel ->
+            viewModel.profileAction(ProfileAction.LoadInfo)
+        },
+    ) { viewModel ->
+        val profileState by viewModel.profileState.collectAsStateWithLifecycle()
 
         ProfileContent(
             profileState = profileState,
@@ -51,7 +57,6 @@ fun ProfileContent(
     profileAction: (ProfileAction) -> Unit,
     baseAction: (BaseAction) -> Unit
 ) {
-    val profileUI = profileState.profile?.toProfileUI() ?: ProfileUI()
     val languages = listOf("en" to "English", "ar" to "العربية")
     var isLanguageSelectorExpanded by remember { mutableStateOf(false) }
 
@@ -101,7 +106,7 @@ fun ProfileContent(
             Text(
                 text = stringResource(
                     R.string.welcome,
-                    profileUI.fullName
+                    profileState.profile?.toProfileUI()?.fullName ?: ""
                 ),
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
@@ -109,7 +114,7 @@ fun ProfileContent(
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = profileUI.email,
+                text = profileState.profile?.toProfileUI()?.email ?: "",
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

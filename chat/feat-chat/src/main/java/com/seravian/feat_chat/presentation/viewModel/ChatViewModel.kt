@@ -21,6 +21,7 @@ import com.seravian.feat_chat.presentation.viewModel.ChatAction
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -55,7 +56,7 @@ class ChatViewModel(
 
     private fun collectConnectionStatus() {
         viewModelScope.launch {
-            chatRepository.getSignalRConnectionStatus().collect { status ->
+            chatRepository.getSignalRConnectionStatus().collectLatest { status ->
                 when(status) {
                     ConnectionStatus.CONNECTING -> {
                         _chatState.update {

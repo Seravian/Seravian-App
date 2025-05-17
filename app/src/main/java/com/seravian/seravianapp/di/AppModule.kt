@@ -12,7 +12,7 @@ val appModule = module {
         )
     }
 
-    single {
+    single(createdAtStart = true) {
         SessionDestinationHandler(
             navigationStateRepository = get(),
             seravianSessionRepository = get()

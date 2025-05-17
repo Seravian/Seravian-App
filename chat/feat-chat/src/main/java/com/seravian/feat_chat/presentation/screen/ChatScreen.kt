@@ -43,6 +43,7 @@ import com.greenvenom.core_ui.components.TopAppBar
 import com.greenvenom.core_ui.presentation.BaseAction
 import com.greenvenom.core_ui.theme.AppTheme
 import com.meticha.permissions_compose.AppPermission
+import com.meticha.permissions_compose.PermissionLifeCycleCheckEffect
 import com.meticha.permissions_compose.rememberAppPermissionState
 import com.seravian.core_chat.domain.models.Message
 import com.seravian.feat_chat.presentation.viewModel.ChatAction
@@ -68,6 +69,8 @@ fun ChatScreen(
             )
         )
     )
+
+    PermissionLifeCycleCheckEffect(permissions)
 
     BaseScreen<ChatViewModel>(
         onPhysicalBack = { viewModel ->
@@ -96,6 +99,8 @@ fun ChatScreen(
                 viewModel.chatAction(it)
             },
             baseAction = viewModel::baseAction,
+            isPermissionGranted = { permissions.allRequiredGranted() },
+            onPermissionRequired = { permissions.requestPermission() },
             modifier = modifier
         )
     }
@@ -106,6 +111,8 @@ private fun ChatScreenContent(
     chatState: ChatState,
     chatAction: (ChatAction) -> Unit,
     baseAction: (BaseAction) -> Unit,
+    isPermissionGranted: () -> Boolean,
+    onPermissionRequired: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var input by rememberSaveable { mutableStateOf("") }
@@ -137,11 +144,14 @@ private fun ChatScreenContent(
                 isSideDestination = false,
                 title = chatState.currentChat?.title ?: "Seravian",
                 action = {
-                    IconButton(onClick = { chatAction(ChatAction.NavigateToVoiceMode) }) {
+                    IconButton(onClick = {
+                        if (isPermissionGranted()) chatAction(ChatAction.NavigateToVoiceMode)
+                        else onPermissionRequired()
+                    }) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_voice_mode),
                             contentDescription = stringResource(R.string.voice_mode),
-                            tint = MaterialTheme.colorScheme.onBackground,
+                            tint = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.size(32.dp)
                         )
                     }
@@ -249,7 +259,9 @@ private fun ChatScreenPreview() {
                 )
             ),
             chatAction = {},
-            baseAction = {}
+            baseAction = {},
+            isPermissionGranted = { true },
+            onPermissionRequired = {}
         )
     }
 }
