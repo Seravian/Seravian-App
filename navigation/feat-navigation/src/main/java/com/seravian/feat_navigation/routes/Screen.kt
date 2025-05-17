@@ -46,13 +46,18 @@ sealed class Screen: Destination {
     }
 
     @Serializable
+    data object ChatsList: Screen() {
+        override val destinationType: DestinationType = DestinationType.MAIN
+    }
+
+    @Serializable
     data class Chat(val chatId: String = ""): Screen() {
         override val destinationType: DestinationType = DestinationType.SIDE
     }
 
     @Serializable
-    data object ChatsList: Screen() {
-        override val destinationType: DestinationType = DestinationType.MAIN
+    data object VoiceMode: Screen() {
+        override val destinationType: DestinationType = DestinationType.SIDE
     }
 
     @Serializable

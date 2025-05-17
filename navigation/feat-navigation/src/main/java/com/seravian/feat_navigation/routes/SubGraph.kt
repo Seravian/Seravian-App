@@ -19,4 +19,9 @@ sealed class SubGraph: Destination {
     data object Main: SubGraph() {
         override val destinationType: DestinationType = DestinationType.GRAPH
     }
+
+    @Serializable
+    data class AIChat(val chatId: String = ""): SubGraph() {
+        override val destinationType: DestinationType = DestinationType.GRAPH
+    }
 }

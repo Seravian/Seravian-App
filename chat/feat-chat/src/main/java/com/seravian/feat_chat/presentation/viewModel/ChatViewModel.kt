@@ -1,5 +1,6 @@
 package com.seravian.feat_chat.presentation.viewModel
 
+import android.util.Base64
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.greenvenom.core_network.data.NetworkResult
@@ -14,8 +15,9 @@ import com.seravian.core_chat.data.dto.request.EditChatRequest
 import com.seravian.core_chat.data.dto.request.GetChatMessagesRequest
 import com.seravian.core_chat.data.dto.request.JoinChatRequest
 import com.seravian.core_chat.domain.models.Message
-import com.seravian.feat_chat.domain.ChatRepository
-import com.seravian.feat_chat.presentation.ChatAction
+import com.seravian.feat_chat.data.AudioStreamer
+import com.seravian.feat_chat.domain.repository.ChatRepository
+import com.seravian.feat_chat.presentation.viewModel.ChatAction
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,6 +31,7 @@ class ChatViewModel(
     private val _chatState: MutableStateFlow<ChatState> = MutableStateFlow(ChatState())
     val chatState = _chatState.asStateFlow()
 
+    private lateinit var audioStreamer: AudioStreamer
     private var responseCollection: Job? = null
     private var messagesCollection: Job? = null
 
@@ -42,6 +45,8 @@ class ChatViewModel(
             is ChatAction.GetChatMessages -> getChatMessages(action.chatId)
             ChatAction.LeaveChat -> leaveChat()
             is ChatAction.SendMessage -> sendRequest(action.message)
+            is ChatAction.StartStreaming -> startStreaming()
+            is ChatAction.StopStreaming -> stopStreaming()
             is ChatAction.ClearChatResults -> clearChatResults()
             is ChatAction.StopCollections -> stopCollections()
             else -> {}
@@ -202,6 +207,41 @@ class ChatViewModel(
                 messagesList = it.messagesList + clientRequest.buildMessage()
             ) }
             chatRepository.sendRequest(clientRequest)
+        }
+    }
+
+    private fun startStreaming() {
+        audioStreamer = AudioStreamer(
+            viewModelScope,
+            onChunkReady = { chunk ->
+                val encoded = Base64.encodeToString(chunk, Base64.NO_WRAP)
+                // SignalR send audio chunk
+            },
+            onUserStoppedTalking = {
+                _chatState.update {
+                    it.copy(
+                        isStreamingVoice = false
+                    )
+                }
+                // SignalR send "DONE" signal
+            }
+        )
+        _chatState.update {
+            it.copy(
+                isStreamingVoice = true
+            )
+        }
+        audioStreamer.start()
+    }
+
+    private fun stopStreaming() {
+        if (::audioStreamer.isInitialized) {
+            audioStreamer.stop()
+            _chatState.update {
+                it.copy(
+                    isStreamingVoice = false
+                )
+            }
         }
     }
 

@@ -19,7 +19,7 @@ import com.seravian.core_chat.domain.models.Chat
 import com.seravian.core_chat.domain.models.Message
 import com.seravian.core_local.domain.LocalDataSource
 import com.seravian.feat_chat.domain.ChatRemoteDataSource
-import com.seravian.feat_chat.domain.ChatRepository
+import com.seravian.feat_chat.domain.repository.ChatRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.first

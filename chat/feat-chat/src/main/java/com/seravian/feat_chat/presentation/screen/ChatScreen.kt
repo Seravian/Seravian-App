@@ -1,5 +1,6 @@
 package com.seravian.feat_chat.presentation.screen
 
+import android.Manifest
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,6 +26,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -40,8 +42,10 @@ import com.greenvenom.core_network.data.onSuccess
 import com.greenvenom.core_ui.components.TopAppBar
 import com.greenvenom.core_ui.presentation.BaseAction
 import com.greenvenom.core_ui.theme.AppTheme
+import com.meticha.permissions_compose.AppPermission
+import com.meticha.permissions_compose.rememberAppPermissionState
 import com.seravian.core_chat.domain.models.Message
-import com.seravian.feat_chat.presentation.ChatAction
+import com.seravian.feat_chat.presentation.viewModel.ChatAction
 import com.seravian.feat_chat.presentation.components.ChatInputTextField
 import com.seravian.feat_chat.presentation.components.ReceivedMessageCard
 import com.seravian.feat_chat.presentation.components.SentMessageCard
@@ -51,9 +55,20 @@ import com.seravian.feat_chat.presentation.viewModel.ChatState
 @Composable
 fun ChatScreen(
     chatId: String,
+    navigateToVoiceMode: () -> Unit,
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val permissions = rememberAppPermissionState(
+        permissions = listOf(
+            AppPermission(
+                permission = Manifest.permission.RECORD_AUDIO,
+                description = "Microphone access is needed for voice recording and streaming. Please grant this permission.",
+                isRequired = true
+            )
+        )
+    )
+
     BaseScreen<ChatViewModel>(
         onPhysicalBack = { viewModel ->
             navigateBack()
@@ -74,6 +89,7 @@ fun ChatScreen(
             chatState = chatState,
             chatAction = {
                 when(it) {
+                    is ChatAction.NavigateToVoiceMode -> navigateToVoiceMode()
                     is ChatAction.NavigateBack -> navigateBack()
                     else -> {}
                 }
@@ -117,9 +133,19 @@ private fun ChatScreenContent(
         topBar = {
             TopAppBar(
                 isVisible = true,
-                isActionEnabled = false,
+                isActionEnabled = true,
                 isSideDestination = false,
                 title = chatState.currentChat?.title ?: "Seravian",
+                action = {
+                    IconButton(onClick = { chatAction(ChatAction.NavigateToVoiceMode) }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_voice_mode),
+                            contentDescription = stringResource(R.string.voice_mode),
+                            tint = MaterialTheme.colorScheme.onBackground,
+                            modifier = Modifier.size(32.dp)
+                        )
+                    }
+                }
             )
         }
     ) { innerPadding ->
@@ -170,6 +196,20 @@ private fun ChatScreenContent(
                     ChatInputTextField(
                         input = input,
                         onValueChange = { input = it },
+                        trailingIcon = {
+                            IconButton(
+                                onClick = {
+
+                                },
+                                enabled = chatState.messagesList.lastOrNull()?.isAI != true
+                                        && input.isNotBlank()
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_analyze_symptoms),
+                                    contentDescription = stringResource(R.string.analyze_symptoms)
+                                )
+                            }
+                        },
                         modifier = Modifier.weight(1f)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
@@ -178,7 +218,8 @@ private fun ChatScreenContent(
                             chatAction(ChatAction.SendMessage(input))
                             input = ""
                         },
-                        enabled = chatState.messagesList.lastOrNull()?.isAI ?: true,
+                        enabled = chatState.messagesList.lastOrNull()?.isAI != true
+                            && input.isNotBlank(),
                         shape = RoundedCornerShape(50),
                         modifier = Modifier.size(48.dp)
                     ) {
@@ -204,7 +245,7 @@ private fun ChatScreenPreview() {
                 messagesList = mutableListOf(
                     Message(id = Pair(1, null), isAI = false, content = "Hello", timestamp = "2023-06-05T14:30:40Z"),
                     Message(id = Pair(2, null), isAI = true, content = "gfhgfhfggfdkjghfdgudfiuhgdfgiufdhigudrhduihjnifgudnhiufgnhuidfgnhiudfnsghfduhiugfdgfiuhf", timestamp = "2023-06-05T14:30:45Z"),
-                    Message(id = Pair(3, null), isAI = true, content = "Hello", timestamp = "2023-06-05T14:30:50Z")
+                    Message(id = Pair(4, null), isAI = false, content = "Hello", timestamp = "2023-06-05T14:30:40Z")
                 )
             ),
             chatAction = {},

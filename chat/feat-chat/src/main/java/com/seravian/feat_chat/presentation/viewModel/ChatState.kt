@@ -14,6 +14,7 @@ data class ChatState(
     val currentChat: Chat ?= null,
     val messagesList: List<Message> = listOf(),
     val chatsList: List<Chat> = emptyList(),
+    val isStreamingVoice: Boolean = false,
     val createChatResult: NetworkResult<Chat, NetworkError> ?= null,
     val editChatResult: NetworkResult<Chat, NetworkError> ?= null,
     val deleteChatResult: EmptyResult<NetworkError> ?= null,

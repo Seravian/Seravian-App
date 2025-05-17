@@ -1,6 +1,5 @@
 package com.seravian.seravianapp.navigation
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +27,7 @@ import com.seravian.feat_home.presentation.HomeScreen
 import com.greenvenom.feat_onboarding.presentation.screens.OnBoardingScreen
 import com.seravian.feat_chat.presentation.screen.ChatListScreen
 import com.seravian.feat_chat.presentation.screen.ChatScreen
+import com.seravian.feat_chat.presentation.screen.VoiceModeScreen
 import com.seravian.feat_profile.presentation.screen.ProfileScreen
 import com.seravian.seravianapp.navigation.utils.SessionDestinationHandler
 import org.koin.compose.koinInject
@@ -165,7 +165,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
                 ChatListScreen(
                     navigateToChat = { chatId ->
                         navigationRepository.navigate(
-                            NavigationType.Standard(Screen.Chat(chatId))
+                            NavigationType.Standard(SubGraph.AIChat(chatId))
                         )
                     },
                     navigateBack = { navigationRepository.navigate(NavigationType.Back) }
@@ -177,17 +177,29 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             composable<Screen.Doctors> {
                 Text(text = "Doctors")
             }
-            composable<Screen.Chat> {
-                val args = it.toRoute<Screen.Chat>()
-                Log.d("ChatId", args.chatId)
-                ChatScreen(
-                    chatId = args.chatId,
-                    navigateBack = { navigationRepository.navigate(NavigationType.Back) }
-                )
-            }
             composable<Screen.Profile> {
                 ProfileScreen(
 
+                )
+            }
+        }
+
+        navigation<SubGraph.AIChat>(startDestination = Screen.Chat()) {
+            composable<Screen.Chat> {
+                val args = it.toRoute<Screen.Chat>()
+                ChatScreen(
+                    chatId = args.chatId,
+                    navigateToVoiceMode = {
+                        navigationRepository.navigate(
+                            NavigationType.Standard(Screen.VoiceMode)
+                        )
+                    },
+                    navigateBack = { navigationRepository.navigate(NavigationType.Back) }
+                )
+            }
+            composable<Screen.VoiceMode> {
+                VoiceModeScreen(
+                    navigateBack = { navigationRepository.navigate(NavigationType.Back) }
                 )
             }
         }
