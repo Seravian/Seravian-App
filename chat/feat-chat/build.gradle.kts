@@ -44,10 +44,10 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.bundles.image.loading)
     implementation(libs.bundles.dependency.injection)
     implementation(libs.ktor.client.core)
     implementation(libs.signalrkore)
+    implementation(libs.permissions.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

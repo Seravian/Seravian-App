@@ -41,7 +41,7 @@ dependencies {
     implementation(project(":crypto"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
-    implementation(libs.bundles.data.persistence)
+    implementation(libs.androidx.datastore)
     implementation(libs.ktor.client.core)
     implementation(platform("io.insert-koin:koin-bom:$koin"))
     implementation("io.insert-koin:koin-androidx-compose")

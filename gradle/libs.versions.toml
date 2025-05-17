@@ -1,7 +1,6 @@
 [versions]
 agp = "8.7.3"
 coreSplashscreen = "1.0.1"
-countryPicker = "2.1.0"
 kotlin = "2.1.0"
 coreKtx = "1.16.0"
 junit = "4.13.2"
@@ -16,23 +15,19 @@ koin = "4.0.0"
 ktor = "3.0.3"
 coil = "2.7.0"
 datastore = "1.1.6"
-material3-adaptive = "1.0.0"
-compose-material-icons-extended = "1.7.5"
-appcompat = "1.6.1"
-materialVersion = "1.12.0"
 appcompatVersion = "1.7.0"
-material = "1.12.0"
 runtimeAndroid = "1.8.1"
+ksp = "2.1.0-1.0.29"
 signalrkore = "0.9.5"
+permissionsCompose = "0.0.1+4"
 
 
 [libraries]
 # Android Core
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 
 # JUnit Testing
-androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
-country-picker = { module = "com.github.arpitkatiyar1999:Country-Picker", version.ref = "countryPicker" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -74,9 +69,12 @@ androidx-datastore = { group = "androidx.datastore", name = "datastore-preferenc
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompatVersion" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroid" }
+
+# External Tools
+permissions-compose = { group = "com.meticha", name = "permissions_compose", version.ref = "permissionsCompose" }
 signalrkore = { module = "eu.lepicekmichal.signalrkore:signalrkore", version.ref = "signalrkore" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -84,9 +82,10 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+google-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 [bundles]
-networking = [
+ktor = [
     "ktor-client-cio",
     "ktor-client-content-negotiation",
     "ktor-serialization-kotlinx-json",
@@ -95,23 +94,25 @@ networking = [
     "ktor-client-auth",
     "ktor-client-okhttp"
 ]
+
 dependency-injection = [
     "koin-android-compose",
-    "koin-android-compose-navigation"
 ]
-data-persistence = ["androidx-datastore"]
-image-loading = ["coil-compose"]
-compose = [
+
+compose-main = [
     "androidx-activity-compose",
-    "androidx-lifecycle-runtime-compose",
-    "androidx-lifecycle-viewmodel-compose",
-    "androidx-compose-navigation",
     "androidx-material3",
     "androidx-ui",
     "androidx-ui-graphics",
     "androidx-ui-tooling-preview",
 ]
-compose-debug = [
-    "androidx-ui-tooling",
-    "androidx-ui-test-manifest",
+
+compose-lifecycle = [
+    "androidx-lifecycle-runtime-compose",
+    "androidx-lifecycle-viewmodel-compose"
+]
+
+compose-navigation = [
+    "androidx-compose-navigation",
+    "koin-android-compose-navigation"
 ]

@@ -72,8 +72,8 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.bundles.compose)
-    implementation(libs.bundles.networking)
+    implementation(libs.bundles.compose.main)
+    implementation(libs.bundles.ktor)
     implementation(libs.bundles.dependency.injection)
     implementation(libs.androidx.compose.navigation)
     implementation(libs.kotlinx.serialization.json)
