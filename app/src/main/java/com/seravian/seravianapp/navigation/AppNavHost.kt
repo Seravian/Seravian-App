@@ -1,5 +1,6 @@
 package com.seravian.seravianapp.navigation
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,7 +38,6 @@ fun AppNavHost(modifier: Modifier = Modifier) {
     val appNavigator = koinInject<AppNavigator>()
     val navigationRepository = koinInject<NavigationStateRepository>()
     val navigationState by navigationRepository.navigationState.collectAsStateWithLifecycle()
-    val sessionRepository = koinInject<SessionRepository>()
     val destinationHandler = koinInject<SessionDestinationHandler>()
 
     appNavigator.config(
@@ -55,7 +55,6 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         composable<Screen.Splash> {
             SplashScreen(
                 onStart = {
-                    sessionRepository.collectSessionStatus()
                     destinationHandler.collectSessionDestinations()
                 }
             )
@@ -187,6 +186,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         navigation<SubGraph.AIChat>(startDestination = Screen.Chat()) {
             composable<Screen.Chat> {
                 val args = it.toRoute<Screen.Chat>()
+                Log.d("ChatId", args.chatId)
                 ChatScreen(
                     chatId = args.chatId,
                     navigateToVoiceMode = {

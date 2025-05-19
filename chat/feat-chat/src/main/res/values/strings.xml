@@ -11,4 +11,6 @@
     <string name="delete">Delete</string>
     <string name="analyze_symptoms">Analyze Symptoms</string>
     <string name="voice_mode">Voice Mode</string>
+    <string name="unmuted">UnMuted</string>
+    <string name="muted">Muted</string>
 </resources>

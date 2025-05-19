@@ -7,19 +7,16 @@ import com.greenvenom.core_network.domain.repository.SessionRepository
 import com.seravian.feat_navigation.routes.SubGraph
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class SessionDestinationHandler(
     private val navigationStateRepository: NavigationStateRepository,
     private val seravianSessionRepository: SessionRepository
 ) {
-    init {
-        collectSessionDestinations()
-    }
-
     fun collectSessionDestinations() {
         CoroutineScope(Dispatchers.Main).launch {
-            seravianSessionRepository.sessionDestination.collect { wantedDestination ->
+            seravianSessionRepository.sessionDestination.collectLatest { wantedDestination ->
                 handleSessionStates(wantedDestination)
             }
         }

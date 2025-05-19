@@ -1,10 +1,12 @@
 package com.seravian.feat_chat.data
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
 import android.media.audiofx.NoiseSuppressor
+import androidx.annotation.RequiresPermission
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -18,7 +20,8 @@ class AudioStreamer(
     private val scope: CoroutineScope,
     private val onChunkReady: (ByteArray) -> Unit,
     private val onUserStoppedTalking: () -> Unit,
-    private val silenceThreshold: Int = 1500
+    private val onAmplitudeUpdate: (Float) -> Unit,
+    private val silenceThreshold: Int = 2000
 ) {
     private val sampleRate = 16000
     private val bufferSize = AudioRecord.getMinBufferSize(
@@ -27,24 +30,25 @@ class AudioStreamer(
         AudioFormat.ENCODING_PCM_16BIT
     )
 
-    @SuppressLint("MissingPermission")
-    private val recorder = AudioRecord(
-        MediaRecorder.AudioSource.MIC,
-        sampleRate,
-        AudioFormat.CHANNEL_IN_MONO,
-        AudioFormat.ENCODING_PCM_16BIT,
-        bufferSize
-    ).also {
-        if (NoiseSuppressor.isAvailable()) {
-            NoiseSuppressor.create(it.audioSessionId)
-        }
-    }
+    private lateinit var recorder: AudioRecord
 
     private var isRecording = false
-    private var recordingJob: Job? = null
+    private var recordingJob: Job ?= null
 
+    @SuppressLint("MissingPermission")
     fun start() {
         if (isRecording) return
+        recorder = AudioRecord(
+            MediaRecorder.AudioSource.MIC,
+            sampleRate,
+            AudioFormat.CHANNEL_IN_MONO,
+            AudioFormat.ENCODING_PCM_16BIT,
+            bufferSize
+        ).also {
+            if (NoiseSuppressor.isAvailable()) {
+                NoiseSuppressor.create(it.audioSessionId)
+            }
+        }
         isRecording = true
         recorder.startRecording()
 
@@ -52,13 +56,15 @@ class AudioStreamer(
             val buffer = ByteArray(bufferSize)
             var lastVoiceTime = System.currentTimeMillis()
 
-            while (isRecording) {
+            while (isRecording && recorder.recordingState == AudioRecord.RECORDSTATE_RECORDING) {
                 val read = recorder.read(buffer, 0, buffer.size)
                 if (read > 0) {
                     val chunk = buffer.copyOf(read)
                     onChunkReady(chunk)
 
                     val rms = calculateRMS(chunk)
+                    onAmplitudeUpdate(rms.toFloat())
+
                     val currentTime = System.currentTimeMillis()
 
                     if (rms > 500) { // Threshold to detect voice
@@ -66,10 +72,10 @@ class AudioStreamer(
                     }
 
                     if (currentTime - lastVoiceTime > silenceThreshold) {
-                        stop()
                         withContext(Dispatchers.Main) {
                             onUserStoppedTalking()
                         }
+                        stop()
                     }
                 }
             }

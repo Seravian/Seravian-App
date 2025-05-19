@@ -17,7 +17,10 @@ import com.seravian.core_chat.data.dto.request.JoinChatRequest
 import com.seravian.core_chat.domain.models.Message
 import com.seravian.feat_chat.data.AudioStreamer
 import com.seravian.feat_chat.domain.repository.ChatRepository
-import com.seravian.feat_chat.presentation.viewModel.ChatAction
+import com.seravian.feat_chat.presentation.viewModel.chat.ChatAction
+import com.seravian.feat_chat.presentation.viewModel.chat.ChatState
+import com.seravian.feat_chat.presentation.viewModel.voice.VoiceAction
+import com.seravian.feat_chat.presentation.viewModel.voice.VoiceState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -32,9 +35,12 @@ class ChatViewModel(
     private val _chatState: MutableStateFlow<ChatState> = MutableStateFlow(ChatState())
     val chatState = _chatState.asStateFlow()
 
+    private val _voiceState = MutableStateFlow(VoiceState())
+    val voiceState = _voiceState.asStateFlow()
+
     private lateinit var audioStreamer: AudioStreamer
-    private var responseCollection: Job? = null
-    private var messagesCollection: Job? = null
+    private var responseCollection: Job ?= null
+    private var messagesCollection: Job ?= null
 
     fun chatAction(action: ChatAction) {
         when(action) {
@@ -46,10 +52,18 @@ class ChatViewModel(
             is ChatAction.GetChatMessages -> getChatMessages(action.chatId)
             ChatAction.LeaveChat -> leaveChat()
             is ChatAction.SendMessage -> sendRequest(action.message)
-            is ChatAction.StartStreaming -> startStreaming()
-            is ChatAction.StopStreaming -> stopStreaming()
             is ChatAction.ClearChatResults -> clearChatResults()
             is ChatAction.StopCollections -> stopCollections()
+            else -> {}
+        }
+    }
+
+    fun voiceAction(action: VoiceAction) {
+        when(action) {
+            is VoiceAction.StartStreaming -> startStreaming()
+            is VoiceAction.ChangeMicState -> changeMicState()
+            is VoiceAction.StopStreaming -> stopStreaming()
+            is VoiceAction.ResetVoiceState -> resetVoiceState()
             else -> {}
         }
     }
@@ -212,22 +226,31 @@ class ChatViewModel(
     }
 
     private fun startStreaming() {
-        audioStreamer = AudioStreamer(
-            viewModelScope,
-            onChunkReady = { chunk ->
-                val encoded = Base64.encodeToString(chunk, Base64.NO_WRAP)
-                // SignalR send audio chunk
-            },
-            onUserStoppedTalking = {
-                _chatState.update {
-                    it.copy(
-                        isStreamingVoice = false
-                    )
+        if (!::audioStreamer.isInitialized) {
+            audioStreamer = AudioStreamer(
+                viewModelScope,
+                onChunkReady = { chunk ->
+                    val encoded = Base64.encodeToString(chunk, Base64.NO_WRAP)
+                    // TODO: SignalR send audio chunk
+                },
+                onUserStoppedTalking = {
+                    _voiceState.update {
+                        it.copy(
+                            isStreamingVoice = false
+                        )
+                    }
+                    // TODO: SignalR send "DONE" signal
+                },
+                onAmplitudeUpdate = { amplitude ->
+                    _voiceState.update {
+                        it.copy(
+                            voiceAmplitude = amplitude
+                        )
+                    }
                 }
-                // SignalR send "DONE" signal
-            }
-        )
-        _chatState.update {
+            )
+        }
+        _voiceState.update {
             it.copy(
                 isStreamingVoice = true
             )
@@ -235,15 +258,29 @@ class ChatViewModel(
         audioStreamer.start()
     }
 
+    private fun changeMicState() {
+        _voiceState.update {
+            it.copy(
+                isMuted = !_voiceState.value.isMuted
+            )
+        }.also {
+            if (_voiceState.value.isMuted) audioStreamer.stop() else audioStreamer.start()
+        }
+    }
+
     private fun stopStreaming() {
         if (::audioStreamer.isInitialized) {
             audioStreamer.stop()
-            _chatState.update {
+            _voiceState.update {
                 it.copy(
                     isStreamingVoice = false
                 )
             }
         }
+    }
+
+    private fun resetVoiceState() {
+        _voiceState.update { VoiceState() }
     }
 
     private fun clearChatResults() {

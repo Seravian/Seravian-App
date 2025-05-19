@@ -1,8 +1,18 @@
 package com.seravian.feat_chat.presentation.screen
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -12,10 +22,18 @@ import com.greenvenom.core_ui.components.TopAppBar
 import com.greenvenom.core_ui.presentation.BaseAction
 import com.greenvenom.core_ui.presentation.BaseScreen
 import com.greenvenom.core_ui.theme.AppTheme
-import com.seravian.feat_chat.presentation.viewModel.ChatAction
-import com.seravian.feat_chat.presentation.viewModel.ChatState
+import com.seravian.feat_chat.presentation.viewModel.chat.ChatAction
+import com.seravian.feat_chat.presentation.viewModel.chat.ChatState
 import com.seravian.feat_chat.presentation.viewModel.ChatViewModel
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import com.seravian.feat_chat.R
+import com.seravian.feat_chat.presentation.components.PulseCircle
+import com.seravian.feat_chat.presentation.viewModel.voice.VoiceAction
+import com.seravian.feat_chat.presentation.viewModel.voice.VoiceState
 
 @Composable
 fun VoiceModeScreen(
@@ -23,20 +41,31 @@ fun VoiceModeScreen(
 ) {
     BaseScreen<ChatViewModel>(
         onPhysicalBack = { viewModel ->
-            viewModel.chatAction(ChatAction.StopStreaming)
+            viewModel.voiceAction(VoiceAction.StopStreaming)
             navigateBack()
+            viewModel.voiceAction(VoiceAction.ResetVoiceState)
         },
+        enableLifecycleObservation = true,
+        onStartAction = { viewModel ->
+            viewModel.voiceAction(VoiceAction.StartStreaming)
+        },
+        onDestroyAction = { viewModel ->
+            viewModel.voiceAction(VoiceAction.StopStreaming)
+            viewModel.voiceAction(VoiceAction.ResetVoiceState)
+        }
     ) { viewModel ->
         val chatState by viewModel.chatState.collectAsStateWithLifecycle()
+        val voiceState by viewModel.voiceState.collectAsStateWithLifecycle()
 
         VoiceModeContent(
             chatState = chatState,
-            chatAction = {
+            voiceState = voiceState,
+            voiceAction = {
                 when(it) {
-                    is ChatAction.NavigateBack -> navigateBack()
+                    is VoiceAction.NavigateBack -> navigateBack()
                     else -> {}
                 }
-                viewModel.chatAction(it)
+                viewModel.voiceAction(it)
             },
             baseAction = viewModel::baseAction,
         )
@@ -46,7 +75,8 @@ fun VoiceModeScreen(
 @Composable
 private fun VoiceModeContent(
     chatState: ChatState,
-    chatAction: (ChatAction) -> Unit,
+    voiceState: VoiceState,
+    voiceAction: (VoiceAction) -> Unit,
     baseAction: (BaseAction) -> Unit
 ) {
     Scaffold(
@@ -57,27 +87,81 @@ private fun VoiceModeContent(
                 isSideDestination = true,
                 isActionEnabled = false,
                 title = chatState.currentChat?.title ?: "Seravian",
-                navigateBack = { chatAction(ChatAction.NavigateBack) }
+                navigateBack = { voiceAction(VoiceAction.NavigateBack) }
             )
         },
     ) { innerPadding ->
-        Column(
+        Box (
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
+            PulseCircle(
+                amplitude = voiceState.voiceAmplitude,
+                icon = painterResource(R.drawable.logo),
+                modifier = Modifier
+                    .padding(bottom = 64.dp)
+                    .align(Alignment.Center)
+            )
 
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 32.dp)
+                    .align(Alignment.BottomCenter)
+            ) {
+                if (voiceState.isMuted) {
+                    FilledIconButton(
+                        onClick = {
+                            voiceAction(VoiceAction.ChangeMicState)
+                        },
+                        enabled = voiceState.isStreamingVoice,
+                        colors = IconButtonDefaults.filledIconButtonColors().copy(
+                            containerColor = MaterialTheme.colorScheme.errorContainer,
+                            contentColor = MaterialTheme.colorScheme.onErrorContainer
+                        ),
+                        modifier = Modifier.size(56.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_voice_mode_off),
+                            contentDescription = stringResource(R.string.muted),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(7.dp)
+                        )
+                    }
+                } else {
+                    FilledIconButton(
+                        onClick = {
+                            voiceAction(VoiceAction.ChangeMicState)
+                        },
+                        enabled = voiceState.isStreamingVoice,
+                        modifier = Modifier.size(56.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_voice_mode),
+                            contentDescription = stringResource(R.string.unmuted),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(7.dp)
+                        )
+                    }
+                }
+            }
         }
     }
 }
 
-@Preview
+@Preview(showSystemUi = false)
 @Composable
 private fun VoiceModeContentPreview() {
     AppTheme {
         VoiceModeContent(
             chatState = ChatState(),
-            chatAction = {},
+            voiceState = VoiceState(isMuted = true, voiceAmplitude = 10000f),
+            voiceAction = {},
             baseAction = {}
         )
     }

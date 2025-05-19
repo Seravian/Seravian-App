@@ -25,6 +25,10 @@ class SeravianSessionRepository(
     override val sessionDestination = _sessionDestination
         .stateIn(scope, SharingStarted.Lazily, SessionDestinations.INITIALIZE)
 
+    init {
+        collectSessionStatus()
+    }
+
     override fun collectSessionStatus() {
         scope.launch {
             tokensDataSource.getStoredTokensFlow().collectLatest { tokens ->

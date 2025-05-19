@@ -46,12 +46,12 @@ import com.meticha.permissions_compose.AppPermission
 import com.meticha.permissions_compose.PermissionLifeCycleCheckEffect
 import com.meticha.permissions_compose.rememberAppPermissionState
 import com.seravian.core_chat.domain.models.Message
-import com.seravian.feat_chat.presentation.viewModel.ChatAction
+import com.seravian.feat_chat.presentation.viewModel.chat.ChatAction
 import com.seravian.feat_chat.presentation.components.ChatInputTextField
 import com.seravian.feat_chat.presentation.components.ReceivedMessageCard
 import com.seravian.feat_chat.presentation.components.SentMessageCard
 import com.seravian.feat_chat.presentation.models.toMessageUI
-import com.seravian.feat_chat.presentation.viewModel.ChatState
+import com.seravian.feat_chat.presentation.viewModel.chat.ChatState
 
 @Composable
 fun ChatScreen(
@@ -79,6 +79,10 @@ fun ChatScreen(
             viewModel.chatAction(ChatAction.LeaveChat)
             viewModel.chatAction(ChatAction.ClearChatResults)
         },
+        enableLifecycleObservation = true,
+        onResumeAction = {
+            if (permissions.allRequiredGranted()) navigateToVoiceMode()
+        }
     ) { viewModel ->
         val chatState by viewModel.chatState.collectAsStateWithLifecycle()
 

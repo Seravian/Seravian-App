@@ -27,11 +27,11 @@ import com.greenvenom.core_ui.presentation.BaseAction
 import com.greenvenom.core_ui.presentation.BaseScreen
 import com.greenvenom.core_ui.theme.AppTheme
 import com.seravian.core_chat.domain.models.Chat
-import com.seravian.feat_chat.presentation.viewModel.ChatAction
+import com.seravian.feat_chat.presentation.viewModel.chat.ChatAction
 import com.seravian.feat_chat.presentation.components.ChatListCard
 import com.seravian.feat_chat.presentation.components.NewChatPopUp
 import com.seravian.feat_chat.presentation.models.toChatUI
-import com.seravian.feat_chat.presentation.viewModel.ChatState
+import com.seravian.feat_chat.presentation.viewModel.chat.ChatState
 import com.seravian.feat_chat.presentation.viewModel.ChatViewModel
 
 @Composable
