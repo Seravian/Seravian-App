@@ -116,7 +116,6 @@ private fun TopBarContent(
                     Image(
                         painter = logo,
                         contentDescription = "Logo",
-                        contentScale = ContentScale.Crop,
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
@@ -125,7 +124,7 @@ private fun TopBarContent(
                 Text(
                     text = title,
                     fontFamily = bowlbyFontFamily,
-                    color = colorScheme.secondary
+                    color = colorScheme.primaryContainer
                 )
             }
         },

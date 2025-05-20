@@ -35,7 +35,7 @@ fun ReceivedMessageCard(
         Card(
             shape = MaterialTheme.shapes.extraLarge,
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.secondary
+                containerColor = MaterialTheme.colorScheme.primaryContainer
             ),
             modifier = Modifier.align(Alignment.Bottom)
         ) {

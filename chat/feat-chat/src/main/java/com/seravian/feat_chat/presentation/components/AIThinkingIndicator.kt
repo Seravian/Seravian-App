@@ -47,7 +47,7 @@ fun AITypingIndicator(
         Card(
             shape = MaterialTheme.shapes.extraLarge,
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.secondary
+                containerColor = MaterialTheme.colorScheme.primary
             ),
             modifier = Modifier.padding(start = 16.dp)
         ) {

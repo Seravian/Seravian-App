@@ -38,7 +38,7 @@ fun SentMessageCard(
         Card(
             shape = RoundedCornerShape(12.dp, 12.dp, 0.dp, 12.dp),
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.secondary
+                containerColor = MaterialTheme.colorScheme.primaryContainer
             ),
             modifier = Modifier.weight(1f, false)
         ) {
