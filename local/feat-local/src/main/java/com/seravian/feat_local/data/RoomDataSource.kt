@@ -48,6 +48,10 @@ class RoomDataSource(
         chatDao.deleteChat(chatId)
     }
 
+    override suspend fun deleteChats() {
+        chatDao.deleteChats()
+    }
+
     override suspend fun getChatMessages(chatId: String): Flow<List<MessageEntity>> {
         return chatDao.getChatMessages(chatId)
     }

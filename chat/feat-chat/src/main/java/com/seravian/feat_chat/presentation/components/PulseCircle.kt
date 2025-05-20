@@ -40,9 +40,9 @@ fun PulseCircle(
     val scaleFactor = sqrt(normalizedAmp).coerceIn(0f, 1f)
 
     // Calculate the target size (15% max growth on top of base size)
-    val baseSize = 130.dp
+    val baseSize = 110.dp
     val targetSize by animateDpAsState(
-        targetValue = baseSize * (1f + (scaleFactor * 0.6f)),
+        targetValue = baseSize * (1f + (scaleFactor * 1.3f)),
         animationSpec = tween(durationMillis = 50)
     )
 

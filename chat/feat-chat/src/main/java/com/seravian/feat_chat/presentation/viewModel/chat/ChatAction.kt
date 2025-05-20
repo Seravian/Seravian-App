@@ -1,7 +1,7 @@
 package com.seravian.feat_chat.presentation.viewModel.chat
 
 sealed interface ChatAction {
-    data class CreateChat(val title: String) : ChatAction
+    data object CreateChat : ChatAction
     data class EditChat(val chatId: String, val title: String) : ChatAction
     data class DeleteChat(val chatId: String) : ChatAction
     data object GetChats : ChatAction

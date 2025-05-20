@@ -8,7 +8,6 @@ import com.greenvenom.core_network.api.utils.safeCall
 import com.greenvenom.core_network.data.EmptyResult
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.map
-import com.greenvenom.core_network.data.onSuccess
 import com.greenvenom.core_tokens.data.dto.request.RefreshTokenRequest
 import com.greenvenom.core_tokens.data.dto.response.TokensResponse
 import com.greenvenom.core_tokens.domain.repo.TokensDataSource

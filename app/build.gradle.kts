@@ -65,12 +65,10 @@ dependencies {
     implementation(project(":profile:core-profile"))
     implementation(project(":profile:feat-profile"))
 
-    val appcompatVersion = "1.7.0"
-
-    implementation("androidx.appcompat:appcompat:$appcompatVersion")
-    implementation("androidx.appcompat:appcompat-resources:$appcompatVersion")
-
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.appcompat.resources)
+    implementation(libs.material)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose.main)
     implementation(libs.bundles.ktor)

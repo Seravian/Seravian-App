@@ -1,6 +1,7 @@
 package com.seravian.feat_chat.presentation.screen
 
 import android.Manifest
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -71,6 +72,7 @@ fun ChatScreen(
         val chatState by viewModel.chatState.collectAsStateWithLifecycle()
 
         LaunchedEffect(Unit) {
+            Log.d("ChatScreen", "ChatId: $chatId")
             viewModel.baseAction(BaseAction.ShowLoading)
             viewModel.chatAction(ChatAction.GetChatMessages(chatId))
             viewModel.chatAction(ChatAction.JoinChat)
@@ -191,9 +193,9 @@ private fun ChatScreenContent(
                         trailingIcon = {
                             IconButton(
                                 onClick = {
-
+                                    //chatAction(ChatAction.SendMessage(input))
                                 },
-                                enabled = chatState.messagesList.lastOrNull()?.isAI != true
+                                enabled = chatState.messagesList.lastOrNull()?.isAI == true
                                         && input.isNotBlank()
                             ) {
                                 Icon(
@@ -210,7 +212,7 @@ private fun ChatScreenContent(
                             chatAction(ChatAction.SendMessage(input))
                             input = ""
                         },
-                        enabled = chatState.messagesList.lastOrNull()?.isAI != true
+                        enabled = chatState.messagesList.lastOrNull()?.isAI == true
                             && input.isNotBlank(),
                         shape = RoundedCornerShape(50),
                         modifier = Modifier.size(48.dp)

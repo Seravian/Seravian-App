@@ -126,7 +126,10 @@ private fun ChatListContent(
         floatingActionButton = {
             FloatingButton(
                 isVisible = true,
-                onClick = { popupState = true },
+                onClick = {
+                    chatAction(ChatAction.CreateChat)
+                    baseAction(BaseAction.ShowLoading)
+                },
                 modifier = Modifier.size(64.dp)
             )
         }
@@ -143,7 +146,7 @@ private fun ChatListContent(
                 value = newChatTitle,
                 onValueChange = { newChatTitle = it },
                 onCreateChat = {
-                    chatAction(ChatAction.CreateChat(newChatTitle))
+                    chatAction(ChatAction.CreateChat)
                     baseAction(BaseAction.ShowLoading)
                 },
                 onEditChat = {

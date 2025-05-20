@@ -44,7 +44,7 @@ class ChatViewModel(
 
     fun chatAction(action: ChatAction) {
         when(action) {
-            is ChatAction.CreateChat -> createChat(action.title)
+            is ChatAction.CreateChat -> createChat()
             is ChatAction.DeleteChat -> deleteChat(action.chatId)
             is ChatAction.EditChat -> editChat(action.chatId, action.title)
             ChatAction.GetChats -> getChats()
@@ -135,9 +135,9 @@ class ChatViewModel(
         }.invokeOnCompletion { collectConnectionStatus() }
     }
 
-    private fun createChat(title: String) {
+    private fun createChat() {
         viewModelScope.launch {
-            val result = chatRepository.createChat(CreateChatRequest(title))
+            val result = chatRepository.createChat(CreateChatRequest())
             _chatState.update { it.copy(createChatResult = result) }
         }
     }

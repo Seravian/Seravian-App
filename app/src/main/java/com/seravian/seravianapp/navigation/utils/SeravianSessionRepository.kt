@@ -31,7 +31,7 @@ class SeravianSessionRepository(
 
     override fun collectSessionStatus() {
         scope.launch {
-            tokensDataSource.getStoredTokensFlow().collectLatest { tokens ->
+            tokensDataSource.getStoredTokensFlow().collect { tokens ->
                 when {
                     tokens == Tokens() -> _sessionDestination.update { SessionDestinations.AUTH }
                     tokens.accessToken.isNotEmpty() && tokens.refreshToken.isNullOrEmpty() ->

@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CreateChatRequest(
-    val title: String ?= null
+    val title: String ?= "New Chat"
 )
