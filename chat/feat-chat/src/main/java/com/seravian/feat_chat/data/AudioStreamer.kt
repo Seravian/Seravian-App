@@ -85,7 +85,7 @@ class AudioStreamer(
 
                     val currentTime = System.currentTimeMillis()
 
-                    if (rms > 500) {
+                    if (rms > 250) {
                         lastVoiceTime = currentTime
                         voiceDetected = true
                     }

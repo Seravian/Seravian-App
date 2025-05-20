@@ -265,13 +265,14 @@ class ChatViewModel(
     }
 
     private fun stopStreaming() {
+        _voiceState.update {
+            it.copy(
+                isStreamingVoice = false
+            )
+        }
+
         if (::audioStreamer.isInitialized) {
             audioStreamer.stop()
-            _voiceState.update {
-                it.copy(
-                    isStreamingVoice = false
-                )
-            }
         }
     }
 

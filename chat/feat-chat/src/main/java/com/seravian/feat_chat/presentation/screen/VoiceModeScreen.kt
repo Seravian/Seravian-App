@@ -1,5 +1,6 @@
 package com.seravian.feat_chat.presentation.screen
 
+import android.Manifest
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,6 +31,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.meticha.permissions_compose.AppPermission
+import com.meticha.permissions_compose.PermissionLifeCycleCheckEffect
+import com.meticha.permissions_compose.rememberAppPermissionState
 import com.seravian.feat_chat.R
 import com.seravian.feat_chat.presentation.components.PulseCircle
 import com.seravian.feat_chat.presentation.viewModel.voice.VoiceAction
@@ -39,6 +43,18 @@ import com.seravian.feat_chat.presentation.viewModel.voice.VoiceState
 fun VoiceModeScreen(
     navigateBack: () -> Unit,
 ) {
+    val permissions = rememberAppPermissionState(
+        permissions = listOf(
+            AppPermission(
+                permission = Manifest.permission.RECORD_AUDIO,
+                description = "Microphone access is needed for voice recording and streaming. Please grant this permission.",
+                isRequired = true
+            )
+        )
+    )
+
+    PermissionLifeCycleCheckEffect(permissions)
+
     BaseScreen<ChatViewModel>(
         onPhysicalBack = { viewModel ->
             viewModel.voiceAction(VoiceAction.StopStreaming)
@@ -47,11 +63,23 @@ fun VoiceModeScreen(
         },
         enableLifecycleObservation = true,
         onStartAction = { viewModel ->
-            viewModel.voiceAction(VoiceAction.StartStreaming)
+            if (permissions.allRequiredGranted()) {
+                viewModel.voiceAction(VoiceAction.StartStreaming)
+            } else {
+                permissions.requestPermission()
+            }
+        },
+        onPauseAction = { viewModel ->
+            viewModel.voiceAction(VoiceAction.StopStreaming)
         },
         onDestroyAction = { viewModel ->
             viewModel.voiceAction(VoiceAction.StopStreaming)
             viewModel.voiceAction(VoiceAction.ResetVoiceState)
+        },
+        onResumeAction = { viewModel ->
+            if (permissions.allRequiredGranted()) {
+                viewModel.voiceAction(VoiceAction.StartStreaming)
+            }
         }
     ) { viewModel ->
         val chatState by viewModel.chatState.collectAsStateWithLifecycle()

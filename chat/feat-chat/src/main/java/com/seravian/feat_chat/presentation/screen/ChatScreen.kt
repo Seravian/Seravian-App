@@ -60,18 +60,6 @@ fun ChatScreen(
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val permissions = rememberAppPermissionState(
-        permissions = listOf(
-            AppPermission(
-                permission = Manifest.permission.RECORD_AUDIO,
-                description = "Microphone access is needed for voice recording and streaming. Please grant this permission.",
-                isRequired = true
-            )
-        )
-    )
-
-    PermissionLifeCycleCheckEffect(permissions)
-
     BaseScreen<ChatViewModel>(
         onPhysicalBack = { viewModel ->
             navigateBack()
@@ -79,10 +67,6 @@ fun ChatScreen(
             viewModel.chatAction(ChatAction.LeaveChat)
             viewModel.chatAction(ChatAction.ClearChatResults)
         },
-        enableLifecycleObservation = true,
-        onResumeAction = {
-            if (permissions.allRequiredGranted()) navigateToVoiceMode()
-        }
     ) { viewModel ->
         val chatState by viewModel.chatState.collectAsStateWithLifecycle()
 
@@ -103,8 +87,6 @@ fun ChatScreen(
                 viewModel.chatAction(it)
             },
             baseAction = viewModel::baseAction,
-            isPermissionGranted = { permissions.allRequiredGranted() },
-            onPermissionRequired = { permissions.requestPermission() },
             modifier = modifier
         )
     }
@@ -115,8 +97,6 @@ private fun ChatScreenContent(
     chatState: ChatState,
     chatAction: (ChatAction) -> Unit,
     baseAction: (BaseAction) -> Unit,
-    isPermissionGranted: () -> Boolean,
-    onPermissionRequired: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var input by rememberSaveable { mutableStateOf("") }
@@ -149,13 +129,11 @@ private fun ChatScreenContent(
                 title = chatState.currentChat?.title ?: "Seravian",
                 action = {
                     IconButton(onClick = {
-                        if (isPermissionGranted()) chatAction(ChatAction.NavigateToVoiceMode)
-                        else onPermissionRequired()
+                        chatAction(ChatAction.NavigateToVoiceMode)
                     }) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_voice_mode),
                             contentDescription = stringResource(R.string.voice_mode),
-                            tint = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.size(32.dp)
                         )
                     }
@@ -264,8 +242,6 @@ private fun ChatScreenPreview() {
             ),
             chatAction = {},
             baseAction = {},
-            isPermissionGranted = { true },
-            onPermissionRequired = {}
         )
     }
 }
