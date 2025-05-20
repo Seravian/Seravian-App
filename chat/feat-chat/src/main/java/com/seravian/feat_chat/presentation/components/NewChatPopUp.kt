@@ -87,7 +87,8 @@ fun NewChatPopUp(
                                 onClick = onDelete,
                                 enabled = value.isNotEmpty(),
                                 colors = ButtonDefaults.buttonColors(
-                                    containerColor = MaterialTheme.colorScheme.error
+                                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                                    contentColor = MaterialTheme.colorScheme.onErrorContainer
                                 ),
                                 modifier = Modifier.weight(1f)
                             )

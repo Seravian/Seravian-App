@@ -35,7 +35,6 @@ import com.seravian.feat_chat.R
 fun AITypingIndicator(
     modifier: Modifier = Modifier,
     dotColor: Color = MaterialTheme.colorScheme.secondary,
-    iconColor: Color = MaterialTheme.colorScheme.onSecondary,
     dotSize: Dp = 8.dp,
     animationDelay: Int = 200
 ) {
@@ -47,7 +46,7 @@ fun AITypingIndicator(
         Card(
             shape = MaterialTheme.shapes.extraLarge,
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primary
+                containerColor = MaterialTheme.colorScheme.primaryContainer
             ),
             modifier = Modifier.padding(start = 16.dp)
         ) {
@@ -56,8 +55,7 @@ fun AITypingIndicator(
                 contentDescription = stringResource(R.string.chatbot_ic),
                 modifier = Modifier
                     .padding(6.dp)
-                    .size(24.dp),
-                tint = iconColor
+                    .size(24.dp)
             )
         }
 

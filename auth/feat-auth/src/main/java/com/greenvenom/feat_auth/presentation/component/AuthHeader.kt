@@ -96,7 +96,8 @@ fun AuthHeader(
                 Text(
                     text = stringResource(R.string.app_name),
                     fontFamily = bowlbyFontFamily,
-                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = 22.sp,
+                    color = MaterialTheme.colorScheme.primaryContainer,
                     modifier = Modifier.padding(5.dp)
                 )
             }
