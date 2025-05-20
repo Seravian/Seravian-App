@@ -47,7 +47,7 @@ fun ReceivedMessageCard(
                     .size(24.dp)
             )
         }
-        Spacer(modifier = Modifier.size(8.dp))
+        Spacer(modifier = Modifier.width(8.dp))
         Card(
             shape = RoundedCornerShape(12.dp, 12.dp, 12.dp, 0.dp),
             modifier = Modifier

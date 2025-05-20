@@ -1,7 +1,14 @@
 package com.seravian.feat_chat.presentation.screen
 
-import android.Manifest
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,6 +24,7 @@ import com.seravian.feat_chat.presentation.viewModel.ChatViewModel
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -43,10 +51,8 @@ import com.greenvenom.core_network.data.onSuccess
 import com.greenvenom.core_ui.components.TopAppBar
 import com.greenvenom.core_ui.presentation.BaseAction
 import com.greenvenom.core_ui.theme.AppTheme
-import com.meticha.permissions_compose.AppPermission
-import com.meticha.permissions_compose.PermissionLifeCycleCheckEffect
-import com.meticha.permissions_compose.rememberAppPermissionState
 import com.seravian.core_chat.domain.models.Message
+import com.seravian.feat_chat.presentation.components.AITypingIndicator
 import com.seravian.feat_chat.presentation.viewModel.chat.ChatAction
 import com.seravian.feat_chat.presentation.components.ChatInputTextField
 import com.seravian.feat_chat.presentation.components.ReceivedMessageCard
@@ -72,7 +78,6 @@ fun ChatScreen(
         val chatState by viewModel.chatState.collectAsStateWithLifecycle()
 
         LaunchedEffect(Unit) {
-            Log.d("ChatScreen", "ChatId: $chatId")
             viewModel.baseAction(BaseAction.ShowLoading)
             viewModel.chatAction(ChatAction.GetChatMessages(chatId))
             viewModel.chatAction(ChatAction.JoinChat)
@@ -101,7 +106,7 @@ private fun ChatScreenContent(
     baseAction: (BaseAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val analyzeSymptomsPrompt = "Analyse all previous messages and tell me if I suffer from any mental health problems. If I do tell me what it is exactly and provide reasoning."
+    val analyzeSymptomsPrompt = "Analyse all previous messages and tell me if I suffer from any mental health problems. If I do, tell me what it is exactly and provide reasoning."
     var input by rememberSaveable { mutableStateOf("") }
     val listState = rememberLazyListState()
 
@@ -170,6 +175,31 @@ private fun ChatScreenContent(
                     }
                 }
             }
+
+            AnimatedVisibility(
+                visible = chatState.messagesList.isNotEmpty() && !chatState.messagesList.last().isAI,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = 56.dp) // Prevent height collapse
+                    .align(Alignment.Start),
+                enter = slideInHorizontally(
+                    initialOffsetX = { -it/2 }, // Smoother entry
+                    animationSpec = tween(300, easing = FastOutSlowInEasing)
+                ) + fadeIn(
+                    animationSpec = tween(300)
+                ),
+                exit = slideOutHorizontally(
+                    targetOffsetX = { -it/2 }, // Smoother exit
+                    animationSpec = tween(250, easing = FastOutLinearInEasing)
+                ) + fadeOut(
+                    animationSpec = tween(250)
+                )
+            ) {
+                AITypingIndicator(
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
+
             Card(
                 shape = RoundedCornerShape(
                     topStart = 20.dp,
@@ -196,8 +226,8 @@ private fun ChatScreenContent(
                                 onClick = {
                                     chatAction(ChatAction.SendMessage(analyzeSymptomsPrompt))
                                 },
-                                enabled = input.isNotBlank() &&
-                                        (chatState.messagesList.isEmpty() || chatState.messagesList.last().isAI)
+                                enabled = chatState.messagesList.isNotEmpty()
+                                        && chatState.messagesList.last().isAI
                             ) {
                                 Icon(
                                     painter = painterResource(R.drawable.ic_analyze_symptoms),
