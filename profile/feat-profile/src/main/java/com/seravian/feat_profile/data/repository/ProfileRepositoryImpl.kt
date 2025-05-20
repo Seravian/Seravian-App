@@ -45,7 +45,7 @@ class ProfileRepositoryImpl(
         return profileDataSource.logoutUser(LogoutRequest(getStoredTokens().refreshToken ?: ""))
             .onSuccess {
                 roomDataSource.deleteProfile()
-                roomDataSource.deleteChats()
+                roomDataSource.deleteAllChats()
                 tokensDataSource.deleteTokens()
             }
     }

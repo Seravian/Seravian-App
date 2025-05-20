@@ -101,6 +101,7 @@ private fun ChatScreenContent(
     baseAction: (BaseAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val analyzeSymptomsPrompt = "Analyse all previous messages and tell me if I suffer from any mental health problems. If I do tell me what it is exactly and provide reasoning."
     var input by rememberSaveable { mutableStateOf("") }
     val listState = rememberLazyListState()
 
@@ -193,10 +194,10 @@ private fun ChatScreenContent(
                         trailingIcon = {
                             IconButton(
                                 onClick = {
-                                    //chatAction(ChatAction.SendMessage(input))
+                                    chatAction(ChatAction.SendMessage(analyzeSymptomsPrompt))
                                 },
-                                enabled = chatState.messagesList.lastOrNull()?.isAI == true
-                                        && input.isNotBlank()
+                                enabled = input.isNotBlank() &&
+                                        (chatState.messagesList.isEmpty() || chatState.messagesList.last().isAI)
                             ) {
                                 Icon(
                                     painter = painterResource(R.drawable.ic_analyze_symptoms),
@@ -212,8 +213,8 @@ private fun ChatScreenContent(
                             chatAction(ChatAction.SendMessage(input))
                             input = ""
                         },
-                        enabled = chatState.messagesList.lastOrNull()?.isAI == true
-                            && input.isNotBlank(),
+                        enabled = input.isNotBlank() &&
+                                (chatState.messagesList.isEmpty() || chatState.messagesList.last().isAI),
                         shape = RoundedCornerShape(50),
                         modifier = Modifier.size(48.dp)
                     ) {

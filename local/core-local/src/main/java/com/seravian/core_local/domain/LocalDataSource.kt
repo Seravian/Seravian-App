@@ -15,8 +15,10 @@ interface LocalDataSource {
     suspend fun insertChat(chatEntity: ChatEntity)
     suspend fun updateChat(chatEntity: ChatEntity)
     suspend fun deleteChat(chatId: String)
-    suspend fun deleteChats()
+    suspend fun deleteChats(chats: List<ChatEntity>)
+    suspend fun deleteAllChats()
     suspend fun getChatMessages(chatId: String): Flow<List<MessageEntity>>
     suspend fun insertMessage(message: MessageEntity)
     suspend fun insertMessages(messages: List<MessageEntity>)
+    suspend fun deleteMessages(messages: List<MessageEntity>)
 }
