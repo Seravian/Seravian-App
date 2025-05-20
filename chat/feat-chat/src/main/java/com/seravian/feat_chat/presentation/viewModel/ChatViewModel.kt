@@ -230,6 +230,11 @@ class ChatViewModel(
             audioStreamer = AudioStreamer(
                 viewModelScope,
                 onCapturingComplete = { capturedVoice ->
+                    _voiceState.update {
+                        it.copy(
+                            isStreamingVoice = false
+                        )
+                    }
                     chatRepository.sendCapturedVoice(capturedVoice)
                 },
                 onAmplitudeUpdate = { amplitude ->
