@@ -35,7 +35,7 @@ class ChatViewModel(
     private val _chatState: MutableStateFlow<ChatState> = MutableStateFlow(ChatState())
     val chatState = _chatState.asStateFlow()
 
-    private val _voiceState = MutableStateFlow(VoiceState())
+    private val _voiceState: MutableStateFlow<VoiceState> = MutableStateFlow(VoiceState())
     val voiceState = _voiceState.asStateFlow()
 
     private lateinit var audioStreamer: AudioStreamer
@@ -229,17 +229,8 @@ class ChatViewModel(
         if (!::audioStreamer.isInitialized) {
             audioStreamer = AudioStreamer(
                 viewModelScope,
-                onChunkReady = { chunk ->
-                    val encoded = Base64.encodeToString(chunk, Base64.NO_WRAP)
-                    // TODO: SignalR send audio chunk
-                },
-                onUserStoppedTalking = {
-                    _voiceState.update {
-                        it.copy(
-                            isStreamingVoice = false
-                        )
-                    }
-                    // TODO: SignalR send "DONE" signal
+                onCapturingComplete = { capturedVoice ->
+                    chatRepository.sendCapturedVoice(capturedVoice)
                 },
                 onAmplitudeUpdate = { amplitude ->
                     _voiceState.update {

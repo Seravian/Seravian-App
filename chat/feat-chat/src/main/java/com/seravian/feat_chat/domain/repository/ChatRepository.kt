@@ -50,4 +50,6 @@ interface ChatRepository {
     fun receiveAIResponse()
 
     fun receiveMessageConfirmation(callback: suspend (ConfirmedMessageResponse) -> Unit)
+
+    suspend fun sendCapturedVoice(capturedVoice: ByteArray)
 }

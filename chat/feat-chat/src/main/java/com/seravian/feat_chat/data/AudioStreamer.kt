@@ -1,25 +1,25 @@
 package com.seravian.feat_chat.data
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
+import android.media.audiofx.AcousticEchoCanceler
 import android.media.audiofx.NoiseSuppressor
-import androidx.annotation.RequiresPermission
+import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.sqrt
 
 class AudioStreamer(
     private val scope: CoroutineScope,
-    private val onChunkReady: (ByteArray) -> Unit,
-    private val onUserStoppedTalking: () -> Unit,
+    private val onCapturingComplete: suspend (ByteArray) -> Unit,
     private val onAmplitudeUpdate: (Float) -> Unit,
     private val silenceThreshold: Int = 2000
 ) {
@@ -31,49 +31,71 @@ class AudioStreamer(
     )
 
     private lateinit var recorder: AudioRecord
+    private var noiseSuppressor: NoiseSuppressor? = null
+    private var acousticEchoCanceler: AcousticEchoCanceler? = null
 
     private var isRecording = false
-    private var recordingJob: Job ?= null
+    private var recordingJob: Job? = null
+
+    private val audioBuffer = ByteArrayOutputStream()
 
     @SuppressLint("MissingPermission")
     fun start() {
         if (isRecording) return
+
+        audioBuffer.reset()
+
         recorder = AudioRecord(
-            MediaRecorder.AudioSource.MIC,
+            MediaRecorder.AudioSource.VOICE_RECOGNITION, // Better for voice capture
             sampleRate,
             AudioFormat.CHANNEL_IN_MONO,
             AudioFormat.ENCODING_PCM_16BIT,
             bufferSize
-        ).also {
-            if (NoiseSuppressor.isAvailable()) {
-                NoiseSuppressor.create(it.audioSessionId)
+        )
+
+        if (NoiseSuppressor.isAvailable()) {
+            noiseSuppressor = NoiseSuppressor.create(recorder.audioSessionId).apply {
+                enabled = true
             }
         }
+
+        if (AcousticEchoCanceler.isAvailable()) {
+            acousticEchoCanceler = AcousticEchoCanceler.create(recorder.audioSessionId).apply {
+                enabled = true
+            }
+        }
+
         isRecording = true
         recorder.startRecording()
 
         recordingJob = scope.launch(Dispatchers.IO) {
             val buffer = ByteArray(bufferSize)
             var lastVoiceTime = System.currentTimeMillis()
+            var voiceDetected = false
 
             while (isRecording && recorder.recordingState == AudioRecord.RECORDSTATE_RECORDING) {
                 val read = recorder.read(buffer, 0, buffer.size)
                 if (read > 0) {
                     val chunk = buffer.copyOf(read)
-                    onChunkReady(chunk)
+
+                    audioBuffer.write(chunk, 0, read)
 
                     val rms = calculateRMS(chunk)
                     onAmplitudeUpdate(rms.toFloat())
 
                     val currentTime = System.currentTimeMillis()
 
-                    if (rms > 500) { // Threshold to detect voice
+                    if (rms > 500) {
                         lastVoiceTime = currentTime
+                        voiceDetected = true
                     }
 
-                    if (currentTime - lastVoiceTime > silenceThreshold) {
-                        withContext(Dispatchers.Main) {
-                            onUserStoppedTalking()
+                    if (voiceDetected && currentTime - lastVoiceTime > silenceThreshold) {
+                        withContext(Dispatchers.IO) {
+                            val completeAudio = audioBuffer.toByteArray()
+                            if (completeAudio.isNotEmpty()) {
+                                onCapturingComplete(completeAudio)
+                            }
                         }
                         stop()
                     }
@@ -83,10 +105,33 @@ class AudioStreamer(
     }
 
     fun stop() {
+        if (!isRecording) return
+
         isRecording = false
-        recorder.stop()
-        recorder.release()
+
         recordingJob?.cancel()
+        recordingJob = null
+
+        cleanupAudioResources()
+    }
+
+    private fun cleanupAudioResources() {
+        try {
+            if (recorder.state == AudioRecord.STATE_INITIALIZED) {
+                recorder.stop()
+            }
+            recorder.release()
+
+            noiseSuppressor?.release()
+            noiseSuppressor = null
+
+            acousticEchoCanceler?.release()
+            acousticEchoCanceler = null
+
+            audioBuffer.reset()
+        } catch (e: Exception) {
+            Log.e("AudioStreamer", "Error cleaning up audio resources", e)
+        }
     }
 
     private fun calculateRMS(buffer: ByteArray): Double {

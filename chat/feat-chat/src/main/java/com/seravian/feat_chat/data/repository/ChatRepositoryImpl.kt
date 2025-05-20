@@ -164,4 +164,8 @@ class ChatRepositoryImpl(
     override fun receiveMessageConfirmation(callback: suspend (ConfirmedMessageResponse) -> Unit) {
         chatDataSource.receiveMessageConfirmation { callback(it) }
     }
+
+    override suspend fun sendCapturedVoice(capturedVoice: ByteArray) {
+        // TODO: Not yet implemented
+    }
 }
