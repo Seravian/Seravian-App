@@ -1,6 +1,7 @@
 package com.seravian.core_chat.domain.models
 
 import com.seravian.core_chat.data.entity.MessageEntity
+import com.seravian.core_chat.domain.MessageType
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -9,7 +10,8 @@ data class Message(
     val id: Pair<Long?, String?> = Pair(null, null),
     val content: String = "",
     val timestamp: String = "",
-    val isAI: Boolean = false
+    val isAI: Boolean = false,
+    val messageType: MessageType = MessageType.TEXT
 ) {
     fun formatDateTime(): String {
         val cleanedTimestamp = if (timestamp.contains(".")) {
@@ -30,6 +32,7 @@ data class Message(
         chatId = chatId,
         content = content,
         timestamp = timestamp,
-        isAI = isAI
+        isAI = isAI,
+        messageType = messageType
     )
 }

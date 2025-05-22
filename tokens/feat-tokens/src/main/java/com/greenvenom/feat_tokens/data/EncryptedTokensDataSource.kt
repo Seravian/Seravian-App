@@ -17,11 +17,14 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
 import kotlinx.io.IOException
 import java.io.File
 
@@ -32,12 +35,43 @@ class EncryptedTokensDataSource(
     private val TAG = "EncryptedTokensDataSource"
     private val Context.tokenDataStore by dataStore("tokens.pb", TokensSerializer)
 
-    override suspend fun refreshTokens(refreshTokenRequest: RefreshTokenRequest): EmptyResult<NetworkError> {
-        return safeCall<TokensResponse> {
-            publicHttpClient.post(constructUrl("auth/refresh-token")) {
-                setBody(refreshTokenRequest)
+    private val mutex = Mutex()
+    private var currentExecution: Deferred<EmptyResult<NetworkError>>? = null
+
+    override suspend fun refreshTokens(
+        refreshTokenRequest: RefreshTokenRequest
+    ): EmptyResult<NetworkError> {
+        currentExecution?.let { execution ->
+            println("RefreshTokens: Joining existing token refresh...")
+            return execution.await()
+        }
+
+        if (!mutex.tryLock()) {
+            currentExecution?.let { execution ->
+                println("RefreshTokens: Joining existing token refresh...")
+                return execution.await()
             }
-        }.map { tokensResponse -> saveTokensLocally(tokensResponse.extractTokens()) }
+        }
+
+        return try {
+            val deferred = CoroutineScope(Dispatchers.IO).async {
+                println("RefreshTokens: Actually performing token refresh...")
+                safeCall<TokensResponse> {
+                    publicHttpClient.post(constructUrl("auth/refresh-token")) {
+                        setBody(refreshTokenRequest)
+                    }
+                }.map { tokensResponse ->
+                    saveTokensLocally(tokensResponse.extractTokens())
+                }
+            }
+
+            currentExecution = deferred
+
+            deferred.await()
+        } finally {
+            currentExecution = null
+            mutex.unlock()
+        }
     }
 
     override suspend fun getStoredTokens(): Tokens {

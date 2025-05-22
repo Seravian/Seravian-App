@@ -41,12 +41,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.greenvenom.core_network.data.onError
 import com.greenvenom.core_network.data.onSuccess
+import com.greenvenom.core_network.utils.toString
 import com.greenvenom.core_ui.components.TopAppBar
 import com.greenvenom.core_ui.presentation.BaseAction
 import com.greenvenom.core_ui.theme.AppTheme
@@ -69,7 +71,7 @@ fun ChatScreen(
     BaseScreen<ChatViewModel>(
         onPhysicalBack = { viewModel ->
             navigateBack()
-            viewModel.chatAction(ChatAction.StopCollections)
+            viewModel.chatAction(ChatAction.StopMessageCollections)
             viewModel.chatAction(ChatAction.LeaveChat)
             viewModel.chatAction(ChatAction.ClearChatResults)
         },
@@ -105,6 +107,7 @@ private fun ChatScreenContent(
     baseAction: (BaseAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     val analyzeSymptomsPrompt = "Analyse all previous messages and tell me if I suffer from any mental health problems. If I do, tell me what it is exactly and provide reasoning."
     var input by rememberSaveable { mutableStateOf("") }
     val listState = rememberLazyListState()
@@ -122,7 +125,7 @@ private fun ChatScreenContent(
         ?.onError {
             baseAction(BaseAction.HideLoading)
             baseAction(BaseAction.ShowErrorMessage(
-                errorMessage = it.errorType?.toString() ?: "",
+                errorMessage = it.errorType?.toString(context) ?: "",
                 dismissAction = { chatAction(ChatAction.NavigateBack) }
             ))
         }

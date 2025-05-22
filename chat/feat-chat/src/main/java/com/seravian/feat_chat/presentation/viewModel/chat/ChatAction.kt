@@ -12,5 +12,5 @@ sealed interface ChatAction {
     data object NavigateToVoiceMode : ChatAction
     data object NavigateBack : ChatAction
     data object ClearChatResults : ChatAction
-    data object StopCollections : ChatAction
+    data object StopMessageCollections : ChatAction
 }

@@ -11,6 +11,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,6 +20,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.greenvenom.core_ui.theme.AppTheme
+import com.seravian.core_chat.domain.MessageType
 import com.seravian.feat_chat.presentation.models.MessageUI
 import com.seravian.feat_chat.R
 
@@ -34,8 +37,9 @@ fun ReceivedMessageCard(
     ) {
         Card(
             shape = MaterialTheme.shapes.extraLarge,
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer
+            colors = CardDefaults.cardColors().copy(
+                containerColor = colorScheme.tertiaryContainer,
+                contentColor = colorScheme.onTertiaryContainer
             ),
             modifier = Modifier.align(Alignment.Bottom)
         ) {
@@ -50,6 +54,22 @@ fun ReceivedMessageCard(
         Spacer(modifier = Modifier.width(8.dp))
         Card(
             shape = RoundedCornerShape(12.dp, 12.dp, 12.dp, 0.dp),
+            colors = CardDefaults.cardColors().copy(
+                containerColor = if (message.messageType == MessageType.VOICE_MODE_TEXT) {
+                    colorScheme.surfaceDim.copy(
+                        alpha = 0.4f
+                    )
+                } else {
+                    colorScheme.surfaceDim
+                },
+                contentColor = if (message.messageType == MessageType.VOICE_MODE_TEXT) {
+                    colorScheme.onSurface.copy(
+                        alpha = 0.6f
+                    )
+                } else {
+                    colorScheme.onSurface
+                }
+            ),
             modifier = Modifier
                 .weight(1f, false)
         ) {
@@ -77,5 +97,13 @@ fun ReceivedMessageCard(
 @Preview(showSystemUi = true)
 @Composable
 private fun ReceivedMessageCardPreview() {
-    ReceivedMessageCard(MessageUI(content = "jghvchjcvbnbvnbvjmhjmjkhgfkhjgkghkghkjhghghjhghjg,hjkghjkhlhjlhjghkjhl", timestamp = "02:38 AM"))
+    AppTheme {
+        ReceivedMessageCard(
+            MessageUI(
+                content = "jghvchjcvbnbvnbvjmhjmjkhgfkhjgkghkghkjhghghjhghjg,hjkghjkhlhjlhjghkjhl",
+                timestamp = "02:38 AM",
+                messageType = MessageType.VOICE_MODE_TEXT
+            )
+        )
+    }
 }

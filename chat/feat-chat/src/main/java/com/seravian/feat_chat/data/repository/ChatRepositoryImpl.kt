@@ -14,6 +14,9 @@ import com.seravian.core_chat.data.dto.request.EditChatRequest
 import com.seravian.core_chat.data.dto.request.GetChatMessagesRequest
 import com.seravian.core_chat.data.dto.request.JoinChatRequest
 import com.seravian.core_chat.data.dto.request.SyncMessagesRequest
+import com.seravian.core_chat.data.dto.request.UploadVoiceRequest
+import com.seravian.core_chat.data.dto.respose.AIAudioReadyResponse
+import com.seravian.core_chat.data.dto.respose.AIAudioResponse
 import com.seravian.core_chat.data.dto.respose.ConfirmedMessageResponse
 import com.seravian.core_chat.domain.models.Chat
 import com.seravian.core_chat.domain.models.Message
@@ -22,6 +25,7 @@ import com.seravian.feat_chat.domain.ChatRemoteDataSource
 import com.seravian.feat_chat.domain.repository.ChatRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
@@ -103,102 +107,61 @@ class ChatRepositoryImpl(
             .onError { error ->
                 send(NetworkResult.Error(error))
             }
-    }.onCompletion { /* Clear any resources if needed */ }
+    }.onCompletion {  }
 
     override fun getChatMessages(
         getChatMessagesRequest: GetChatMessagesRequest
     ): Flow<NetworkResult<Pair<Chat, List<Message>>, NetworkError>> = channelFlow {
         currentChatId = getChatMessagesRequest.id
+        val messagesList = mutableListOf<Message>()
         val storedChat = roomDataSource.getChat(getChatMessagesRequest.id)
-        val messagesList: MutableList<Message> = mutableListOf()
-        val cachedMessagesFlow = roomDataSource.getChatMessages(getChatMessagesRequest.id)
-
-        // First emit from cache immediately
-        cachedMessagesFlow
-            .onEach { cachedMessages ->
-                messagesList.removeIf { currentMessage ->
-                    currentMessage.id in cachedMessages.map { it.extractMessage().id }
-                }
-                messagesList.addAll(cachedMessages.map { it.extractMessage() })
+        roomDataSource.getChatMessages(getChatMessagesRequest.id)
+            .onEach { messages ->
                 send(NetworkResult.Success(
-                    storedChat.extractChat() to cachedMessages.map { it.extractMessage() }
+                    storedChat.extractChat() to messages.map { it.extractMessage() }
                 ))
             }
             .launchIn(this)
 
-        // Start fetching remote data
-        chatDataSource.getChatMessages(getChatMessagesRequest)
-            .map { response -> response.extractChat() to response.extractMessages() }
-            .onSuccess { (_, remoteMessages) ->
-                // Compare remote messages with local messages
-                val currentMessageIds = messagesList.map { it.id }
-                val remoteMessageIds = remoteMessages.map { it.id }
+        messagesList.addAll(
+            roomDataSource.getChatMessages(currentChatId)
+                .first().map { it.extractMessage() }
+        )
 
-                // Find new messages not in local storage
-                val newMessages = remoteMessages.filter { message ->
-                    message.id !in currentMessageIds
-                }
-
-                // Find deleted messages that exist locally but not remotely
-                val deletedMessages = messagesList.filter { message ->
-                    message.id !in remoteMessageIds
-                }
-
-                // Only update if there are changes
-                if (newMessages.isNotEmpty()) {
+        if (messagesList.isEmpty()) {
+            chatDataSource.getChatMessages(getChatMessagesRequest)
+                .map { response -> response.extractChat() to response.extractMessages() }
+                .onSuccess { (_, messages) ->
                     roomDataSource.insertMessages(
-                        newMessages.map { it.toEntity(currentChatId) }
+                        messages.map { it.toEntity(currentChatId) }
                     )
                 }
-
-                if (deletedMessages.isNotEmpty()) {
-                    roomDataSource.deleteMessages(
-                        deletedMessages.map { it.toEntity(currentChatId) }
-                    )
-                    messagesList.removeAll(deletedMessages.toSet())
+                .onError { error ->
+                    send(NetworkResult.Error(error))
                 }
-            }
-            .onError { error ->
-                send(NetworkResult.Error(error))
-            }
+        } else {
+            syncMessages(
+                SyncMessagesRequest(messagesList.last().timestamp, getChatMessagesRequest.id)
+            )
+        }
     }.onCompletion {  }
 
-    override suspend fun syncMessages(
+    private suspend fun syncMessages(
         syncRequest: SyncMessagesRequest
     ): EmptyResult<NetworkError> {
         val syncMessagesResponse = chatDataSource.syncMessages(syncRequest)
         return syncMessagesResponse.onSuccess { response ->
-            val remoteMessages = response.map { it.extractMessage() }
-            val localMessages = roomDataSource.getChatMessages(syncRequest.chatId)
-                .first()
-                .map { it.extractMessage() }
-
-            // Find messages that are in remote but not in local
-            val newMessages = remoteMessages.filter { remoteMessage ->
-                remoteMessage.id !in localMessages.map { it.id }
-            }
-
-            // Find messages that are in local but not in remote
-            val deletedMessages = localMessages.filter { localMessage ->
-                localMessage.id !in remoteMessages.map { it.id }
-            }
-
-            if (newMessages.isNotEmpty()) {
-                roomDataSource.insertMessages(
-                    newMessages.map { it.toEntity(syncRequest.chatId) }
-                )
-            }
-
-            if (deletedMessages.isNotEmpty()) {
-                roomDataSource.deleteMessages(
-                    deletedMessages.map { it.toEntity(syncRequest.chatId) }
-                )
-            }
+            roomDataSource.insertMessages(response.map { message ->
+                message.extractMessage() }.map { it.toEntity(syncRequest.chatId) })
         }.map {  }
     }
 
     override suspend fun insertConfirmedMessage(message: Message) {
         roomDataSource.insertMessage(message.toEntity(currentChatId))
+    }
+
+    override suspend fun sendCapturedVoice(capturedVoice: ByteArray): EmptyResult<NetworkError> {
+        return chatDataSource.uploadUserVoice(UploadVoiceRequest(capturedVoice, currentChatId))
     }
 
     //////////////////////////////////
@@ -241,7 +204,12 @@ class ChatRepositoryImpl(
         chatDataSource.receiveMessageConfirmation { callback(it) }
     }
 
-    override suspend fun sendCapturedVoice(capturedVoice: ByteArray) {
-        // TODO: Not yet implemented
+    override suspend fun receiveAIAudioResponse(callback: (NetworkResult<AIAudioResponse, NetworkError>) -> Unit) {
+        chatDataSource.receiveAIAudioReadyResponse { aiAudioReadyResponse ->
+            val fetchingResult = chatDataSource.fetchAIAudioResponse(
+                aiAudioReadyResponse.extractFetchRequest()
+            )
+            callback(fetchingResult)
+        }
     }
 }

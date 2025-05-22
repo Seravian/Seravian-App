@@ -124,7 +124,7 @@ private fun TopBarContent(
                 Text(
                     text = title,
                     fontFamily = bowlbyFontFamily,
-                    color = colorScheme.primaryContainer
+                    color = colorScheme.tertiary
                 )
             }
         },

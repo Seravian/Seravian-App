@@ -1,6 +1,5 @@
 package com.seravian.feat_chat.presentation.viewModel
 
-import android.util.Base64
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.greenvenom.core_network.data.NetworkResult
@@ -15,6 +14,7 @@ import com.seravian.core_chat.data.dto.request.EditChatRequest
 import com.seravian.core_chat.data.dto.request.GetChatMessagesRequest
 import com.seravian.core_chat.data.dto.request.JoinChatRequest
 import com.seravian.core_chat.domain.models.Message
+import com.seravian.feat_chat.data.AudioPlayer
 import com.seravian.feat_chat.data.AudioStreamer
 import com.seravian.feat_chat.domain.repository.ChatRepository
 import com.seravian.feat_chat.presentation.viewModel.chat.ChatAction
@@ -39,7 +39,10 @@ class ChatViewModel(
     val voiceState = _voiceState.asStateFlow()
 
     private lateinit var audioStreamer: AudioStreamer
-    private var responseCollection: Job ?= null
+    private var audioPlayer: AudioPlayer ?= null
+
+    private var messageResponsesCollection: Job ?= null
+    private var audioResponseCollection: Job ?= null
     private var messagesCollection: Job ?= null
 
     fun chatAction(action: ChatAction) {
@@ -53,7 +56,7 @@ class ChatViewModel(
             ChatAction.LeaveChat -> leaveChat()
             is ChatAction.SendMessage -> sendRequest(action.message)
             is ChatAction.ClearChatResults -> clearChatResults()
-            is ChatAction.StopCollections -> stopCollections()
+            is ChatAction.StopMessageCollections -> stopMessageCollections()
             else -> {}
         }
     }
@@ -61,8 +64,11 @@ class ChatViewModel(
     fun voiceAction(action: VoiceAction) {
         when(action) {
             is VoiceAction.StartStreaming -> startStreaming()
+            is VoiceAction.StartCollectingAIAudio -> collectAudioResponse()
             is VoiceAction.ChangeMicState -> changeMicState()
+            is VoiceAction.BuildAudioPlayer -> buildAudioPlayer()
             is VoiceAction.StopStreaming -> stopStreaming()
+            is VoiceAction.StopCollectingAIAudio -> stopAudioResponseCollection(action.releaseAudioPlayer)
             is VoiceAction.ResetVoiceState -> resetVoiceState()
             else -> {}
         }
@@ -78,13 +84,18 @@ class ChatViewModel(
                                 joinChatResult = null
                             )
                         }
-                        stopCollections()
+                        stopMessageCollections()
+                        stopAudioResponseCollection()
                     }
                     ConnectionStatus.CONNECTED -> {
                         if (_chatState.value.joinChatResult == null) {
                             joinChat(_chatState.value.currentChat?.id ?: "")
                             getChatMessages(_chatState.value.currentChat?.id ?: "")
-                            collectResponses()
+                            collectMessageResponses()
+                            audioPlayer?.let {
+                                Log.d("ChatViewModel", "Recollecting audio response")
+                                collectAudioResponse()
+                            }
                             _chatState.update {
                                 it.copy(
                                     joinChatResult = NetworkResult.Success(Unit)
@@ -93,7 +104,8 @@ class ChatViewModel(
                         }
                     }
                     ConnectionStatus.RECONNECTING -> {
-                        stopCollections()
+                        stopMessageCollections()
+                        stopAudioResponseCollection()
                         _chatState.update {
                             it.copy(
                                 joinChatResult = null
@@ -103,14 +115,18 @@ class ChatViewModel(
                     ConnectionStatus.DISCONNECTED -> {
 
                     }
-                    else -> { Log.d("Status", "IDLE") }
+                    ConnectionStatus.IDLE -> { Log.d("Status", "IDLE") }
                 }
             }
         }
     }
 
-    private fun collectResponses() {
-        responseCollection = viewModelScope.launch {
+    //////////////////////////////////
+    ///////// MESSAGES MODE METHODS
+    /////////////////////////////////
+
+    private fun collectMessageResponses() {
+        messageResponsesCollection = viewModelScope.launch {
             chatRepository.receiveClientResponse()
 
             chatRepository.receiveAIResponse()
@@ -126,7 +142,7 @@ class ChatViewModel(
                 )
             }
         }
-        responseCollection?.start()
+        messageResponsesCollection?.start()
     }
 
     private fun startConnection() {
@@ -225,6 +241,28 @@ class ChatViewModel(
         }
     }
 
+    private fun clearChatResults() {
+        _chatState.update {
+            it.copy(
+                createChatResult = null,
+                deleteChatResult = null,
+                editChatResult = null,
+                getChatMessagesResult = null
+            )
+        }
+    }
+
+    private fun stopMessageCollections() {
+        messageResponsesCollection?.cancel()
+        messageResponsesCollection = null
+        messagesCollection?.cancel()
+        messagesCollection = null
+    }
+
+    //////////////////////////////////
+    ///////// VOICE MODE METHODS
+    /////////////////////////////////
+
     private fun startStreaming() {
         if (!::audioStreamer.isInitialized) {
             audioStreamer = AudioStreamer(
@@ -232,10 +270,14 @@ class ChatViewModel(
                 onCapturingComplete = { capturedVoice ->
                     _voiceState.update {
                         it.copy(
-                            isStreamingVoice = false
+                            isStreamingVoice = false,
                         )
                     }
-                    chatRepository.sendCapturedVoice(capturedVoice)
+                    _voiceState.update {
+                        it.copy(
+                            voiceUploadResult = chatRepository.sendCapturedVoice(capturedVoice)
+                        )
+                    }
                 },
                 onAmplitudeUpdate = { amplitude ->
                     _voiceState.update {
@@ -252,6 +294,47 @@ class ChatViewModel(
             )
         }
         audioStreamer.start()
+    }
+
+    private fun collectAudioResponse() {
+        audioResponseCollection = viewModelScope.launch {
+            chatRepository.receiveAIAudioResponse { audioResult ->
+                _voiceState.update {
+                    it.copy(
+                        receivedAIAudioResult = audioResult
+                    )
+                }
+
+                audioResult.onSuccess { audioResponse ->
+                    audioPlayer?.play(audioResponse)
+                }
+            }
+        }
+        audioResponseCollection?.start()
+    }
+
+    private fun buildAudioPlayer() {
+        if (audioPlayer == null) {
+            audioPlayer = AudioPlayer(
+                viewModelScope,
+                onPlaybackComplete = {
+                    _voiceState.update {
+                        it.copy(
+                            voiceUploadResult = null,
+                            receivedAIAudioResult = null
+                        )
+                    }
+                    startStreaming()
+                },
+                onAmplitudeUpdate = { amplitude ->
+                    _voiceState.update {
+                        it.copy(
+                            voiceAmplitude = amplitude
+                        )
+                    }
+                }
+            )
+        }
     }
 
     private fun changeMicState() {
@@ -276,25 +359,18 @@ class ChatViewModel(
         }
     }
 
-    private fun resetVoiceState() {
-        _voiceState.update { VoiceState() }
-    }
+    private fun stopAudioResponseCollection(releaseAudioPlayer: Boolean = false) {
+        audioResponseCollection?.cancel()
+        audioResponseCollection = null
+        audioPlayer?.stop()
 
-    private fun clearChatResults() {
-        _chatState.update {
-            it.copy(
-                createChatResult = null,
-                deleteChatResult = null,
-                editChatResult = null,
-                getChatMessagesResult = null
-            )
+        if (releaseAudioPlayer) {
+            Log.d("ChatViewModel", "Releasing audio player")
+            audioPlayer = null
         }
     }
 
-    private fun stopCollections() {
-        responseCollection?.cancel()
-        responseCollection = null
-        messagesCollection?.cancel()
-        messagesCollection = null
+    private fun resetVoiceState() {
+        _voiceState.update { VoiceState() }
     }
 }

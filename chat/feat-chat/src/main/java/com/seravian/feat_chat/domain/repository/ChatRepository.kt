@@ -11,6 +11,7 @@ import com.seravian.core_chat.data.dto.request.EditChatRequest
 import com.seravian.core_chat.data.dto.request.GetChatMessagesRequest
 import com.seravian.core_chat.data.dto.request.JoinChatRequest
 import com.seravian.core_chat.data.dto.request.SyncMessagesRequest
+import com.seravian.core_chat.data.dto.respose.AIAudioResponse
 import com.seravian.core_chat.data.dto.respose.ConfirmedMessageResponse
 import com.seravian.core_chat.domain.models.Chat
 import com.seravian.core_chat.domain.models.Message
@@ -29,11 +30,9 @@ interface ChatRepository {
         getChatMessagesRequest: GetChatMessagesRequest
     ): Flow<NetworkResult<Pair<Chat, List<Message>>, NetworkError>>
 
-    suspend fun syncMessages(
-        syncRequest: SyncMessagesRequest
-    ): EmptyResult<NetworkError>
-
     suspend fun insertConfirmedMessage(message: Message)
+
+    suspend fun sendCapturedVoice(capturedVoice: ByteArray): EmptyResult<NetworkError>
 
     suspend fun startConnection()
 
@@ -51,5 +50,5 @@ interface ChatRepository {
 
     fun receiveMessageConfirmation(callback: suspend (ConfirmedMessageResponse) -> Unit)
 
-    suspend fun sendCapturedVoice(capturedVoice: ByteArray)
+    suspend fun receiveAIAudioResponse(callback: (NetworkResult<AIAudioResponse, NetworkError>) -> Unit)
 }

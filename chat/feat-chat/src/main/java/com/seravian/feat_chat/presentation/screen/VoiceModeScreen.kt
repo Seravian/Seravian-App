@@ -28,9 +28,13 @@ import com.seravian.feat_chat.presentation.viewModel.chat.ChatState
 import com.seravian.feat_chat.presentation.viewModel.ChatViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.greenvenom.core_network.data.NetworkResult
+import com.greenvenom.core_network.data.onError
+import com.greenvenom.core_network.utils.toString
 import com.meticha.permissions_compose.AppPermission
 import com.meticha.permissions_compose.PermissionLifeCycleCheckEffect
 import com.meticha.permissions_compose.rememberAppPermissionState
@@ -57,28 +61,35 @@ fun VoiceModeScreen(
 
     BaseScreen<ChatViewModel>(
         onPhysicalBack = { viewModel ->
+            viewModel.voiceAction(VoiceAction.StopCollectingAIAudio(true))
             viewModel.voiceAction(VoiceAction.StopStreaming)
-            navigateBack()
             viewModel.voiceAction(VoiceAction.ResetVoiceState)
+            navigateBack()
         },
         enableLifecycleObservation = true,
         onStartAction = { viewModel ->
             if (permissions.allRequiredGranted()) {
+                viewModel.voiceAction(VoiceAction.BuildAudioPlayer)
                 viewModel.voiceAction(VoiceAction.StartStreaming)
+                viewModel.voiceAction(VoiceAction.StartCollectingAIAudio)
             } else {
                 permissions.requestPermission()
             }
         },
         onPauseAction = { viewModel ->
             viewModel.voiceAction(VoiceAction.StopStreaming)
+            viewModel.voiceAction(VoiceAction.StopCollectingAIAudio(false))
         },
         onDestroyAction = { viewModel ->
-            viewModel.voiceAction(VoiceAction.StopStreaming)
             viewModel.voiceAction(VoiceAction.ResetVoiceState)
+            viewModel.voiceAction(VoiceAction.StopStreaming)
+            viewModel.voiceAction(VoiceAction.StopCollectingAIAudio(true))
         },
         onResumeAction = { viewModel ->
             if (permissions.allRequiredGranted()) {
+                viewModel.voiceAction(VoiceAction.BuildAudioPlayer)
                 viewModel.voiceAction(VoiceAction.StartStreaming)
+                viewModel.voiceAction(VoiceAction.StartCollectingAIAudio)
             }
         }
     ) { viewModel ->
@@ -107,6 +118,14 @@ private fun VoiceModeContent(
     voiceAction: (VoiceAction) -> Unit,
     baseAction: (BaseAction) -> Unit
 ) {
+    val context = LocalContext.current
+
+    voiceState.voiceUploadResult?.onError {
+        baseAction(BaseAction.ShowErrorMessage(
+            errorMessage = it.errorType?.toString(context) ?: ""
+        ))
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -127,6 +146,7 @@ private fun VoiceModeContent(
             PulseCircle(
                 amplitude = voiceState.voiceAmplitude,
                 icon = painterResource(R.drawable.logo),
+                isThinking = !voiceState.isStreamingVoice && voiceState.receivedAIAudioResult == null,
                 modifier = Modifier
                     .padding(bottom = 64.dp)
                     .align(Alignment.Center)
