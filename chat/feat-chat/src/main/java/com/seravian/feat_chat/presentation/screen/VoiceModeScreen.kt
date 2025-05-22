@@ -134,7 +134,12 @@ private fun VoiceModeContent(
                 isSideDestination = true,
                 isActionEnabled = false,
                 title = chatState.currentChat?.title ?: "Seravian",
-                navigateBack = { voiceAction(VoiceAction.NavigateBack) }
+                navigateBack = {
+                    voiceAction(VoiceAction.StopCollectingAIAudio(true))
+                    voiceAction(VoiceAction.StopStreaming)
+                    voiceAction(VoiceAction.ResetVoiceState)
+                    voiceAction(VoiceAction.NavigateBack)
+                }
             )
         },
     ) { innerPadding ->

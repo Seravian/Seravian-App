@@ -222,7 +222,6 @@ class SeravianChatDataSource(
         signalRConnection.connection.on(
             target = "notify-ai-audio-response-ready"
         ) { response: AIAudioReadyResponse ->
-            Log.d("receiveAIAudioReadyResponse", response.toString())
             callback(response)
         }
     }

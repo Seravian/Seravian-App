@@ -24,9 +24,10 @@ import kotlin.math.sqrt
 class AudioStreamer(
     private val scope: CoroutineScope,
     private val onCapturingComplete: suspend (ByteArray) -> Unit,
+    private val onVoiceDetected: suspend () -> Unit,
     private val onAmplitudeUpdate: (Float) -> Unit,
-    private val silenceThreshold: Int = 2500,
-    private val voiceThreshold: Int = 500,
+    private val silenceThreshold: Int = 2200,
+    private val voiceThreshold: Int = 520,
     private val minRecordingDuration: Int = 500,
     private val audioGain: Float = 1.0f
 ) {
@@ -100,7 +101,12 @@ class AudioStreamer(
                     val currentTime = System.currentTimeMillis()
                     if (rms > adaptiveThreshold) {
                         lastVoiceTime = currentTime
-                        voiceDetected = true
+                        if (!voiceDetected) {
+                            voiceDetected = true
+                            withContext(Dispatchers.Main) {
+                                onVoiceDetected()
+                            }
+                        }
                     }
 
                     // Feed PCM to FLAC encoder

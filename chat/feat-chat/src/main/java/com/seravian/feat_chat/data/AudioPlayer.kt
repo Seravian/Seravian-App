@@ -23,7 +23,8 @@ import kotlin.math.sqrt
 class AudioPlayer(
     private val scope: CoroutineScope,
     private val onAmplitudeUpdate: (Float) -> Unit,
-    private val onPlaybackComplete: () -> Unit
+    private val onPlayBackStarted: suspend () -> Unit,
+    private val onPlaybackComplete: () -> Unit,
 ) {
     private var audioTrack: AudioTrack? = null
     private var playbackJob: Job? = null
@@ -81,6 +82,9 @@ class AudioPlayer(
 
         audioTrack?.play()
         isPlaying = true
+        scope.launch(Dispatchers.Main) {
+            onPlayBackStarted()
+        }
 
         // Stream the audio data and calculate amplitude
         playbackJob = scope.launch(Dispatchers.IO) {
@@ -112,16 +116,17 @@ class AudioPlayer(
     }
 
     fun stop() {
-        isPlaying = false
-
-        playbackJob?.cancel()
-        playbackJob = null
-
         audioTrack?.apply {
             stop()
             release()
         }
         audioTrack = null
+
+        playbackJob?.cancel()
+        playbackJob = null
+
+        if (!isPlaying) return
+        isPlaying = false
     }
 
     private fun calculateRMS(buffer: ByteArray): Double {

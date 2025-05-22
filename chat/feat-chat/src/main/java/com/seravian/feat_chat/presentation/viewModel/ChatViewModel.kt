@@ -279,6 +279,15 @@ class ChatViewModel(
                         )
                     }
                 },
+                onVoiceDetected = {
+                    stopAudioResponseCollection()
+                    _voiceState.update {
+                        it.copy(
+                            voiceUploadResult = null,
+                            receivedAIAudioResult = null
+                        )
+                    }
+                },
                 onAmplitudeUpdate = { amplitude ->
                     _voiceState.update {
                         it.copy(
@@ -317,6 +326,9 @@ class ChatViewModel(
         if (audioPlayer == null) {
             audioPlayer = AudioPlayer(
                 viewModelScope,
+                onPlayBackStarted = {
+                    startStreaming()
+                },
                 onPlaybackComplete = {
                     _voiceState.update {
                         it.copy(
@@ -324,7 +336,6 @@ class ChatViewModel(
                             receivedAIAudioResult = null
                         )
                     }
-                    startStreaming()
                 },
                 onAmplitudeUpdate = { amplitude ->
                     _voiceState.update {
@@ -365,7 +376,6 @@ class ChatViewModel(
         audioPlayer?.stop()
 
         if (releaseAudioPlayer) {
-            Log.d("ChatViewModel", "Releasing audio player")
             audioPlayer = null
         }
     }
