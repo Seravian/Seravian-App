@@ -67,15 +67,6 @@ fun VoiceModeScreen(
             navigateBack()
         },
         enableLifecycleObservation = true,
-        onStartAction = { viewModel ->
-            if (permissions.allRequiredGranted()) {
-                viewModel.voiceAction(VoiceAction.BuildAudioPlayer)
-                viewModel.voiceAction(VoiceAction.StartStreaming)
-                viewModel.voiceAction(VoiceAction.StartCollectingAIAudio)
-            } else {
-                permissions.requestPermission()
-            }
-        },
         onPauseAction = { viewModel ->
             viewModel.voiceAction(VoiceAction.StopStreaming)
             viewModel.voiceAction(VoiceAction.StopCollectingAIAudio(false))
@@ -90,6 +81,8 @@ fun VoiceModeScreen(
                 viewModel.voiceAction(VoiceAction.BuildAudioPlayer)
                 viewModel.voiceAction(VoiceAction.StartStreaming)
                 viewModel.voiceAction(VoiceAction.StartCollectingAIAudio)
+            } else {
+                permissions.requestPermission()
             }
         }
     ) { viewModel ->

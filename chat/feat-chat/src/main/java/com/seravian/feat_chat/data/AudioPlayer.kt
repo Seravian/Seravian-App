@@ -54,8 +54,8 @@ class AudioPlayer(
     }
 
     private fun startPlayback(audioData: ByteArray) {
-        // Initialize AudioTrack for 16kHz mono PCM
-        val sampleRate = 16000
+        // Initialize AudioTrack for 24kHz mono PCM
+        val sampleRate = 24000
         val channelConfig = AudioFormat.CHANNEL_OUT_MONO
         val audioFormat = AudioFormat.ENCODING_PCM_16BIT
 

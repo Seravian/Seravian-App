@@ -127,8 +127,8 @@ class SeravianChatDataSource(
                 }
             ) {
                 timeout {
-                    requestTimeoutMillis = 60_000L
-                    connectTimeoutMillis = 15_000L
+                    requestTimeoutMillis = 15_000L
+                    connectTimeoutMillis = 60_000L
                 }
             }
         }
@@ -219,6 +219,7 @@ class SeravianChatDataSource(
     override suspend fun receiveAIAudioReadyResponse(
         callback: suspend (AIAudioReadyResponse) -> Unit
     ) {
+        Log.d("AIAudio", "receiveAIAudioReadyResponse")
         signalRConnection.connection.on(
             target = "notify-ai-audio-response-ready"
         ) { response: AIAudioReadyResponse ->
