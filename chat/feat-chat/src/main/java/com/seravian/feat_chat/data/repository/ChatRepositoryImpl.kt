@@ -7,35 +7,44 @@ import com.greenvenom.core_network.data.map
 import com.greenvenom.core_network.data.onError
 import com.greenvenom.core_network.data.onSuccess
 import com.greenvenom.core_network.data.ConnectionStatus
+import com.greenvenom.core_network.data.ErrorType
 import com.seravian.core_chat.data.dto.request.ClientRequest
 import com.seravian.core_chat.data.dto.request.CreateChatRequest
 import com.seravian.core_chat.data.dto.request.DeleteChatRequest
 import com.seravian.core_chat.data.dto.request.EditChatRequest
+import com.seravian.core_chat.data.dto.request.FetchAIAudioRequest
 import com.seravian.core_chat.data.dto.request.GetChatMessagesRequest
 import com.seravian.core_chat.data.dto.request.JoinChatRequest
 import com.seravian.core_chat.data.dto.request.SyncMessagesRequest
 import com.seravian.core_chat.data.dto.request.UploadVoiceRequest
-import com.seravian.core_chat.data.dto.respose.AIAudioReadyResponse
-import com.seravian.core_chat.data.dto.respose.AIAudioResponse
 import com.seravian.core_chat.data.dto.respose.ConfirmedMessageResponse
+import com.seravian.core_chat.domain.models.Audio
 import com.seravian.core_chat.domain.models.Chat
 import com.seravian.core_chat.domain.models.Message
 import com.seravian.core_local.domain.LocalDataSource
 import com.seravian.feat_chat.domain.ChatRemoteDataSource
 import com.seravian.feat_chat.domain.repository.ChatRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.sync.Mutex
 
 class ChatRepositoryImpl(
     private val chatDataSource: ChatRemoteDataSource,
     private val roomDataSource: LocalDataSource
 ): ChatRepository {
+    private val audioDownloadLock: Mutex = Mutex()
+    private var downloadExecution: Deferred<NetworkResult<Audio, NetworkError>>? = null
+
     private var currentChatId: String = ""
+    private var lastNotifiedAudio: Long = -1
 
     //////////////////////////////////
     /////////// CHAT METHODS
@@ -204,12 +213,53 @@ class ChatRepositoryImpl(
         chatDataSource.receiveMessageConfirmation { callback(it) }
     }
 
-    override suspend fun receiveAIAudioResponse(callback: (NetworkResult<AIAudioResponse, NetworkError>) -> Unit) {
+    override suspend fun receiveAIAudioResponse(callback: (NetworkResult<Audio, NetworkError>) -> Unit) {
         chatDataSource.receiveAIAudioReadyResponse { aiAudioReadyResponse ->
-            val fetchingResult = chatDataSource.fetchAIAudioResponse(
+            lastNotifiedAudio = aiAudioReadyResponse.aiAudioId
+            val fetchingResult = downloadAudio(
                 aiAudioReadyResponse.extractFetchRequest()
             )
             callback(fetchingResult)
+        }
+    }
+
+    override suspend fun fetchAIAudio(
+        fetchRequest: FetchAIAudioRequest
+    ): NetworkResult<Audio, NetworkError> {
+        when {
+            fetchRequest.aiAudioId == lastNotifiedAudio && downloadExecution != null -> {
+                return NetworkResult.Error(NetworkError(ErrorType.TOO_MANY_REQUESTS))
+            }
+            fetchRequest.aiAudioId != lastNotifiedAudio && downloadExecution == null -> {
+                lastNotifiedAudio = fetchRequest.aiAudioId
+                return downloadAudio(fetchRequest)
+            }
+            else -> { return NetworkResult.Error(NetworkError(ErrorType.UNKNOWN_ERROR)) }
+        }
+    }
+
+    private suspend fun downloadAudio(
+        fetchRequest: FetchAIAudioRequest
+    ): NetworkResult<Audio, NetworkError> {
+        if (!audioDownloadLock.tryLock()) {
+            downloadExecution?.let {
+                println("Already Fetching Audio")
+                return NetworkResult.Error(NetworkError(ErrorType.TOO_MANY_REQUESTS))
+            }
+        }
+
+        return try {
+            val deferred = CoroutineScope(Dispatchers.IO).async {
+                chatDataSource.fetchAIAudioResponse(fetchRequest).map { response ->
+                    response.extractAudio(fetchRequest.aiAudioId)
+                }
+            }
+            downloadExecution = deferred
+
+            deferred.await()
+        } finally {
+            audioDownloadLock.unlock()
+            downloadExecution = null
         }
     }
 }

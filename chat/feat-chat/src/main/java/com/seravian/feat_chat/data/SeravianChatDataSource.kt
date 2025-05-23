@@ -1,6 +1,5 @@
 package com.seravian.feat_chat.data
 
-import android.util.Log
 import com.greenvenom.core_network.api.utils.constructUrl
 import com.greenvenom.core_network.api.utils.safeCall
 import com.greenvenom.core_network.data.ConnectionStatus
@@ -31,7 +30,6 @@ import com.seravian.core_chat.data.dto.respose.MessageResponse
 import com.seravian.feat_chat.domain.ChatRemoteDataSource
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.plugins.timeout
 import io.ktor.client.request.delete
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.forms.submitFormWithBinaryData
@@ -155,7 +153,7 @@ class SeravianChatDataSource(
             AIAudioResponse(
                 audioBytes = audioBytes,
                 contentType = contentType,
-                fileName = fileName
+                contentDisposition = fileName
             )
         }
     }
@@ -212,7 +210,6 @@ class SeravianChatDataSource(
     override suspend fun receiveAIAudioReadyResponse(
         callback: suspend (AIAudioReadyResponse) -> Unit
     ) {
-        Log.d("AIAudio", "receiveAIAudioReadyResponse")
         signalRConnection.connection.on(
             target = "notify-ai-audio-response-ready"
         ) { response: AIAudioReadyResponse ->

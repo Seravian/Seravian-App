@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.io.IOException
 import java.io.File
 
@@ -41,36 +42,33 @@ class EncryptedTokensDataSource(
     override suspend fun refreshTokens(
         refreshTokenRequest: RefreshTokenRequest
     ): EmptyResult<NetworkError> {
-        currentExecution?.let { execution ->
+        // Fast path: if a refresh is already in progress, wait for it
+        currentExecution?.let { existing ->
             println("RefreshTokens: Joining existing token refresh...")
-            return execution.await()
+            return existing.await()
         }
 
-        if (!mutex.tryLock()) {
-            currentExecution?.let { execution ->
-                println("RefreshTokens: Joining existing token refresh...")
-                return execution.await()
+        return mutex.withLock {
+            currentExecution?.let { existing ->
+                return existing.await()
             }
-        }
 
-        return try {
-            val deferred = CoroutineScope(Dispatchers.IO).async {
-                println("RefreshTokens: Actually performing token refresh...")
-                safeCall<TokensResponse> {
-                    publicHttpClient.post(constructUrl("auth/refresh-token")) {
-                        setBody(refreshTokenRequest)
+            try {
+                val deferred = CoroutineScope(Dispatchers.IO).async {
+                    safeCall<TokensResponse> {
+                        publicHttpClient.post(constructUrl("auth/refresh-token")) {
+                            setBody(refreshTokenRequest)
+                        }
+                    }.map { tokensResponse ->
+                        saveTokensLocally(tokensResponse.extractTokens())
                     }
-                }.map { tokensResponse ->
-                    saveTokensLocally(tokensResponse.extractTokens())
                 }
+
+                currentExecution = deferred
+                deferred.await()
+            } finally {
+                currentExecution = null
             }
-
-            currentExecution = deferred
-
-            deferred.await()
-        } finally {
-            currentExecution = null
-            mutex.unlock()
         }
     }
 

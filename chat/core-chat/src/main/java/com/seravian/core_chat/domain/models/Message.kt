@@ -2,6 +2,7 @@ package com.seravian.core_chat.domain.models
 
 import com.seravian.core_chat.data.entity.MessageEntity
 import com.seravian.core_chat.domain.MessageType
+import java.time.Duration
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -13,6 +14,11 @@ data class Message(
     val isAI: Boolean = false,
     val messageType: MessageType = MessageType.TEXT
 ) {
+    fun isNotOlderThan(minutes: Long): Boolean {
+        return Instant.parse(timestamp)
+            .plus(Duration.ofMinutes(minutes)).isAfter(Instant.now())
+    }
+
     fun formatDateTime(): String {
         val cleanedTimestamp = if (timestamp.contains(".")) {
             timestamp.substringBefore(".") + "Z"

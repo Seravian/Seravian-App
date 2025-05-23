@@ -8,11 +8,12 @@ import com.seravian.core_chat.data.dto.request.ClientRequest
 import com.seravian.core_chat.data.dto.request.CreateChatRequest
 import com.seravian.core_chat.data.dto.request.DeleteChatRequest
 import com.seravian.core_chat.data.dto.request.EditChatRequest
+import com.seravian.core_chat.data.dto.request.FetchAIAudioRequest
 import com.seravian.core_chat.data.dto.request.GetChatMessagesRequest
 import com.seravian.core_chat.data.dto.request.JoinChatRequest
-import com.seravian.core_chat.data.dto.request.SyncMessagesRequest
 import com.seravian.core_chat.data.dto.respose.AIAudioResponse
 import com.seravian.core_chat.data.dto.respose.ConfirmedMessageResponse
+import com.seravian.core_chat.domain.models.Audio
 import com.seravian.core_chat.domain.models.Chat
 import com.seravian.core_chat.domain.models.Message
 import kotlinx.coroutines.flow.Flow
@@ -50,5 +51,9 @@ interface ChatRepository {
 
     fun receiveMessageConfirmation(callback: suspend (ConfirmedMessageResponse) -> Unit)
 
-    suspend fun receiveAIAudioResponse(callback: (NetworkResult<AIAudioResponse, NetworkError>) -> Unit)
+    suspend fun receiveAIAudioResponse(callback: (NetworkResult<Audio, NetworkError>) -> Unit)
+
+    suspend fun fetchAIAudio(
+        fetchRequest: FetchAIAudioRequest
+    ): NetworkResult<Audio, NetworkError>
 }

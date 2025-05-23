@@ -11,8 +11,10 @@ import com.seravian.core_chat.data.dto.request.ClientRequest
 import com.seravian.core_chat.data.dto.request.CreateChatRequest
 import com.seravian.core_chat.data.dto.request.DeleteChatRequest
 import com.seravian.core_chat.data.dto.request.EditChatRequest
+import com.seravian.core_chat.data.dto.request.FetchAIAudioRequest
 import com.seravian.core_chat.data.dto.request.GetChatMessagesRequest
 import com.seravian.core_chat.data.dto.request.JoinChatRequest
+import com.seravian.core_chat.domain.MessageType
 import com.seravian.core_chat.domain.models.Message
 import com.seravian.feat_chat.data.AudioPlayer
 import com.seravian.feat_chat.data.AudioStreamer
@@ -37,10 +39,9 @@ class ChatViewModel(
     private val _voiceState: MutableStateFlow<VoiceState> = MutableStateFlow(VoiceState())
     val voiceState = _voiceState.asStateFlow()
 
-    private var isInVoiceMode: Boolean = false
-
     private lateinit var audioStreamer: AudioStreamer
     private lateinit var audioPlayer: AudioPlayer
+    private var isInVoiceMode: Boolean = false
 
     private var messageResponsesCollection: Job ?= null
     private var audioResponseCollection: Job ?= null
@@ -70,7 +71,7 @@ class ChatViewModel(
             is VoiceAction.ChangeMicState -> changeMicState()
             is VoiceAction.BuildAudioPlayer -> buildAudioPlayer()
             is VoiceAction.StopStreaming -> stopStreaming()
-            is VoiceAction.StopCollectingAIAudio -> stopAudioResponseCollection(action.releaseAudioPlayer)
+            is VoiceAction.StopCollectingAIAudio -> stopAudioResponseCollection(action.stopAudioPlayer)
             is VoiceAction.ResetVoiceState -> resetVoiceState()
             is VoiceAction.RestartStreaming -> restartStreaming()
             is VoiceAction.NavigateBack -> { isInVoiceMode = false }
@@ -180,6 +181,30 @@ class ChatViewModel(
                             messagesList = result.second,
                             getChatMessagesResult = messagesResult
                         ) }
+
+                        if (result.second.isNotEmpty()) {
+                            val lastMessage = result.second.last()
+                            if (isInVoiceMode && ::audioPlayer.isInitialized
+                                && lastMessage.id.first != _voiceState.value.lastAudioId
+                                && lastMessage.isAI
+                                && lastMessage.messageType == MessageType.VOICE_MODE_TEXT
+                                && lastMessage.isNotOlderThan(2)
+                            ) {
+                                val audioResult = chatRepository.fetchAIAudio(
+                                    FetchAIAudioRequest(lastMessage.id.first ?: -1)
+                                )
+
+                                _voiceState.update {
+                                    it.copy(
+                                        receivedAIAudioResult = audioResult
+                                    )
+                                }
+
+                                audioResult.onSuccess { audio ->
+                                    audioPlayer.play(audio)
+                                }
+                            }
+                        }
                     }
                     .onError {
                         _chatState.update { it.copy(
@@ -315,8 +340,8 @@ class ChatViewModel(
                     )
                 }
 
-                audioResult.onSuccess { audioResponse ->
-                    audioPlayer.play(audioResponse)
+                audioResult.onSuccess { audio ->
+                    audioPlayer.play(audio)
                 }
             }
         }
@@ -327,9 +352,10 @@ class ChatViewModel(
         if (!::audioPlayer.isInitialized) {
             audioPlayer = AudioPlayer(
                 viewModelScope,
-                onPlayBackStarted = {
+                onPlayBackStarted = { audioId ->
                     _voiceState.update {
                         it.copy(
+                            lastAudioId = audioId,
                             voiceUploadResult = null
                         )
                     }
@@ -375,11 +401,11 @@ class ChatViewModel(
         }
     }
 
-    private fun stopAudioResponseCollection(releaseAudioPlayer: Boolean = false) {
+    private fun stopAudioResponseCollection(stopAudioPlayer: Boolean = false) {
         audioResponseCollection?.cancel()
         audioResponseCollection = null
 
-        if (releaseAudioPlayer) {
+        if (stopAudioPlayer) {
             audioPlayer.stop()
         }
     }

@@ -5,15 +5,10 @@ import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioTrack
 import android.util.Log
-import com.seravian.core_chat.data.dto.respose.AIAudioResponse
+import com.seravian.core_chat.domain.models.Audio
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.nio.ByteBuffer
@@ -23,29 +18,29 @@ import kotlin.math.sqrt
 class AudioPlayer(
     private val scope: CoroutineScope,
     private val onAmplitudeUpdate: (Float) -> Unit,
-    private val onPlayBackStarted: suspend () -> Unit,
+    private val onPlayBackStarted: suspend (Long) -> Unit,
     private val onPlaybackComplete: () -> Unit,
 ) {
     private var audioTrack: AudioTrack? = null
     private var playbackJob: Job? = null
     private var isPlaying = false
 
-    fun play(audioResponse: AIAudioResponse) {
+    fun play(audio: Audio) {
         if (isPlaying) {
             stop()
         }
 
         scope.launch(Dispatchers.IO) {
             try {
-                val audioData = when (audioResponse.contentType) {
-                    "audio/wav" -> audioResponse.audioBytes
+                val audioData = when (audio.contentType) {
+                    "audio/wav" -> audio.audioBytes
                     else -> {
-                        Log.e("AudioPlayer", "Unsupported audio format: ${audioResponse.contentType}")
+                        Log.e("AudioPlayer", "Unsupported audio format: ${audio.contentType}")
                         return@launch
                     }
                 }
 
-                startPlayback(audioData)
+                startPlayback(audio.audioId, audioData)
             } catch (e: Exception) {
                 Log.e("AudioPlayer", "Error preparing audio for playback", e)
                 onPlaybackComplete()
@@ -53,7 +48,7 @@ class AudioPlayer(
         }
     }
 
-    private fun startPlayback(audioData: ByteArray) {
+    private fun startPlayback(audioId: Long, audioData: ByteArray) {
         // Initialize AudioTrack for 24kHz mono PCM
         val sampleRate = 24000
         val channelConfig = AudioFormat.CHANNEL_OUT_MONO
@@ -83,7 +78,7 @@ class AudioPlayer(
         audioTrack?.play()
         isPlaying = true
         scope.launch(Dispatchers.Main) {
-            onPlayBackStarted()
+            onPlayBackStarted(audioId)
         }
 
         // Stream the audio data and calculate amplitude
