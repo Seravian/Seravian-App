@@ -234,6 +234,10 @@ class ChatRepositoryImpl(
                 lastNotifiedAudio = fetchRequest.aiAudioId
                 return downloadAudio(fetchRequest)
             }
+            fetchRequest.aiAudioId == lastNotifiedAudio && downloadExecution == null -> {
+                lastNotifiedAudio = fetchRequest.aiAudioId
+                return downloadAudio(fetchRequest)
+            }
             else -> { return NetworkResult.Error(NetworkError(ErrorType.UNKNOWN_ERROR)) }
         }
     }

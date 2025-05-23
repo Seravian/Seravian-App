@@ -15,7 +15,7 @@ data class Message(
     val messageType: MessageType = MessageType.TEXT
 ) {
     fun isNotOlderThan(minutes: Long): Boolean {
-        return Instant.parse(timestamp)
+        return Instant.parse(if (!timestamp.endsWith("Z")) timestamp + "Z" else timestamp)
             .plus(Duration.ofMinutes(minutes)).isAfter(Instant.now())
     }
 

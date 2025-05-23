@@ -6,9 +6,6 @@ import android.media.AudioRecord
 import android.media.MediaCodec
 import android.media.MediaFormat
 import android.media.MediaRecorder
-import android.media.audiofx.AcousticEchoCanceler
-import android.media.audiofx.AutomaticGainControl
-import android.media.audiofx.NoiseSuppressor
 import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +18,7 @@ import java.nio.ByteOrder
 import kotlin.math.max
 import kotlin.math.sqrt
 
-class AudioStreamer(
+class VoiceRecorder(
     private val scope: CoroutineScope,
     private val onCapturingComplete: suspend (ByteArray) -> Unit,
     private val onVoiceDetected: suspend () -> Unit,

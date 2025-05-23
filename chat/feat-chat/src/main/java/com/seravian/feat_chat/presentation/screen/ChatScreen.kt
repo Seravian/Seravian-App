@@ -60,6 +60,7 @@ import com.seravian.feat_chat.presentation.components.ReceivedMessageCard
 import com.seravian.feat_chat.presentation.components.SentMessageCard
 import com.seravian.feat_chat.presentation.models.toMessageUI
 import com.seravian.feat_chat.presentation.viewModel.chat.ChatState
+import com.seravian.feat_chat.presentation.viewModel.voice.VoiceAction
 
 @Composable
 fun ChatScreen(
@@ -74,6 +75,7 @@ fun ChatScreen(
             viewModel.chatAction(ChatAction.StopMessageCollections)
             viewModel.chatAction(ChatAction.LeaveChat)
             viewModel.chatAction(ChatAction.ClearChatResults)
+            viewModel.voiceAction(VoiceAction.ResetVoiceState)
         },
     ) { viewModel ->
         val chatState by viewModel.chatState.collectAsStateWithLifecycle()
@@ -228,8 +230,7 @@ private fun ChatScreenContent(
                                 onClick = {
                                     chatAction(ChatAction.SendMessage(analyzeSymptomsPrompt))
                                 },
-                                enabled = chatState.messagesList.isNotEmpty()
-                                        && chatState.messagesList.last().isAI
+                                enabled = false
                             ) {
                                 Icon(
                                     painter = painterResource(R.drawable.ic_analyze_symptoms),

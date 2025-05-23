@@ -17,7 +17,7 @@ import com.seravian.core_chat.data.dto.request.JoinChatRequest
 import com.seravian.core_chat.domain.MessageType
 import com.seravian.core_chat.domain.models.Message
 import com.seravian.feat_chat.data.AudioPlayer
-import com.seravian.feat_chat.data.AudioStreamer
+import com.seravian.feat_chat.data.VoiceRecorder
 import com.seravian.feat_chat.domain.repository.ChatRepository
 import com.seravian.feat_chat.presentation.viewModel.chat.ChatAction
 import com.seravian.feat_chat.presentation.viewModel.chat.ChatState
@@ -39,8 +39,8 @@ class ChatViewModel(
     private val _voiceState: MutableStateFlow<VoiceState> = MutableStateFlow(VoiceState())
     val voiceState = _voiceState.asStateFlow()
 
-    private lateinit var audioStreamer: AudioStreamer
-    private lateinit var audioPlayer: AudioPlayer
+    private val voiceRecorder: VoiceRecorder = buildVoiceRecorder()
+    private val audioPlayer: AudioPlayer = buildAudioPlayer()
     private var isInVoiceMode: Boolean = false
 
     private var messageResponsesCollection: Job ?= null
@@ -84,14 +84,14 @@ class ChatViewModel(
             chatRepository.getSignalRConnectionStatus().collect { status ->
                 when(status) {
                     ConnectionStatus.CONNECTING -> {
-                        buildAudioPlayer()
+
                     }
                     ConnectionStatus.CONNECTED -> {
                         if (_chatState.value.joinChatResult == null) {
                             joinChat(_chatState.value.currentChat?.id ?: "")
                             getChatMessages(_chatState.value.currentChat?.id ?: "")
                             collectMessageResponses()
-                            if (::audioPlayer.isInitialized && isInVoiceMode) {
+                            if (isInVoiceMode) {
                                 collectAudioResponse()
                             }
                             _chatState.update {
@@ -184,7 +184,7 @@ class ChatViewModel(
 
                         if (result.second.isNotEmpty()) {
                             val lastMessage = result.second.last()
-                            if (isInVoiceMode && ::audioPlayer.isInitialized
+                            if (isInVoiceMode
                                 && lastMessage.id.first != _voiceState.value.lastAudioId
                                 && lastMessage.isAI
                                 && lastMessage.messageType == MessageType.VOICE_MODE_TEXT
@@ -286,49 +286,52 @@ class ChatViewModel(
     /////////////////////////////////
 
     private fun startStreaming() {
-        if (!::audioStreamer.isInitialized) {
-            audioStreamer = AudioStreamer(
-                viewModelScope,
-                onCapturingComplete = { capturedVoice ->
-                    _voiceState.update {
-                        it.copy(
-                            isStreamingVoice = false,
-                        )
-                    }
-                    _voiceState.update {
-                        it.copy(
-                            voiceUploadResult = chatRepository.sendCapturedVoice(capturedVoice)
-                        )
-                    }
-                },
-                onVoiceDetected = {
-                    if (::audioPlayer.isInitialized) audioPlayer.stop()
-                    _voiceState.update {
-                        it.copy(
-                            voiceUploadResult = null,
-                            receivedAIAudioResult = null
-                        )
-                    }
-                },
-                onAmplitudeUpdate = { amplitude ->
-                    _voiceState.update {
-                        it.copy(
-                            voiceAmplitude = amplitude
-                        )
-                    }
-                }
-            )
-        }
         if (!_voiceState.value.isStreamingVoice &&
             (_voiceState.value.voiceUploadResult == null ||
             _voiceState.value.receivedAIAudioResult != null)) {
-            _voiceState.update {
-                it.copy(
-                    isStreamingVoice = true
-                )
+            viewModelScope.launch {
+                _voiceState.update {
+                    it.copy(
+                        isStreamingVoice = true
+                    )
+                }
+                voiceRecorder.start()
             }
-            audioStreamer.start()
         }
+    }
+
+    private fun buildVoiceRecorder(): VoiceRecorder {
+        return VoiceRecorder(
+            viewModelScope,
+            onCapturingComplete = { capturedVoice ->
+                _voiceState.update {
+                    it.copy(
+                        isStreamingVoice = false,
+                    )
+                }
+                _voiceState.update {
+                    it.copy(
+                        voiceUploadResult = chatRepository.sendCapturedVoice(capturedVoice)
+                    )
+                }
+            },
+            onVoiceDetected = {
+                audioPlayer.stop()
+                _voiceState.update {
+                    it.copy(
+                        voiceUploadResult = null,
+                        receivedAIAudioResult = null
+                    )
+                }
+            },
+            onAmplitudeUpdate = { amplitude ->
+                _voiceState.update {
+                    it.copy(
+                        voiceAmplitude = amplitude
+                    )
+                }
+            }
+        )
     }
 
     private fun collectAudioResponse() {
@@ -348,35 +351,33 @@ class ChatViewModel(
         audioResponseCollection?.start()
     }
 
-    private fun buildAudioPlayer() {
-        if (!::audioPlayer.isInitialized) {
-            audioPlayer = AudioPlayer(
-                viewModelScope,
-                onPlayBackStarted = { audioId ->
-                    _voiceState.update {
-                        it.copy(
-                            lastAudioId = audioId,
-                            voiceUploadResult = null
-                        )
-                    }
-                    startStreaming()
-                },
-                onPlaybackComplete = {
-                    _voiceState.update {
-                        it.copy(
-                            receivedAIAudioResult = null
-                        )
-                    }
-                },
-                onAmplitudeUpdate = { amplitude ->
-                    _voiceState.update {
-                        it.copy(
-                            voiceAmplitude = amplitude
-                        )
-                    }
+    private fun buildAudioPlayer(): AudioPlayer {
+        return AudioPlayer(
+            viewModelScope,
+            onPlayBackStarted = { audioId ->
+                _voiceState.update {
+                    it.copy(
+                        lastAudioId = audioId,
+                        voiceUploadResult = null
+                    )
                 }
-            )
-        }
+                startStreaming()
+            },
+            onPlaybackComplete = {
+                _voiceState.update {
+                    it.copy(
+                        receivedAIAudioResult = null
+                    )
+                }
+            },
+            onAmplitudeUpdate = { amplitude ->
+                _voiceState.update {
+                    it.copy(
+                        voiceAmplitude = amplitude
+                    )
+                }
+            }
+        )
     }
 
     private fun changeMicState() {
@@ -385,7 +386,7 @@ class ChatViewModel(
                 isMuted = !_voiceState.value.isMuted
             )
         }.also {
-            if (_voiceState.value.isMuted) audioStreamer.stop() else audioStreamer.start()
+            if (_voiceState.value.isMuted) voiceRecorder.stop() else voiceRecorder.start()
         }
     }
 
@@ -396,9 +397,7 @@ class ChatViewModel(
             )
         }
 
-        if (::audioStreamer.isInitialized) {
-            audioStreamer.stop()
-        }
+        voiceRecorder.stop()
     }
 
     private fun stopAudioResponseCollection(stopAudioPlayer: Boolean = false) {
