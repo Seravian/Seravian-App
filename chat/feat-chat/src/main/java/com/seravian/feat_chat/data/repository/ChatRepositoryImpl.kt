@@ -141,7 +141,7 @@ class ChatRepositoryImpl(
                 }
         } else {
             syncMessages(
-                SyncMessagesRequest(messagesList.last().timestamp, getChatMessagesRequest.id)
+                SyncMessagesRequest(messagesList.last().id.first ?: 0, getChatMessagesRequest.id)
             )
         }
     }.onCompletion {  }

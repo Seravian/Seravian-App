@@ -42,9 +42,7 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentDisposition
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
-import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.runBlocking
 
 class SeravianChatDataSource(
     private val authorizedHttpClient: HttpClient,
@@ -103,8 +101,8 @@ class SeravianChatDataSource(
             authorizedHttpClient.get(constructUrl("chat/sync-messages")) {
                 url {
                     parameters.append(
-                        name = "lastMessageTimestampUtc",
-                        value = syncRequest.lastMessageTimestampUtc
+                        name = "lastMessageId",
+                        value = syncRequest.lastMessageId.toString()
                     )
                     parameters.append("chatId", syncRequest.chatId)
                 }
@@ -125,12 +123,7 @@ class SeravianChatDataSource(
                         append(HttpHeaders.ContentDisposition, "filename=\"recording.flac\"")
                     })
                 }
-            ) {
-                timeout {
-                    requestTimeoutMillis = 15_000L
-                    connectTimeoutMillis = 60_000L
-                }
-            }
+            )
         }
     }
 

@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,15 +43,15 @@ fun SentMessageCard(
             shape = RoundedCornerShape(12.dp, 12.dp, 0.dp, 12.dp),
             colors = CardDefaults.cardColors().copy(
                 containerColor = if (message.messageType == MessageType.VOICE_MODE_TEXT) {
-                    colorScheme.tertiaryContainer.copy(
-                        alpha = 0.5f
+                    colorScheme.primaryContainer.copy(
+                        alpha = 0.4f
                     )
                 } else {
-                    colorScheme.tertiaryContainer
+                    colorScheme.tertiary
                 },
                 contentColor = if (message.messageType == MessageType.VOICE_MODE_TEXT) {
-                    colorScheme.onTertiaryContainer.copy(
-                        alpha = 0.7f
+                    colorScheme.onSurface.copy(
+                        alpha = 0.6f
                     )
                 } else {
                     colorScheme.onTertiaryContainer
@@ -61,6 +62,11 @@ fun SentMessageCard(
             Column {
                 Text(
                     text = message.content,
+                    fontStyle = if (message.messageType == MessageType.VOICE_MODE_TEXT) {
+                        FontStyle.Italic
+                    } else {
+                        null
+                    },
                     modifier = Modifier
                         .padding(12.dp)
                         .padding(end = 4.dp)
@@ -85,7 +91,7 @@ private fun SentMessageCardPreview() {
             MessageUI(
                 content = "Helgdgkidfgdfhfghshfgdthhfhjftgjfjhgfdjggfdhgfdshhfglo",
                 timestamp = "02:38 AM",
-                messageType = MessageType.TEXT
+                messageType = MessageType.VOICE_MODE_TEXT
             )
         )
     }

@@ -63,7 +63,6 @@ fun VoiceModeScreen(
         onPhysicalBack = { viewModel ->
             viewModel.voiceAction(VoiceAction.StopCollectingAIAudio(true))
             viewModel.voiceAction(VoiceAction.StopStreaming)
-            viewModel.voiceAction(VoiceAction.ResetVoiceState)
             navigateBack()
         },
         enableLifecycleObservation = true,
@@ -72,13 +71,11 @@ fun VoiceModeScreen(
             viewModel.voiceAction(VoiceAction.StopCollectingAIAudio(false))
         },
         onDestroyAction = { viewModel ->
-            viewModel.voiceAction(VoiceAction.ResetVoiceState)
             viewModel.voiceAction(VoiceAction.StopStreaming)
             viewModel.voiceAction(VoiceAction.StopCollectingAIAudio(true))
         },
         onResumeAction = { viewModel ->
             if (permissions.allRequiredGranted()) {
-                viewModel.voiceAction(VoiceAction.BuildAudioPlayer)
                 viewModel.voiceAction(VoiceAction.StartStreaming)
                 viewModel.voiceAction(VoiceAction.StartCollectingAIAudio)
             } else {
@@ -118,6 +115,16 @@ private fun VoiceModeContent(
             errorMessage = it.errorType?.toString(context) ?: ""
         ))
     }
+
+    voiceState.receivedAIAudioResult
+        ?.onError {
+            baseAction(BaseAction.ShowErrorMessage(
+                errorMessage = it.errorType?.toString(context) ?: "",
+                dismissAction = {
+                    voiceAction(VoiceAction.RestartStreaming)
+                }
+            ))
+        }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),

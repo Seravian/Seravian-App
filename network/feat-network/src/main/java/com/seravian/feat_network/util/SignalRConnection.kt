@@ -87,7 +87,7 @@ class SignalRConnection(
     override fun startCollectingConnectionStatus() {
         if (statusCollectionJob == null) {
             statusCollectionJob = scope.launch {
-                connection.connectionState.collectLatest { connectionState ->
+                connection.connectionState.collect { connectionState ->
                     _connectionStatus.update {
                         when (connectionState) {
                             HubConnectionState.CONNECTED -> ConnectionStatus.CONNECTED

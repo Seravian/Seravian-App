@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.greenvenom.core_ui.theme.AppTheme
@@ -56,11 +57,11 @@ fun ReceivedMessageCard(
             shape = RoundedCornerShape(12.dp, 12.dp, 12.dp, 0.dp),
             colors = CardDefaults.cardColors().copy(
                 containerColor = if (message.messageType == MessageType.VOICE_MODE_TEXT) {
-                    colorScheme.surfaceDim.copy(
+                    colorScheme.surfaceVariant.copy(
                         alpha = 0.4f
                     )
                 } else {
-                    colorScheme.surfaceDim
+                    colorScheme.surfaceVariant
                 },
                 contentColor = if (message.messageType == MessageType.VOICE_MODE_TEXT) {
                     colorScheme.onSurface.copy(
@@ -75,6 +76,11 @@ fun ReceivedMessageCard(
         ) {
             Text(
                 text = message.content,
+                fontStyle = if (message.messageType == MessageType.VOICE_MODE_TEXT) {
+                    FontStyle.Italic
+                } else {
+                    null
+                },
                 modifier = Modifier
                     .padding(12.dp)
                     .padding(start = 4.dp)
@@ -102,7 +108,7 @@ private fun ReceivedMessageCardPreview() {
             MessageUI(
                 content = "jghvchjcvbnbvnbvjmhjmjkhgfkhjgkghkghkjhghghjhghjg,hjkghjkhlhjlhjghkjhl",
                 timestamp = "02:38 AM",
-                messageType = MessageType.VOICE_MODE_TEXT
+                messageType = MessageType.TEXT
             )
         )
     }

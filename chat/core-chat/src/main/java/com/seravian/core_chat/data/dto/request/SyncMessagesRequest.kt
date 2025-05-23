@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SyncMessagesRequest(
-    val lastMessageTimestampUtc: String,
+    val lastMessageId: Long,
     val chatId: String
 )
