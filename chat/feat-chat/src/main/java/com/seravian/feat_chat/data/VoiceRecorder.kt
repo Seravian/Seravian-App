@@ -6,6 +6,9 @@ import android.media.AudioRecord
 import android.media.MediaCodec
 import android.media.MediaFormat
 import android.media.MediaRecorder
+import android.media.audiofx.AcousticEchoCanceler
+import android.media.audiofx.AutomaticGainControl
+import android.media.audiofx.NoiseSuppressor
 import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,9 +24,9 @@ import kotlin.math.sqrt
 class VoiceRecorder(
     private val scope: CoroutineScope,
     private val onCapturingComplete: suspend (ByteArray) -> Unit,
-    private val onVoiceDetected: suspend () -> Unit,
+    private val onVoiceDetected: () -> Unit,
     private val onAmplitudeUpdate: (Float) -> Unit,
-    private val silenceThreshold: Int = 2200,
+    private val silenceThreshold: Int = 2000,
     private val voiceThreshold: Int = 520,
     private val minRecordingDuration: Int = 500,
     private val audioGain: Float = 1.0f
@@ -51,7 +54,7 @@ class VoiceRecorder(
         encodedFlac.reset()
 
         recorder = AudioRecord(
-            MediaRecorder.AudioSource.VOICE_RECOGNITION,
+            MediaRecorder.AudioSource.VOICE_COMMUNICATION,
             sampleRate,
             AudioFormat.CHANNEL_IN_MONO,
             AudioFormat.ENCODING_PCM_16BIT,
@@ -62,6 +65,8 @@ class VoiceRecorder(
 
         recorder.startRecording()
         isRecording = true
+
+        setupAudioEffects(recorder.audioSessionId)
 
         recordingJob = scope.launch(Dispatchers.IO) {
             val buffer = ByteArray(bufferSize)
@@ -138,6 +143,23 @@ class VoiceRecorder(
         scope.launch(Dispatchers.IO) {
             job?.join()
             cleanupAudioResources()
+        }
+    }
+
+    private fun setupAudioEffects(audioSessionId: Int) {
+        if (AcousticEchoCanceler.isAvailable()) {
+            val echoCanceler = AcousticEchoCanceler.create(audioSessionId)
+            echoCanceler?.enabled = true
+        }
+
+        if (NoiseSuppressor.isAvailable()) {
+            val noiseSuppressor = NoiseSuppressor.create(audioSessionId)
+            noiseSuppressor?.enabled = true
+        }
+
+        if (AutomaticGainControl.isAvailable()) {
+            val agc = AutomaticGainControl.create(audioSessionId)
+            agc?.enabled = true
         }
     }
 

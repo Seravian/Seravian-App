@@ -18,7 +18,7 @@ import kotlin.math.sqrt
 class AudioPlayer(
     private val scope: CoroutineScope,
     private val onAmplitudeUpdate: (Float) -> Unit,
-    private val onPlayBackStarted: suspend (Long) -> Unit,
+    private val onPlayBackStarted: (Long) -> Unit,
     private val onPlaybackComplete: () -> Unit,
 ) {
     private var audioTrack: AudioTrack? = null
@@ -77,9 +77,7 @@ class AudioPlayer(
 
         audioTrack?.play()
         isPlaying = true
-        scope.launch(Dispatchers.Main) {
-            onPlayBackStarted(audioId)
-        }
+        onPlayBackStarted(audioId)
 
         // Stream the audio data and calculate amplitude
         playbackJob = scope.launch(Dispatchers.IO) {
