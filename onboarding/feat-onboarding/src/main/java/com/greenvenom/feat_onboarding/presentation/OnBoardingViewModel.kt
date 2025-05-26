@@ -60,10 +60,11 @@ class OnBoardingViewModel(
     }
 
     private fun validateFullName(fullName: String) {
-        val validationResult = ValidateInput.validateFullName(fullName)
+        val trimmedName = fullName.trim()
+        val validationResult = ValidateInput.validateFullName(trimmedName)
         validationResult.onSuccess {
             updateUserDetailsState(
-                fullName = fullName
+                fullName = trimmedName
             )
         }
         _onBoardingState.update {
@@ -86,7 +87,7 @@ class OnBoardingViewModel(
                 userDetails = currentState.userDetails.copy(
                     fullName = fullName ?: currentState.userDetails.fullName,
                     role = userType ?: currentState.userDetails.role,
-                    dateOfBirth = birthDate ?: currentState.userDetails.dateOfBirth,
+                    dateOfBirth = birthDate?.trim() ?: currentState.userDetails.dateOfBirth,
                     gender = gender ?: currentState.userDetails.gender
                 )
             ).let { updatedState ->
