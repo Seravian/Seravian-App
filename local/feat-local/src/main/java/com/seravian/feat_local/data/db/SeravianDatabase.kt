@@ -10,7 +10,7 @@ import com.seravian.core_profile.data.local.ProfileEntity
 
 @Database(
     entities = [ProfileEntity::class, ChatEntity::class, MessageEntity::class],
-    version = 2,
+    version = 1,
     exportSchema = false
 )
 abstract class SeravianDatabase: RoomDatabase() {
