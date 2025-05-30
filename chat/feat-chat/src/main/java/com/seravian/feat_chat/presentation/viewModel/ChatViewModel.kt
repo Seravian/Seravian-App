@@ -43,6 +43,7 @@ class ChatViewModel(
     private val audioPlayer: AudioPlayer = buildAudioPlayer()
     private var isInVoiceMode: Boolean = false
 
+    // TODO: Change naming to job prefix
     private var messageResponsesCollection: Job ?= null
     private var audioResponseCollection: Job ?= null
     private var messagesCollection: Job ?= null
@@ -60,7 +61,7 @@ class ChatViewModel(
             is ChatAction.ClearChatResults -> clearChatResults()
             is ChatAction.StopMessageCollections -> stopMessageCollections()
             is ChatAction.NavigateToVoiceMode -> { isInVoiceMode = true }
-            else -> {}
+            ChatAction.NavigateBack -> {  }
         }
     }
 
@@ -75,7 +76,6 @@ class ChatViewModel(
             is VoiceAction.ResetVoiceState -> resetVoiceState()
             is VoiceAction.RestartStreaming -> restartStreaming()
             is VoiceAction.NavigateBack -> { isInVoiceMode = false }
-            else -> {}
         }
     }
 
@@ -140,7 +140,6 @@ class ChatViewModel(
                 )
             }
         }
-        messageResponsesCollection?.start()
     }
 
     private fun startConnection() {
@@ -184,12 +183,7 @@ class ChatViewModel(
 
                         if (result.second.isNotEmpty()) {
                             val lastMessage = result.second.last()
-                            if (isInVoiceMode
-                                && lastMessage.id.first != _voiceState.value.lastAudioId
-                                && lastMessage.isAI
-                                && lastMessage.messageType == MessageType.VOICE_MODE_TEXT
-                                && lastMessage.isNotOlderThan(2)
-                            ) {
+                            if (shouldGetVoiceMessage(lastMessage)) {
                                 val audioResult = chatRepository.fetchAIAudio(
                                     FetchAIAudioRequest(lastMessage.id.first ?: -1)
                                 )
@@ -214,6 +208,12 @@ class ChatViewModel(
             }
         }
     }
+
+    private fun shouldGetVoiceMessage(lastMessage: Message) = (isInVoiceMode
+            && lastMessage.id.first != _voiceState.value.lastAudioId
+            && lastMessage.isAI
+            && lastMessage.messageType == MessageType.VOICE_MODE_TEXT
+            && lastMessage.isNotOlderThan(2))
 
     private fun getChats() {
         viewModelScope.launch {
@@ -286,9 +286,9 @@ class ChatViewModel(
     /////////////////////////////////
 
     private fun startStreaming() {
-        if (!_voiceState.value.isStreamingVoice &&
-            (_voiceState.value.voiceUploadResult == null ||
-            _voiceState.value.receivedAIAudioResult != null)) {
+        if (shouldStartRecording()) {
+            // TODO: Handle the UI update without a coroutine
+
             viewModelScope.launch {
                 _voiceState.update {
                     it.copy(
@@ -299,6 +299,10 @@ class ChatViewModel(
             }
         }
     }
+
+    private fun shouldStartRecording() = !_voiceState.value.isStreamingVoice &&
+            (_voiceState.value.voiceUploadResult == null ||
+                    _voiceState.value.receivedAIAudioResult != null)
 
     private fun buildVoiceRecorder(): VoiceRecorder {
         return VoiceRecorder(
@@ -348,7 +352,6 @@ class ChatViewModel(
                 }
             }
         }
-        audioResponseCollection?.start()
     }
 
     private fun buildAudioPlayer(): AudioPlayer {

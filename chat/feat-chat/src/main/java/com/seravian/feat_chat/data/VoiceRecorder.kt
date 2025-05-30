@@ -13,7 +13,9 @@ import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
@@ -31,6 +33,8 @@ class VoiceRecorder(
     private val minRecordingDuration: Int = 500,
     private val audioGain: Float = 1.0f
 ) {
+    // TODO: Move to Internal Coroutine scope
+
     private val sampleRate = 16000
     private val bufferSize = AudioRecord.getMinBufferSize(
         sampleRate,
@@ -120,12 +124,11 @@ class VoiceRecorder(
                         recordingDuration > minRecordingDuration) {
 
                         drainFlacEncoder(true) // finalize stream
-                        withContext(Dispatchers.IO) {
-                            val flac = encodedFlac.toByteArray()
-                            if (flac.isNotEmpty()) {
-                                onCapturingComplete(flac)
-                            }
+                        val flac = encodedFlac.toByteArray()
+                        if (flac.isNotEmpty()) {
+                            onCapturingComplete(flac)
                         }
+
                         stop()
                     }
                 }
@@ -133,17 +136,13 @@ class VoiceRecorder(
         }
     }
 
-    fun stop() {
-        if (!isRecording) return
+    fun stop() = runBlocking {
+        if (!isRecording) return@runBlocking
         isRecording = false
 
-        val job = recordingJob
+        recordingJob?.cancelAndJoin()
+        cleanupAudioResources()
         recordingJob = null
-
-        scope.launch(Dispatchers.IO) {
-            job?.join()
-            cleanupAudioResources()
-        }
     }
 
     private fun setupAudioEffects(audioSessionId: Int) {
@@ -190,9 +189,11 @@ class VoiceRecorder(
     private fun feedFlacEncoder(pcm: ByteArray) {
         val inputBufferIndex = flacEncoder.dequeueInputBuffer(10000)
         if (inputBufferIndex >= 0) {
-            val inputBuffer = flacEncoder.getInputBuffer(inputBufferIndex)!!
-            inputBuffer.clear()
-            inputBuffer.put(pcm)
+            val inputBuffer = flacEncoder.getInputBuffer(inputBufferIndex)
+            inputBuffer?.let {
+                it.clear()
+                it.put(pcm)
+            }
             flacEncoder.queueInputBuffer(inputBufferIndex, 0, pcm.size, System.nanoTime() / 1000, 0)
         }
         drainFlacEncoder(false)
