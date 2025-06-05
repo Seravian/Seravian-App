@@ -13,4 +13,5 @@
     <string name="voice_mode">Voice Mode</string>
     <string name="unmuted">UnMuted</string>
     <string name="muted">Muted</string>
+    <string name="voice_mode_message">Voice Mode Message</string>
 </resources>

@@ -23,11 +23,13 @@ import com.seravian.feat_chat.presentation.viewModel.chat.ChatAction
 import com.seravian.feat_chat.presentation.viewModel.chat.ChatState
 import com.seravian.feat_chat.presentation.viewModel.voice.VoiceAction
 import com.seravian.feat_chat.presentation.viewModel.voice.VoiceState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.UUID
 
 class ChatViewModel(
@@ -43,10 +45,9 @@ class ChatViewModel(
     private val audioPlayer: AudioPlayer = buildAudioPlayer()
     private var isInVoiceMode: Boolean = false
 
-    // TODO: Change naming to job prefix
-    private var messageResponsesCollection: Job ?= null
-    private var audioResponseCollection: Job ?= null
-    private var messagesCollection: Job ?= null
+    private var jobMessageResponsesCollection: Job ?= null
+    private var jobAudioResponseCollection: Job ?= null
+    private var jobMessagesCollection: Job ?= null
 
     fun chatAction(action: ChatAction) {
         when(action) {
@@ -75,7 +76,10 @@ class ChatViewModel(
             is VoiceAction.StopCollectingAIAudio -> stopAudioResponseCollection(action.stopAudioPlayer)
             is VoiceAction.ResetVoiceState -> resetVoiceState()
             is VoiceAction.RestartStreaming -> restartStreaming()
-            is VoiceAction.NavigateBack -> { isInVoiceMode = false }
+            is VoiceAction.NavigateBack -> {
+                isInVoiceMode = false
+                stopStreaming()
+            }
         }
     }
 
@@ -124,7 +128,7 @@ class ChatViewModel(
     /////////////////////////////////
 
     private fun collectMessageResponses() {
-        messageResponsesCollection = viewModelScope.launch {
+        jobMessageResponsesCollection = viewModelScope.launch {
             chatRepository.receiveClientResponse()
 
             chatRepository.receiveAIResponse()
@@ -170,7 +174,7 @@ class ChatViewModel(
     }
 
     private fun getChatMessages(chatId: String) {
-        messagesCollection = viewModelScope.launch {
+        jobMessagesCollection = viewModelScope.launch {
             val messagesFlow = chatRepository.getChatMessages(GetChatMessagesRequest(chatId))
             messagesFlow.collect { messagesResult ->
                 messagesResult
@@ -183,7 +187,19 @@ class ChatViewModel(
 
                         if (result.second.isNotEmpty()) {
                             val lastMessage = result.second.last()
+                            if (!isInVoiceMode && lastMessage.messageType == MessageType.VOICE_MODE_TEXT) {
+                                _voiceState.update { it.copy(
+                                    voiceUploadResult = null,
+                                    receivedAIAudioResult = null
+                                ) }
+                            }
                             if (shouldGetVoiceMessage(lastMessage)) {
+                                _voiceState.update {
+                                    it.copy(
+                                        isWaitingForResponse = true
+                                    )
+                                }
+
                                 val audioResult = chatRepository.fetchAIAudio(
                                     FetchAIAudioRequest(lastMessage.id.first ?: -1)
                                 )
@@ -275,10 +291,10 @@ class ChatViewModel(
     }
 
     private fun stopMessageCollections() {
-        messageResponsesCollection?.cancel()
-        messageResponsesCollection = null
-        messagesCollection?.cancel()
-        messagesCollection = null
+        jobMessageResponsesCollection?.cancel()
+        jobMessageResponsesCollection = null
+        jobMessagesCollection?.cancel()
+        jobMessagesCollection = null
     }
 
     //////////////////////////////////
@@ -287,8 +303,6 @@ class ChatViewModel(
 
     private fun startStreaming() {
         if (shouldStartRecording()) {
-            // TODO: Handle the UI update without a coroutine
-
             viewModelScope.launch {
                 _voiceState.update {
                     it.copy(
@@ -301,22 +315,27 @@ class ChatViewModel(
     }
 
     private fun shouldStartRecording() = !_voiceState.value.isStreamingVoice &&
-            (_voiceState.value.voiceUploadResult == null ||
-                    _voiceState.value.receivedAIAudioResult != null)
+            !_voiceState.value.isWaitingForResponse
 
     private fun buildVoiceRecorder(): VoiceRecorder {
         return VoiceRecorder(
-            viewModelScope,
             onCapturingComplete = { capturedVoice ->
                 _voiceState.update {
                     it.copy(
                         isStreamingVoice = false,
+                        isWaitingForResponse = true
                     )
                 }
-                _voiceState.update {
-                    it.copy(
-                        voiceUploadResult = chatRepository.sendCapturedVoice(capturedVoice)
-                    )
+
+                viewModelScope.launch {
+                    val uploadAudioResult = withContext(Dispatchers.IO) {
+                        chatRepository.sendCapturedVoice(capturedVoice)
+                    }
+                    _voiceState.update {
+                        it.copy(
+                            voiceUploadResult = uploadAudioResult
+                        )
+                    }
                 }
             },
             onVoiceDetected = {
@@ -339,7 +358,7 @@ class ChatViewModel(
     }
 
     private fun collectAudioResponse() {
-        audioResponseCollection = viewModelScope.launch {
+        jobAudioResponseCollection = viewModelScope.launch {
             chatRepository.receiveAIAudioResponse { audioResult ->
                 _voiceState.update {
                     it.copy(
@@ -356,12 +375,12 @@ class ChatViewModel(
 
     private fun buildAudioPlayer(): AudioPlayer {
         return AudioPlayer(
-            viewModelScope,
             onPlayBackStarted = { audioId ->
                 _voiceState.update {
                     it.copy(
                         lastAudioId = audioId,
-                        voiceUploadResult = null
+                        voiceUploadResult = null,
+                        isWaitingForResponse = false
                     )
                 }
                 startStreaming()
@@ -404,8 +423,8 @@ class ChatViewModel(
     }
 
     private fun stopAudioResponseCollection(stopAudioPlayer: Boolean = false) {
-        audioResponseCollection?.cancel()
-        audioResponseCollection = null
+        jobAudioResponseCollection?.cancel()
+        jobAudioResponseCollection = null
 
         if (stopAudioPlayer) {
             audioPlayer.stop()

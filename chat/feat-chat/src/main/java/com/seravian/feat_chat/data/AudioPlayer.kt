@@ -16,11 +16,12 @@ import java.nio.ByteOrder
 import kotlin.math.sqrt
 
 class AudioPlayer(
-    private val scope: CoroutineScope,
     private val onAmplitudeUpdate: (Float) -> Unit,
     private val onPlayBackStarted: (Long) -> Unit,
     private val onPlaybackComplete: () -> Unit,
 ) {
+    private val scope = CoroutineScope(Dispatchers.IO)
+
     private var audioTrack: AudioTrack? = null
     private var playbackJob: Job? = null
     private var isPlaying = false
@@ -30,21 +31,19 @@ class AudioPlayer(
             stop()
         }
 
-        scope.launch(Dispatchers.IO) {
-            try {
-                val audioData = when (audio.contentType) {
-                    "audio/wav" -> audio.audioBytes
-                    else -> {
-                        Log.e("AudioPlayer", "Unsupported audio format: ${audio.contentType}")
-                        return@launch
-                    }
+        try {
+            val audioData = when (audio.contentType) {
+                "audio/wav" -> audio.audioBytes
+                else -> {
+                    Log.e("AudioPlayer", "Unsupported audio format: ${audio.contentType}")
+                    return
                 }
-
-                startPlayback(audio.audioId, audioData)
-            } catch (e: Exception) {
-                Log.e("AudioPlayer", "Error preparing audio for playback", e)
-                onPlaybackComplete()
             }
+
+            startPlayback(audio.audioId, audioData)
+        } catch (e: Exception) {
+            Log.e("AudioPlayer", "Error preparing audio for playback", e)
+            onPlaybackComplete()
         }
     }
 
@@ -77,7 +76,9 @@ class AudioPlayer(
 
         audioTrack?.play()
         isPlaying = true
-        onPlayBackStarted(audioId)
+        scope.launch(Dispatchers.Main.immediate) {
+            onPlayBackStarted(audioId)
+        }
 
         // Stream the audio data and calculate amplitude
         playbackJob = scope.launch(Dispatchers.IO) {
@@ -100,7 +101,7 @@ class AudioPlayer(
             }
 
             if (isPlaying) {
-                withContext(Dispatchers.Main) {
+                withContext(Dispatchers.Main.immediate) {
                     onPlaybackComplete()
                 }
                 stop()

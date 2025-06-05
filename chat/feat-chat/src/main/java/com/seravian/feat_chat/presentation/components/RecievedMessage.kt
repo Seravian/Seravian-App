@@ -1,5 +1,6 @@
 package com.seravian.feat_chat.presentation.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -85,13 +86,26 @@ fun ReceivedMessageCard(
                     .padding(12.dp)
                     .padding(start = 4.dp)
             )
-            Text(
-                text = message.timestamp,
-                style = MaterialTheme.typography.labelMedium,
+            Row(
+                horizontalArrangement = Arrangement.End,
                 modifier = Modifier
-                    .padding(start = 12.dp, end = 12.dp, bottom = 8.dp)
                     .align(Alignment.End)
-            )
+                    .padding(start = 12.dp, end = 12.dp, bottom = 8.dp)
+            ) {
+                if (message.messageType == MessageType.VOICE_MODE_TEXT) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_mic),
+                        contentDescription = stringResource(R.string.voice_mode_message),
+                        modifier = Modifier.size(16.dp)
+                    )
+
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+                Text(
+                    text = message.timestamp,
+                    style = MaterialTheme.typography.labelMedium
+                )
+            }
         }
         Spacer(
             modifier = Modifier
@@ -108,7 +122,7 @@ private fun ReceivedMessageCardPreview() {
             MessageUI(
                 content = "jghvchjcvbnbvnbvjmhjmjkhgfkhjgkghkghkjhghghjhghjg,hjkghjkhlhjlhjghkjhl",
                 timestamp = "02:38 AM",
-                messageType = MessageType.TEXT
+                messageType = MessageType.VOICE_MODE_TEXT
             )
         )
     }

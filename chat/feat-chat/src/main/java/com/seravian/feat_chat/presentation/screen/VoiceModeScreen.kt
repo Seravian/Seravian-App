@@ -70,10 +70,6 @@ fun VoiceModeScreen(
             viewModel.voiceAction(VoiceAction.StopStreaming)
             viewModel.voiceAction(VoiceAction.StopCollectingAIAudio(false))
         },
-        onDestroyAction = { viewModel ->
-            viewModel.voiceAction(VoiceAction.StopStreaming)
-            viewModel.voiceAction(VoiceAction.StopCollectingAIAudio(true))
-        },
         onResumeAction = { viewModel ->
             if (permissions.allRequiredGranted()) {
                 viewModel.voiceAction(VoiceAction.StartStreaming)
@@ -137,7 +133,6 @@ private fun VoiceModeContent(
                 navigateBack = {
                     voiceAction(VoiceAction.StopCollectingAIAudio(true))
                     voiceAction(VoiceAction.StopStreaming)
-                    voiceAction(VoiceAction.ResetVoiceState)
                     voiceAction(VoiceAction.NavigateBack)
                 }
             )
@@ -151,7 +146,7 @@ private fun VoiceModeContent(
             PulseCircle(
                 amplitude = voiceState.voiceAmplitude,
                 icon = painterResource(R.drawable.logo),
-                isThinking = !voiceState.isStreamingVoice && voiceState.receivedAIAudioResult == null,
+                isThinking = !voiceState.isStreamingVoice && voiceState.isWaitingForResponse,
                 modifier = Modifier
                     .padding(bottom = 64.dp)
                     .align(Alignment.Center)
@@ -170,7 +165,7 @@ private fun VoiceModeContent(
                         onClick = {
                             voiceAction(VoiceAction.ChangeMicState)
                         },
-                        enabled = voiceState.isStreamingVoice,
+                        enabled = voiceState.isStreamingVoice && !voiceState.isWaitingForResponse,
                         colors = IconButtonDefaults.filledIconButtonColors().copy(
                             containerColor = MaterialTheme.colorScheme.errorContainer,
                             contentColor = MaterialTheme.colorScheme.onErrorContainer
@@ -190,7 +185,7 @@ private fun VoiceModeContent(
                         onClick = {
                             voiceAction(VoiceAction.ChangeMicState)
                         },
-                        enabled = voiceState.isStreamingVoice,
+                        enabled = voiceState.isStreamingVoice && !voiceState.isWaitingForResponse,
                         modifier = Modifier.size(56.dp)
                     ) {
                         Icon(

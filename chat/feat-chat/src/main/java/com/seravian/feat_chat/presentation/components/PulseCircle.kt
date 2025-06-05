@@ -47,7 +47,7 @@ fun PulseCircle(
 
     val baseSize = 110.dp
     val targetSize by animateDpAsState(
-        targetValue = baseSize * (1f + (scaleFactor * 1.3f)),
+        targetValue = baseSize * (1f + (scaleFactor * 1.1f)),
         animationSpec = tween(durationMillis = 50)
     )
 

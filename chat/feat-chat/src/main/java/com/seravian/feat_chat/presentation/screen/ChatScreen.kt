@@ -61,6 +61,7 @@ import com.seravian.feat_chat.presentation.components.SentMessageCard
 import com.seravian.feat_chat.presentation.models.toMessageUI
 import com.seravian.feat_chat.presentation.viewModel.chat.ChatState
 import com.seravian.feat_chat.presentation.viewModel.voice.VoiceAction
+import com.seravian.feat_chat.presentation.viewModel.voice.VoiceState
 
 @Composable
 fun ChatScreen(
@@ -79,6 +80,7 @@ fun ChatScreen(
         },
     ) { viewModel ->
         val chatState by viewModel.chatState.collectAsStateWithLifecycle()
+        val voiceState by viewModel.voiceState.collectAsStateWithLifecycle()
 
         LaunchedEffect(Unit) {
             viewModel.baseAction(BaseAction.ShowLoading)
@@ -88,6 +90,7 @@ fun ChatScreen(
 
         ChatScreenContent(
             chatState = chatState,
+            voiceState = voiceState,
             chatAction = {
                 when(it) {
                     is ChatAction.NavigateToVoiceMode -> navigateToVoiceMode()
@@ -105,6 +108,7 @@ fun ChatScreen(
 @Composable
 private fun ChatScreenContent(
     chatState: ChatState,
+    voiceState: VoiceState,
     chatAction: (ChatAction) -> Unit,
     baseAction: (BaseAction) -> Unit,
     modifier: Modifier = Modifier
@@ -246,8 +250,10 @@ private fun ChatScreenContent(
                             chatAction(ChatAction.SendMessage(input))
                             input = ""
                         },
-                        enabled = input.isNotBlank() &&
-                                (chatState.messagesList.isEmpty() || chatState.messagesList.last().isAI),
+                        enabled = input.isNotBlank() && (
+                                (chatState.messagesList.isEmpty() && !voiceState.isWaitingForResponse) ||
+                                        (chatState.messagesList.last().isAI && !voiceState.isWaitingForResponse)
+                                ),
                         shape = RoundedCornerShape(50),
                         modifier = Modifier.size(48.dp)
                     ) {
@@ -276,6 +282,7 @@ private fun ChatScreenPreview() {
                     Message(id = Pair(4, null), isAI = false, content = "Hello", timestamp = "2023-06-05T14:30:40Z")
                 )
             ),
+            voiceState = VoiceState(),
             chatAction = {},
             baseAction = {},
         )

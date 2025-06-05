@@ -24,8 +24,7 @@ import kotlin.math.max
 import kotlin.math.sqrt
 
 class VoiceRecorder(
-    private val scope: CoroutineScope,
-    private val onCapturingComplete: suspend (ByteArray) -> Unit,
+    private val onCapturingComplete: (ByteArray) -> Unit,
     private val onVoiceDetected: () -> Unit,
     private val onAmplitudeUpdate: (Float) -> Unit,
     private val silenceThreshold: Int = 2000,
@@ -33,7 +32,7 @@ class VoiceRecorder(
     private val minRecordingDuration: Int = 500,
     private val audioGain: Float = 1.0f
 ) {
-    // TODO: Move to Internal Coroutine scope
+    private val scope = CoroutineScope(Dispatchers.IO)
 
     private val sampleRate = 16000
     private val bufferSize = AudioRecord.getMinBufferSize(
@@ -140,8 +139,11 @@ class VoiceRecorder(
         if (!isRecording) return@runBlocking
         isRecording = false
 
-        recordingJob?.cancelAndJoin()
-        cleanupAudioResources()
+        scope.launch(Dispatchers.IO) {
+            recordingJob?.cancelAndJoin()
+            cleanupAudioResources()
+        }
+
         recordingJob = null
     }
 
@@ -164,11 +166,11 @@ class VoiceRecorder(
 
     private fun cleanupAudioResources() {
         try {
-            if (recorder.state == AudioRecord.STATE_INITIALIZED) recorder.stop()
+            recorder.stop()
+            recorder.release()
             flacEncoder.stop()
             flacEncoder.release()
             encodedFlac.reset()
-            recorder.release()
         } catch (e: Exception) {
             Log.e("AudioStreamer", "Cleanup failed", e)
         }
