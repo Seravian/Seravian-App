@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.greenvenom.core_ui.presentation.BaseScreen
 import com.seravian.feat_chat.R
-import com.seravian.feat_chat.presentation.viewModel.ChatViewModel
+import com.seravian.feat_chat.presentation.viewModel.chat.ChatViewModel
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -75,22 +75,17 @@ fun ChatScreen(
             navigateBack()
             viewModel.chatAction(ChatAction.StopMessageCollections)
             viewModel.chatAction(ChatAction.LeaveChat)
-            viewModel.chatAction(ChatAction.ClearChatResults)
-            viewModel.voiceAction(VoiceAction.ResetVoiceState)
         },
     ) { viewModel ->
         val chatState by viewModel.chatState.collectAsStateWithLifecycle()
-        val voiceState by viewModel.voiceState.collectAsStateWithLifecycle()
 
         LaunchedEffect(Unit) {
             viewModel.baseAction(BaseAction.ShowLoading)
             viewModel.chatAction(ChatAction.GetChatMessages(chatId))
-            viewModel.chatAction(ChatAction.JoinChat)
         }
 
         ChatScreenContent(
             chatState = chatState,
-            voiceState = voiceState,
             chatAction = {
                 when(it) {
                     is ChatAction.NavigateToVoiceMode -> navigateToVoiceMode()
@@ -108,7 +103,6 @@ fun ChatScreen(
 @Composable
 private fun ChatScreenContent(
     chatState: ChatState,
-    voiceState: VoiceState,
     chatAction: (ChatAction) -> Unit,
     baseAction: (BaseAction) -> Unit,
     modifier: Modifier = Modifier
@@ -125,7 +119,6 @@ private fun ChatScreenContent(
 
     chatState.joinChatResult
         ?.onSuccess {
-            chatAction(ChatAction.ClearChatResults)
             baseAction(BaseAction.HideLoading)
         }
         ?.onError {
@@ -185,7 +178,8 @@ private fun ChatScreenContent(
             }
 
             AnimatedVisibility(
-                visible = chatState.messagesList.isNotEmpty() && !chatState.messagesList.last().isAI,
+                visible = chatState.messagesList.isNotEmpty() &&
+                        (!chatState.messagesList.last().isAI || chatState.isWaitingForResponse),
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(min = 56.dp) // Prevent height collapse
@@ -251,8 +245,8 @@ private fun ChatScreenContent(
                             input = ""
                         },
                         enabled = input.isNotBlank() && (
-                                (chatState.messagesList.isEmpty() && !voiceState.isWaitingForResponse) ||
-                                        (chatState.messagesList.last().isAI && !voiceState.isWaitingForResponse)
+                                (chatState.messagesList.isEmpty() && !chatState.isWaitingForResponse) ||
+                                        (chatState.messagesList.last().isAI && !chatState.isWaitingForResponse)
                                 ),
                         shape = RoundedCornerShape(50),
                         modifier = Modifier.size(48.dp)
@@ -282,7 +276,6 @@ private fun ChatScreenPreview() {
                     Message(id = Pair(4, null), isAI = false, content = "Hello", timestamp = "2023-06-05T14:30:40Z")
                 )
             ),
-            voiceState = VoiceState(),
             chatAction = {},
             baseAction = {},
         )

@@ -27,12 +27,12 @@ import com.greenvenom.core_ui.presentation.BaseAction
 import com.greenvenom.core_ui.presentation.BaseScreen
 import com.greenvenom.core_ui.theme.AppTheme
 import com.seravian.core_chat.domain.models.Chat
-import com.seravian.feat_chat.presentation.viewModel.chat.ChatAction
 import com.seravian.feat_chat.presentation.components.ChatListCard
 import com.seravian.feat_chat.presentation.components.NewChatPopUp
 import com.seravian.feat_chat.presentation.models.toChatUI
-import com.seravian.feat_chat.presentation.viewModel.chat.ChatState
-import com.seravian.feat_chat.presentation.viewModel.ChatViewModel
+import com.seravian.feat_chat.presentation.viewModel.chats_list.ChatsListAction
+import com.seravian.feat_chat.presentation.viewModel.chats_list.ChatsListState
+import com.seravian.feat_chat.presentation.viewModel.chats_list.ChatsListViewModel
 
 @Composable
 fun ChatListScreen(
@@ -40,32 +40,35 @@ fun ChatListScreen(
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    BaseScreen<ChatViewModel>(
+    BaseScreen<ChatsListViewModel>(
         onPhysicalBack = { viewModel ->
             navigateBack()
-            viewModel.chatAction(ChatAction.ClearChatResults)
         },
         modifier = modifier
     ) { viewModel ->
-        val state by viewModel.chatState.collectAsStateWithLifecycle()
+        val state by viewModel.chatsListState.collectAsStateWithLifecycle()
 
-        LaunchedEffect(Unit) { viewModel.chatAction(ChatAction.GetChats) }
+        LaunchedEffect(Unit) { viewModel.chatsListAction(ChatsListAction.GetChats) }
 
         ChatListContent(
-            chatState = state,
-            chatAction = viewModel::chatAction,
+            chatsListState = state,
+            chatsListAction = {
+                when (it) {
+                    is ChatsListAction.NavigateToChat -> navigateToChat(it.chat.id)
+                    else -> {}
+                }
+                viewModel::chatsListAction
+            },
             baseAction = viewModel::baseAction,
-            navigateToChat = navigateToChat
         )
     }
 }
 
 @Composable
 private fun ChatListContent(
-    chatState: ChatState,
-    chatAction: (ChatAction) -> Unit,
+    chatsListState: ChatsListState,
+    chatsListAction: (ChatsListAction) -> Unit,
     baseAction: (BaseAction) -> Unit,
-    navigateToChat: (String) -> Unit
 ) {
     val context = LocalContext.current
     var popupState by rememberSaveable { mutableStateOf(false) }
@@ -73,36 +76,28 @@ private fun ChatListContent(
     var chatId by rememberSaveable { mutableStateOf("") }
     var newChatTitle by rememberSaveable { mutableStateOf("") }
 
-    chatState.joinChatResult
-        ?.onError {
-            baseAction(BaseAction.HideLoading)
-            baseAction(BaseAction.ShowErrorMessage(it.errorType?.toString() ?: ""))
-        }
-
-    chatState.getChatsResult
+    chatsListState.getChatsResult
         ?.onSuccess {
             baseAction(BaseAction.HideLoading)
-            chatAction(ChatAction.ClearChatResults)
         }
         ?.onError {
             baseAction(BaseAction.HideLoading)
             baseAction(BaseAction.ShowErrorMessage(it.errorType?.toString(context) ?: ""))
         }
 
-    chatState.createChatResult
+    chatsListState.createChatResult
         ?.onSuccess { response ->
             popupState = false
             newChatTitle = ""
             baseAction(BaseAction.HideLoading)
-            navigateToChat(response.id)
-            chatAction(ChatAction.ClearChatResults)
+            chatsListAction(ChatsListAction.NavigateToChat(response))
         }
         ?.onError {
             baseAction(BaseAction.HideLoading)
             baseAction(BaseAction.ShowErrorMessage(it.errorType?.toString(context) ?: ""))
         }
 
-    chatState.deleteChatResult
+    chatsListState.deleteChatResult
         ?.onSuccess {
             baseAction(BaseAction.HideLoading)
             popupState = false
@@ -127,7 +122,7 @@ private fun ChatListContent(
             FloatingButton(
                 isVisible = true,
                 onClick = {
-                    chatAction(ChatAction.CreateChat)
+                    chatsListAction(ChatsListAction.CreateChat)
                     baseAction(BaseAction.ShowLoading)
                 },
                 modifier = Modifier.size(64.dp)
@@ -146,14 +141,14 @@ private fun ChatListContent(
                 value = newChatTitle,
                 onValueChange = { newChatTitle = it },
                 onCreateChat = {
-                    chatAction(ChatAction.CreateChat)
+                    chatsListAction(ChatsListAction.CreateChat)
                     baseAction(BaseAction.ShowLoading)
                 },
                 onEditChat = {
-                    chatAction(ChatAction.EditChat(chatId, newChatTitle))
+                    chatsListAction(ChatsListAction.EditChat(chatId, newChatTitle))
                     baseAction(BaseAction.ShowLoading)
                 },
-                onDelete = { chatAction(ChatAction.DeleteChat(chatId)) },
+                onDelete = { chatsListAction(ChatsListAction.DeleteChat(chatId)) },
                 onDismiss = {
                     popupState = false
                     isEdit = false
@@ -170,12 +165,16 @@ private fun ChatListContent(
                 .fillMaxSize()
         ) {
             items(
-                items = chatState.chatsList.map { chat -> chat.toChatUI() },
+                items = chatsListState.chatsList.map { chat -> chat.toChatUI() },
                 key = { it.id }
             ) { chat ->
                 ChatListCard(
                     chat = chat,
-                    onClick = { navigateToChat(chat.id) },
+                    onClick = {
+                        chatsListAction(ChatsListAction.NavigateToChat(
+                            chatsListState.chatsList.find { it.id == chat.id } ?: Chat()
+                        ))
+                    },
                     onEdit = { id, title ->
                         isEdit = true
                         newChatTitle = title
@@ -194,7 +193,7 @@ private fun ChatListContent(
 private fun ChatListScreenPreview() {
     AppTheme {
         ChatListContent(
-            chatState = ChatState(
+            chatsListState = ChatsListState(
                 chatsList = listOf(
                     Chat(
                         id = "1",
@@ -213,8 +212,7 @@ private fun ChatListScreenPreview() {
                     ),
                 )
             ),
-            navigateToChat = {},
-            chatAction = {},
+            chatsListAction = {},
             baseAction = {}
         )
     }

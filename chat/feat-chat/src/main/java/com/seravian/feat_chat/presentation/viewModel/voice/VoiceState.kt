@@ -5,9 +5,12 @@ import com.greenvenom.core_network.data.EmptyResult
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
 import com.seravian.core_chat.domain.models.Audio
+import com.seravian.core_chat.domain.models.Chat
 
 @Immutable
 data class VoiceState(
+    val currentChat: Chat? = null,
+    val isRecordingVoice: Boolean = false,
     val isStreamingVoice: Boolean = false,
     val isMuted: Boolean = false,
     val voiceAmplitude: Float = 900f,

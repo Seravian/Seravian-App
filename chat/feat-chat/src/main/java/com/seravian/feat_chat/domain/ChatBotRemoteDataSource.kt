@@ -25,7 +25,7 @@ import com.seravian.core_chat.data.dto.respose.EditChatResponse
 import com.seravian.core_chat.data.dto.respose.MessageResponse
 import kotlinx.coroutines.flow.Flow
 
-interface ChatRemoteDataSource {
+interface ChatBotRemoteDataSource {
     //////////////////////////////////
     /////////// CHAT METHODS
     /////////////////////////////////

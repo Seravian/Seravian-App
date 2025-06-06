@@ -25,7 +25,7 @@ import com.greenvenom.core_ui.presentation.BaseScreen
 import com.greenvenom.core_ui.theme.AppTheme
 import com.seravian.feat_chat.presentation.viewModel.chat.ChatAction
 import com.seravian.feat_chat.presentation.viewModel.chat.ChatState
-import com.seravian.feat_chat.presentation.viewModel.ChatViewModel
+import com.seravian.feat_chat.presentation.viewModel.chat.ChatViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
@@ -41,6 +41,7 @@ import com.meticha.permissions_compose.rememberAppPermissionState
 import com.seravian.feat_chat.R
 import com.seravian.feat_chat.presentation.components.PulseCircle
 import com.seravian.feat_chat.presentation.viewModel.voice.VoiceAction
+import com.seravian.feat_chat.presentation.viewModel.voice.VoiceModeViewModel
 import com.seravian.feat_chat.presentation.viewModel.voice.VoiceState
 
 @Composable
@@ -59,7 +60,7 @@ fun VoiceModeScreen(
 
     PermissionLifeCycleCheckEffect(permissions)
 
-    BaseScreen<ChatViewModel>(
+    BaseScreen<VoiceModeViewModel>(
         onPhysicalBack = { viewModel ->
             viewModel.voiceAction(VoiceAction.StopCollectingAIAudio(true))
             viewModel.voiceAction(VoiceAction.StopStreaming)
@@ -79,11 +80,9 @@ fun VoiceModeScreen(
             }
         }
     ) { viewModel ->
-        val chatState by viewModel.chatState.collectAsStateWithLifecycle()
         val voiceState by viewModel.voiceState.collectAsStateWithLifecycle()
 
         VoiceModeContent(
-            chatState = chatState,
             voiceState = voiceState,
             voiceAction = {
                 when(it) {
@@ -99,7 +98,6 @@ fun VoiceModeScreen(
 
 @Composable
 private fun VoiceModeContent(
-    chatState: ChatState,
     voiceState: VoiceState,
     voiceAction: (VoiceAction) -> Unit,
     baseAction: (BaseAction) -> Unit
@@ -129,7 +127,7 @@ private fun VoiceModeContent(
                 isVisible = true,
                 isSideDestination = true,
                 isActionEnabled = false,
-                title = chatState.currentChat?.title ?: "Seravian",
+                title = voiceState.currentChat?.title ?: "Seravian",
                 navigateBack = {
                     voiceAction(VoiceAction.StopCollectingAIAudio(true))
                     voiceAction(VoiceAction.StopStreaming)
@@ -207,7 +205,6 @@ private fun VoiceModeContent(
 private fun VoiceModeContentPreview() {
     AppTheme {
         VoiceModeContent(
-            chatState = ChatState(),
             voiceState = VoiceState(isMuted = true, voiceAmplitude = 10000f),
             voiceAction = {},
             baseAction = {}

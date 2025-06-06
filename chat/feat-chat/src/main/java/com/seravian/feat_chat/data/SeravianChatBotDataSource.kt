@@ -27,7 +27,7 @@ import com.seravian.core_chat.data.dto.respose.ConfirmedMessageResponse
 import com.seravian.core_chat.data.dto.respose.CreateChatResponse
 import com.seravian.core_chat.data.dto.respose.EditChatResponse
 import com.seravian.core_chat.data.dto.respose.MessageResponse
-import com.seravian.feat_chat.domain.ChatRemoteDataSource
+import com.seravian.feat_chat.domain.ChatBotRemoteDataSource
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.delete
@@ -42,10 +42,10 @@ import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import kotlinx.coroutines.flow.Flow
 
-class SeravianChatDataSource(
+class SeravianChatBotDataSource(
     private val authorizedHttpClient: HttpClient,
     private val signalRConnection: RealtimeConnection
-): ChatRemoteDataSource {
+): ChatBotRemoteDataSource {
     //////////////////////////////////
     /////////// CHAT METHODS
     /////////////////////////////////

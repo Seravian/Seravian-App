@@ -1,4 +1,4 @@
-package com.seravian.feat_chat.data
+package com.seravian.feat_chat.data.utils
 
 import android.media.AudioAttributes
 import android.media.AudioFormat

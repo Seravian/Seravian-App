@@ -6,9 +6,9 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 data class Chat(
-    val id: String,
-    val title: String?,
-    val createdAt: String
+    val id: String = "",
+    val title: String? = null,
+    val createdAt: String = "",
 ) {
     fun formatDateTime(): String {
         val cleanedCreatedAt = if (createdAt.contains(".")) {
