@@ -9,4 +9,9 @@
     <string name="edit">تعديل</string>
     <string name="edit_chat">تعديل المحادثة</string>
     <string name="delete">حذف</string>
+    <string name="analyze_symptoms">حلل الأعراض</string>
+    <string name="voice_mode">المحادثة الصوتية</string>
+    <string name="unmuted">الصوت مسموع</string>
+    <string name="muted">الصوت غير مسموع</string>
+    <string name="voice_mode_message">رسالة صوتية</string>
 </resources>

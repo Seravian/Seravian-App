@@ -37,6 +37,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    androidResources {
+        generateLocaleConfig = true
+    }
     kotlin {
         compilerOptions {
             freeCompilerArgs.add("-Xwhen-guards")
@@ -65,15 +68,13 @@ dependencies {
     implementation(project(":profile:core-profile"))
     implementation(project(":profile:feat-profile"))
 
-    val appcompatVersion = "1.7.0"
-
-    implementation("androidx.appcompat:appcompat:$appcompatVersion")
-    implementation("androidx.appcompat:appcompat-resources:$appcompatVersion")
-
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.appcompat.resources)
+    implementation(libs.material)
     implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.bundles.compose)
-    implementation(libs.bundles.networking)
+    implementation(libs.bundles.compose.main)
+    implementation(libs.bundles.ktor)
     implementation(libs.bundles.dependency.injection)
     implementation(libs.androidx.compose.navigation)
     implementation(libs.kotlinx.serialization.json)

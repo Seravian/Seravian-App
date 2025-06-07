@@ -1,7 +1,8 @@
 package com.seravian.feat_chat.presentation.components
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -13,6 +14,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -22,7 +24,8 @@ import com.seravian.feat_chat.R
 fun ChatInputTextField(
     input: String,
     onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    trailingIcon: @Composable (() -> Unit)? = null
 ) {
     OutlinedTextField(
         value = input,
@@ -37,15 +40,24 @@ fun ChatInputTextField(
         placeholder = {
             Text(text = stringResource(R.string.type_a_message))
         },
+        trailingIcon = trailingIcon,
         modifier = modifier
     )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun ChatInputTextFieldPreview() {
     ChatInputTextField(
         input = "",
-        onValueChange = {}
+        onValueChange = {},
+        trailingIcon = {
+            IconButton(onClick = {}, enabled = true) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_analyze_symptoms),
+                    contentDescription = stringResource(R.string.analyze_symptoms)
+                )
+            }
+        }
     )
 }

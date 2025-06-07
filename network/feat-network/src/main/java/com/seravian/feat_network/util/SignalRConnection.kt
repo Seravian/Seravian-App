@@ -1,5 +1,6 @@
 package com.seravian.feat_network.util
 
+import android.util.Log
 import com.greenvenom.core_network.api.utils.constructUrl
 import com.greenvenom.core_network.api.utils.safeCall
 import com.greenvenom.core_network.data.map
@@ -39,7 +40,6 @@ class SignalRConnection(
     private val defaultRetryDelays = listOf(2_000L, 3_000L, 5_000L, 10_000L)
 
     private val currentTokenFlow = MutableStateFlow(Tokens())
-    private val tokenMutex = Mutex()
 
     private val _connectionStatus = MutableStateFlow(ConnectionStatus.IDLE)
     override val connectionStatus: StateFlow<ConnectionStatus> = _connectionStatus.asStateFlow()
@@ -53,11 +53,10 @@ class SignalRConnection(
         // Start the token collection if not already started
         if (tokenCollectionJob == null) {
             tokenCollectionJob = scope.launch {
-                tokensDataSource.getStoredTokensFlow().collectLatest { storedTokens ->
-                    tokenMutex.withLock {
-                        val refreshedTokens = refreshTokenIfNeeded(storedTokens)
-                        currentTokenFlow.update { refreshedTokens }
-                    }
+                tokensDataSource.getStoredTokensFlow().collect { storedTokens ->
+                    Log.d("EncryptedTokensDataSource", "Tokens: $storedTokens")
+                    val refreshedTokens = refreshTokenIfNeeded(storedTokens)
+                    currentTokenFlow.update { refreshedTokens }
                 }
             }
         }
@@ -74,11 +73,9 @@ class SignalRConnection(
 
                 // Attempt to refresh token on reconnect if needed
                 scope.launch {
-                    tokenMutex.withLock {
-                        val tokens = currentTokenFlow.value
-                        val refreshedTokens = refreshTokenIfNeeded(tokens)
-                        accessToken = refreshedTokens.accessToken
-                    }
+                    val tokens = currentTokenFlow.value
+                    val refreshedTokens = refreshTokenIfNeeded(tokens)
+                    accessToken = refreshedTokens.accessToken
                 }
 
                 defaultRetryDelays.getOrNull(previousRetryCount)
@@ -97,7 +94,6 @@ class SignalRConnection(
                             HubConnectionState.DISCONNECTED -> ConnectionStatus.DISCONNECTED
                             HubConnectionState.CONNECTING -> ConnectionStatus.CONNECTING
                             HubConnectionState.RECONNECTING -> ConnectionStatus.RECONNECTING
-                            else -> ConnectionStatus.IDLE
                         }
                     }
                 }

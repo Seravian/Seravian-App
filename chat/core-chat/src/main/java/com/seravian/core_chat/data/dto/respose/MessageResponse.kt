@@ -1,5 +1,6 @@
 package com.seravian.core_chat.data.dto.respose
 
+import com.seravian.core_chat.domain.MessageType
 import com.seravian.core_chat.domain.models.Message
 import kotlinx.serialization.Serializable
 
@@ -8,12 +9,14 @@ data class MessageResponse(
     val id: Long,
     val content: String,
     val timestampUtc: String,
-    val isAI: Boolean
+    val isAI: Boolean,
+    val messageType: Int
 ) {
     fun extractMessage() = Message(
         id = Pair(id, null),
         content = content,
         timestamp = timestampUtc,
-        isAI = isAI
+        isAI = isAI,
+        messageType = MessageType.entries[messageType]
     )
 }

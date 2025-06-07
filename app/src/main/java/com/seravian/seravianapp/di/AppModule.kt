@@ -6,7 +6,7 @@ import com.seravian.seravianapp.navigation.utils.SessionDestinationHandler
 import org.koin.dsl.module
 
 val appModule = module {
-    single<SessionRepository> {
+    single<SessionRepository>(createdAtStart = true) {
         SeravianSessionRepository(
             tokensDataSource = get()
         )

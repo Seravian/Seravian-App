@@ -4,7 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ConfirmedMessageResponse(
-    val timestampUtc: String,
     val messageId: Long,
+    val chatId: String,
+    val timestampUtc: String,
     val clientMessageId: String
 )

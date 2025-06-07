@@ -11,6 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -23,6 +24,10 @@ class SeravianSessionRepository(
     private val _sessionDestination = MutableStateFlow(SessionDestinations.INITIALIZE)
     override val sessionDestination = _sessionDestination
         .stateIn(scope, SharingStarted.Lazily, SessionDestinations.INITIALIZE)
+
+    init {
+        collectSessionStatus()
+    }
 
     override fun collectSessionStatus() {
         scope.launch {

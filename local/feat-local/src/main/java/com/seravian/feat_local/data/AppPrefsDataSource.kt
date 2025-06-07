@@ -30,7 +30,7 @@ class AppPrefsDataSource(private val context: Context): PrefsDataSource {
         }
     }
     
-    override suspend fun changeTheme( isDarkTheme: Boolean) {
+    override suspend fun changeTheme(isDarkTheme: Boolean) {
         context.themeDataStore.edit { preferences ->
             preferences[darkThemeKey] = isDarkTheme
         }

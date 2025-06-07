@@ -17,6 +17,8 @@ import org.koin.androidx.compose.koinViewModel
 inline fun<reified VM: BaseViewModel> BaseScreen(
     crossinline onCreateAction: (viewModel: VM) -> Unit = {},
     crossinline onStartAction: (viewModel: VM) -> Unit = {},
+    crossinline onResumeAction: (viewModel: VM) -> Unit = {},
+    crossinline onPauseAction: (viewModel: VM) -> Unit = {},
     crossinline onStopAction: (viewModel: VM) -> Unit = {},
     crossinline onDestroyAction: (viewModel: VM) -> Unit = {},
     crossinline onPhysicalBack: (viewModel: VM) -> Unit = {},
@@ -39,13 +41,19 @@ inline fun<reified VM: BaseViewModel> BaseScreen(
                     Lifecycle.Event.ON_START -> {
                         onStartAction(viewModel)
                     }
+                    Lifecycle.Event.ON_RESUME -> {
+                        onResumeAction(viewModel)
+                    }
+                    Lifecycle.Event.ON_PAUSE -> {
+                        onPauseAction(viewModel)
+                    }
                     Lifecycle.Event.ON_STOP -> {
                         onStopAction(viewModel)
                     }
                     Lifecycle.Event.ON_DESTROY -> {
                         onDestroyAction(viewModel)
                     }
-                    else -> { /* Ignore other events */ }
+                    else -> {}
                 }
             }
 

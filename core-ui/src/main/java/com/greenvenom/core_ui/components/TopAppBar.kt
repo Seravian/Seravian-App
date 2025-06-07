@@ -26,6 +26,9 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.greenvenom.core_ui.R
@@ -71,6 +74,10 @@ private fun TopBarContent(
     modifier: Modifier = Modifier,
     action: @Composable () -> Unit
 ) {
+    val bowlbyFontFamily = FontFamily(
+        Font(R.font.bowlby_one_sc, weight = FontWeight.Normal)
+    )
+
     val colorScheme = MaterialTheme.colorScheme
 
     TopAppBar(
@@ -109,7 +116,6 @@ private fun TopBarContent(
                     Image(
                         painter = logo,
                         contentDescription = "Logo",
-                        contentScale = ContentScale.Crop,
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
@@ -117,8 +123,8 @@ private fun TopBarContent(
                 // Title
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.titleLarge,
-                    color = colorScheme.onBackground
+                    fontFamily = bowlbyFontFamily,
+                    color = colorScheme.tertiary
                 )
             }
         },
@@ -135,7 +141,7 @@ private fun TopAppBarPreview() {
             isActionEnabled = true,
             navigateBack = {  },
             logo = painterResource(R.drawable.logo),
-            title = "Test",
+            title = "Testsdgd",
             action = { IconButton(onClick = {  }) {
                 Icon(
                     painter = painterResource(id = R.drawable.short_back_arrow),
