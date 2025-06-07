@@ -11,6 +11,7 @@ import com.seravian.core_chat.domain.models.Message
 import com.seravian.feat_chat.domain.ChatBotRemoteDataSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,12 +34,19 @@ class ChatBotStateRepository(
         seravianChatBotDataSource.getSignalRConnectionStatus()
             .shareIn(scope, SharingStarted.Lazily, replay = 1)
 
-    fun updateCurrentChat(newChat: Chat) {
-        runBlocking {
-            _chatBotState.update {
-                it.copy(
-                    currentChat = newChat
-                )
+    private var jobInternalConnectionStatus: Job? = null
+
+    fun updateCurrentChat(newChat: Chat?) {
+        _chatBotState.update {
+            it.copy(
+                previousChat = it.currentChat ?: it.previousChat,
+                currentChat = newChat
+            ).also {
+                if (it.currentChat != it.previousChat) {
+                    it.copy(
+                        isWaitingForResponse = false
+                    )
+                }
             }
         }
     }
@@ -51,14 +59,12 @@ class ChatBotStateRepository(
         }
     }
 
-    fun changeResponseWaiting(): Boolean {
+    fun changeResponseWaiting() {
         _chatBotState.update {
             it.copy(
                 isWaitingForResponse = !it.isWaitingForResponse
             )
         }
-
-        return _chatBotState.value.isWaitingForResponse
     }
 
     suspend fun startConnection() {
@@ -71,7 +77,9 @@ class ChatBotStateRepository(
     }
 
     private fun collectConnectionStatusInternally() {
-        scope.launch {
+        if (jobInternalConnectionStatus != null) return
+
+        jobInternalConnectionStatus = scope.launch {
             connectionStatusSharedFlow.collect { status ->
                 when (status) {
                     ConnectionStatus.CONNECTING -> {
@@ -100,8 +108,6 @@ class ChatBotStateRepository(
         }
     }
 
-    fun connectionStatus(): Flow<ConnectionStatus> = connectionStatusSharedFlow
-
     suspend fun joinChat(joinChatRequest: JoinChatRequest) {
         try {
             seravianChatBotDataSource.joinChat(joinChatRequest)
@@ -111,7 +117,7 @@ class ChatBotStateRepository(
                 )
             }
         } catch (e: Exception) {
-            Log.e("Chat", "Error joining chat: ${e.message}")
+            Log.e("Chat", "Error joining chat: $e")
             _chatBotState.update {
                 it.copy(
                     joinChatResult = NetworkResult.Error(NetworkError(ErrorType.UNKNOWN_ERROR))

@@ -8,4 +8,5 @@ sealed interface ChatsListAction {
     data class DeleteChat(val chatId: String) : ChatsListAction
     data object GetChats : ChatsListAction
     data class NavigateToChat(val chat: Chat) : ChatsListAction
+    data object ClearChatOperationResults : ChatsListAction
 }

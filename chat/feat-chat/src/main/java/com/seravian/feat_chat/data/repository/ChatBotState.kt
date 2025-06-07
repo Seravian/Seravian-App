@@ -7,7 +7,8 @@ import com.seravian.core_chat.domain.models.Message
 
 data class ChatBotState(
     val currentChat: Chat ?= null,
+    val previousChat: Chat ?= null,
     val lastMessage: Message ?= null,
-    val isWaitingForResponse: Boolean = true,
+    val isWaitingForResponse: Boolean = false,
     val joinChatResult: EmptyResult<NetworkError> ?= null
 )

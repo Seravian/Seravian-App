@@ -72,16 +72,14 @@ fun ChatScreen(
 ) {
     BaseScreen<ChatViewModel>(
         onPhysicalBack = { viewModel ->
-            navigateBack()
-            viewModel.chatAction(ChatAction.StopMessageCollections)
             viewModel.chatAction(ChatAction.LeaveChat)
+            navigateBack()
         },
     ) { viewModel ->
         val chatState by viewModel.chatState.collectAsStateWithLifecycle()
 
         LaunchedEffect(Unit) {
             viewModel.baseAction(BaseAction.ShowLoading)
-            viewModel.chatAction(ChatAction.GetChatMessages(chatId))
         }
 
         ChatScreenContent(
@@ -89,7 +87,7 @@ fun ChatScreen(
             chatAction = {
                 when(it) {
                     is ChatAction.NavigateToVoiceMode -> navigateToVoiceMode()
-                    is ChatAction.NavigateBack -> navigateBack()
+                    is ChatAction.LeaveChat -> navigateBack()
                     else -> {}
                 }
                 viewModel.chatAction(it)
@@ -114,7 +112,7 @@ private fun ChatScreenContent(
 
     LaunchedEffect(chatState.messagesList.size) {
         if (chatState.messagesList.isEmpty()) return@LaunchedEffect
-        listState.animateScrollToItem(chatState.messagesList.lastIndex)
+        listState.scrollToItem(chatState.messagesList.lastIndex)
     }
 
     chatState.joinChatResult
@@ -125,7 +123,7 @@ private fun ChatScreenContent(
             baseAction(BaseAction.HideLoading)
             baseAction(BaseAction.ShowErrorMessage(
                 errorMessage = it.errorType?.toString(context) ?: "",
-                dismissAction = { chatAction(ChatAction.NavigateBack) }
+                dismissAction = { chatAction(ChatAction.LeaveChat) }
             ))
         }
 
@@ -134,8 +132,11 @@ private fun ChatScreenContent(
             TopAppBar(
                 isVisible = true,
                 isActionEnabled = true,
-                isSideDestination = false,
+                isSideDestination = true,
                 title = chatState.currentChat?.title ?: "Seravian",
+                navigateBack = {
+                    chatAction(ChatAction.LeaveChat)
+                },
                 action = {
                     IconButton(onClick = {
                         chatAction(ChatAction.NavigateToVoiceMode)

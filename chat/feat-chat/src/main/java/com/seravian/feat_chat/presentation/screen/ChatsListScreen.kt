@@ -57,7 +57,7 @@ fun ChatListScreen(
                     is ChatsListAction.NavigateToChat -> navigateToChat(it.chat.id)
                     else -> {}
                 }
-                viewModel::chatsListAction
+                viewModel.chatsListAction(it)
             },
             baseAction = viewModel::baseAction,
         )
@@ -90,11 +90,14 @@ private fun ChatListContent(
             popupState = false
             newChatTitle = ""
             baseAction(BaseAction.HideLoading)
+            chatsListAction(ChatsListAction.ClearChatOperationResults)
             chatsListAction(ChatsListAction.NavigateToChat(response))
         }
         ?.onError {
             baseAction(BaseAction.HideLoading)
-            baseAction(BaseAction.ShowErrorMessage(it.errorType?.toString(context) ?: ""))
+            baseAction(BaseAction.ShowErrorMessage(it.errorType?.toString(context) ?: "") {
+                chatsListAction(ChatsListAction.ClearChatOperationResults)
+            })
         }
 
     chatsListState.deleteChatResult
@@ -104,10 +107,13 @@ private fun ChatListContent(
             newChatTitle = ""
             chatId = ""
             isEdit = false
+            chatsListAction(ChatsListAction.ClearChatOperationResults)
         }
         ?.onError {
             baseAction(BaseAction.HideLoading)
-            baseAction(BaseAction.ShowErrorMessage(it.errorType?.toString(context) ?: ""))
+            baseAction(BaseAction.ShowErrorMessage(it.errorType?.toString(context) ?: "") {
+                chatsListAction(ChatsListAction.ClearChatOperationResults)
+            })
         }
 
     Scaffold(

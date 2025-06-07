@@ -94,7 +94,6 @@ class SignalRConnection(
                             HubConnectionState.DISCONNECTED -> ConnectionStatus.DISCONNECTED
                             HubConnectionState.CONNECTING -> ConnectionStatus.CONNECTING
                             HubConnectionState.RECONNECTING -> ConnectionStatus.RECONNECTING
-                            else -> ConnectionStatus.IDLE
                         }
                     }
                 }

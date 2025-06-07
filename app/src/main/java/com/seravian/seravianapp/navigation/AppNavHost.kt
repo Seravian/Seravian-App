@@ -186,7 +186,6 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         navigation<SubGraph.AIChat>(startDestination = Screen.Chat()) {
             composable<Screen.Chat> {
                 val args = it.toRoute<Screen.Chat>()
-                Log.d("ChatId", args.chatId)
                 ChatScreen(
                     chatId = args.chatId,
                     navigateToVoiceMode = {

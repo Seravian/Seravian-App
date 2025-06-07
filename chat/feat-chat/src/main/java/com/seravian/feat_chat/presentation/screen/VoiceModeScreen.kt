@@ -3,9 +3,7 @@ package com.seravian.feat_chat.presentation.screen
 import android.Manifest
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,16 +21,12 @@ import com.greenvenom.core_ui.components.TopAppBar
 import com.greenvenom.core_ui.presentation.BaseAction
 import com.greenvenom.core_ui.presentation.BaseScreen
 import com.greenvenom.core_ui.theme.AppTheme
-import com.seravian.feat_chat.presentation.viewModel.chat.ChatAction
-import com.seravian.feat_chat.presentation.viewModel.chat.ChatState
-import com.seravian.feat_chat.presentation.viewModel.chat.ChatViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.greenvenom.core_network.data.NetworkResult
 import com.greenvenom.core_network.data.onError
 import com.greenvenom.core_network.utils.toString
 import com.meticha.permissions_compose.AppPermission
@@ -62,14 +56,13 @@ fun VoiceModeScreen(
 
     BaseScreen<VoiceModeViewModel>(
         onPhysicalBack = { viewModel ->
-            viewModel.voiceAction(VoiceAction.StopCollectingAIAudio(true))
-            viewModel.voiceAction(VoiceAction.StopStreaming)
+            viewModel.voiceAction(VoiceAction.LeaveVoiceMode)
             navigateBack()
         },
         enableLifecycleObservation = true,
         onPauseAction = { viewModel ->
             viewModel.voiceAction(VoiceAction.StopStreaming)
-            viewModel.voiceAction(VoiceAction.StopCollectingAIAudio(false))
+            viewModel.voiceAction(VoiceAction.StopCollectingAIAudio(true))
         },
         onResumeAction = { viewModel ->
             if (permissions.allRequiredGranted()) {
@@ -86,7 +79,7 @@ fun VoiceModeScreen(
             voiceState = voiceState,
             voiceAction = {
                 when(it) {
-                    is VoiceAction.NavigateBack -> navigateBack()
+                    is VoiceAction.LeaveVoiceMode -> navigateBack()
                     else -> {}
                 }
                 viewModel.voiceAction(it)
@@ -129,9 +122,7 @@ private fun VoiceModeContent(
                 isActionEnabled = false,
                 title = voiceState.currentChat?.title ?: "Seravian",
                 navigateBack = {
-                    voiceAction(VoiceAction.StopCollectingAIAudio(true))
-                    voiceAction(VoiceAction.StopStreaming)
-                    voiceAction(VoiceAction.NavigateBack)
+                    voiceAction(VoiceAction.LeaveVoiceMode)
                 }
             )
         },

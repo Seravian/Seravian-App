@@ -9,5 +9,5 @@ sealed interface VoiceAction {
     data class StopCollectingAIAudio(val stopAudioPlayer: Boolean) : VoiceAction
     data object ResetVoiceState : VoiceAction
     data object RestartStreaming : VoiceAction
-    data object NavigateBack : VoiceAction
+    data object LeaveVoiceMode : VoiceAction
 }

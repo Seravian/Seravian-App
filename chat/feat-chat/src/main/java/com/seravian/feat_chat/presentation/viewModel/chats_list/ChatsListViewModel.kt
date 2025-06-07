@@ -28,6 +28,7 @@ class ChatsListViewModel(
             is ChatsListAction.DeleteChat -> deleteChat(action.chatId)
             is ChatsListAction.EditChat -> editChat(action.chatId, action.title)
             is ChatsListAction.NavigateToChat -> chatBotStateRepository.updateCurrentChat(action.chat)
+            ChatsListAction.ClearChatOperationResults -> clearChatOperationResults()
         }
     }
 
@@ -69,6 +70,16 @@ class ChatsListViewModel(
         viewModelScope.launch {
             val result = chatsListRepository.updateChat(EditChatRequest(chatId, title))
             _chatsListState.update { it.copy(editChatResult = result) }
+        }
+    }
+
+    private fun clearChatOperationResults() {
+        _chatsListState.update {
+            it.copy(
+                createChatResult = null,
+                deleteChatResult = null,
+                editChatResult = null
+            )
         }
     }
 }

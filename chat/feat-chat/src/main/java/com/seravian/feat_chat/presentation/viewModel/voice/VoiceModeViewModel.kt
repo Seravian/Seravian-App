@@ -1,8 +1,6 @@
 package com.seravian.feat_chat.presentation.viewModel.voice
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.greenvenom.core_network.data.ConnectionStatus
 import com.greenvenom.core_network.data.NetworkResult
 import com.greenvenom.core_network.data.onSuccess
 import com.greenvenom.core_ui.presentation.BaseViewModel
@@ -35,14 +33,20 @@ class VoiceModeViewModel(
     private var jobAudioResponseCollection: Job ?= null
 
     init {
-        _voiceState.update {
-            it.copy(
-                isWaitingForResponse = chatBotStateRepository.chatBotState.value.isWaitingForResponse,
-                lastAudioId = chatBotStateRepository.chatBotState.value.lastMessage?.id?.first,
-                currentChat = chatBotStateRepository.chatBotState.value.currentChat
-            )
-        }
         collectConnectionStatus()
+
+        viewModelScope.launch {
+            chatBotStateRepository.chatBotState.collect { newState ->
+                _voiceState.update {
+                    it.copy(
+                        isWaitingForResponse = newState.isWaitingForResponse,
+                        lastAudioId = newState.lastMessage?.id?.first,
+                        currentChat = newState.currentChat
+                    )
+                }
+
+            }
+        }
     }
 
     fun voiceAction(action: VoiceAction) {
@@ -55,27 +59,30 @@ class VoiceModeViewModel(
             is VoiceAction.StopCollectingAIAudio -> stopAudioResponseCollection(action.stopAudioPlayer)
             is VoiceAction.ResetVoiceState -> resetVoiceState()
             is VoiceAction.RestartStreaming -> restartStreaming()
-            is VoiceAction.NavigateBack -> { stopStreaming() }
+            is VoiceAction.LeaveVoiceMode -> {
+                stopAudioResponseCollection(true)
+                stopStreaming()
+                viewModelScope.launch(Dispatchers.IO) {
+                    chatBotStateRepository.stopConnection()
+                }
+            }
         }
     }
 
     private fun collectConnectionStatus() {
         viewModelScope.launch {
-            chatBotStateRepository.connectionStatus().collect { status ->
-                when(status) {
-                    ConnectionStatus.CONNECTING -> {
-
-                    }
-                    ConnectionStatus.CONNECTED -> {
+            chatBotStateRepository.chatBotState.collect { status ->
+                when(status.joinChatResult) {
+                    is NetworkResult.Success -> {
+                        getLastAudioResponse()
                         collectAudioResponse()
                     }
-                    ConnectionStatus.RECONNECTING -> {
-                        getLastAudioResponse()
-                    }
-                    ConnectionStatus.DISCONNECTED -> {
+
+                    is NetworkResult.Error -> {
                         stopAudioResponseCollection()
                     }
-                    ConnectionStatus.IDLE -> { Log.d("Status", "IDLE") }
+
+                    null -> { stopAudioResponseCollection() }
                 }
             }
         }
@@ -113,11 +120,7 @@ class VoiceModeViewModel(
                 )
             }
 
-            _voiceState.update {
-                it.copy(
-                    isWaitingForResponse = chatBotStateRepository.changeResponseWaiting()
-                )
-            }
+            chatBotStateRepository.changeResponseWaiting()
 
             val audioResult = runBlocking {
                 voiceModeRepository.fetchAIAudio(
@@ -157,11 +160,7 @@ class VoiceModeViewModel(
                         isStreamingVoice = false
                     )
                 }
-                _voiceState.update {
-                    it.copy(
-                        isWaitingForResponse = chatBotStateRepository.changeResponseWaiting()
-                    )
-                }
+                chatBotStateRepository.changeResponseWaiting()
 
                 viewModelScope.launch {
                     val uploadAudioResult = withContext(Dispatchers.IO) {
@@ -197,6 +196,7 @@ class VoiceModeViewModel(
     }
 
     private fun collectAudioResponse() {
+        if (jobAudioResponseCollection != null) return
         jobAudioResponseCollection = viewModelScope.launch {
             voiceModeRepository.receiveAIAudioResponse { audioResult ->
                 _voiceState.update {
@@ -221,11 +221,7 @@ class VoiceModeViewModel(
                         voiceUploadResult = null
                     )
                 }
-                _voiceState.update {
-                    it.copy(
-                        isWaitingForResponse = chatBotStateRepository.changeResponseWaiting()
-                    )
-                }
+                chatBotStateRepository.changeResponseWaiting()
                 startStreaming()
             },
             onPlaybackComplete = {

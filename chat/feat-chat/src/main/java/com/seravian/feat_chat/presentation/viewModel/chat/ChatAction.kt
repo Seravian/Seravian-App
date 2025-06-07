@@ -5,6 +5,5 @@ sealed interface ChatAction {
     data object LeaveChat : ChatAction
     data class SendMessage(val message: String) : ChatAction
     data object NavigateToVoiceMode : ChatAction
-    data object NavigateBack : ChatAction
     data object StopMessageCollections : ChatAction
 }

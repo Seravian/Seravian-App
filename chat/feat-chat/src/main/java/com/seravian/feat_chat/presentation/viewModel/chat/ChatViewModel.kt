@@ -14,11 +14,13 @@ import com.seravian.core_chat.domain.MessageType
 import com.seravian.core_chat.domain.models.Message
 import com.seravian.feat_chat.data.repository.ChatBotStateRepository
 import com.seravian.feat_chat.domain.repository.ChatRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.UUID
 
 class ChatViewModel(
@@ -28,15 +30,23 @@ class ChatViewModel(
     private val _chatState: MutableStateFlow<ChatState> = MutableStateFlow(ChatState())
     val chatState = _chatState.asStateFlow()
 
+    private var jobConnectionStatusCollection: Job ?= null
     private var jobMessageResponsesCollection: Job ?= null
     private var jobMessagesCollection: Job ?= null
 
     init {
-        _chatState.update {
-            it.copy(
-                currentChat = chatBotStateRepository.chatBotState.value.currentChat,
-                isWaitingForResponse = chatBotStateRepository.chatBotState.value.isWaitingForResponse
-            )
+        viewModelScope.launch {
+            collectConnectionStatus()
+
+            chatBotStateRepository.chatBotState.collect { newState ->
+                _chatState.update {
+                    it.copy(
+                        currentChat = newState.currentChat,
+                        isWaitingForResponse = newState.isWaitingForResponse,
+                        joinChatResult = newState.joinChatResult
+                    )
+                }
+            }
         }
     }
 
@@ -49,36 +59,32 @@ class ChatViewModel(
             is ChatAction.NavigateToVoiceMode -> {
                 chatBotStateRepository.updateLastMessage(_chatState.value.messagesList.last())
             }
-            ChatAction.NavigateBack -> {  }
         }
     }
 
     private fun collectConnectionStatus() {
-        viewModelScope.launch {
-            chatBotStateRepository.connectionStatus().collect { status ->
-                when(status) {
-                    ConnectionStatus.CONNECTING -> {
+        jobConnectionStatusCollection = viewModelScope.launch {
+            chatBotStateRepository.chatBotState.collect { status ->
+                when(status.joinChatResult) {
+                    is NetworkResult.Success -> {
+                        getChatMessages(chatBotStateRepository.chatBotState.value.currentChat?.id ?: "")
+                        collectMessageResponses()
+                    }
 
-                    }
-                    ConnectionStatus.CONNECTED -> {
-                        if (chatBotStateRepository.chatBotState.value.joinChatResult is NetworkResult.Success) {
-                            getChatMessages(_chatState.value.currentChat?.id ?: "")
-                            collectMessageResponses()
-                        }
-                    }
-                    ConnectionStatus.RECONNECTING -> {
-
-                    }
-                    ConnectionStatus.DISCONNECTED -> {
+                    is NetworkResult.Error -> {
                         stopMessageCollections()
                     }
-                    ConnectionStatus.IDLE -> { Log.d("Status", "IDLE") }
+
+                    null -> {
+                        chatBotStateRepository.startConnection()
+                    }
                 }
             }
         }
     }
 
     private fun collectMessageResponses() {
+        if (jobMessageResponsesCollection != null) return
         jobMessageResponsesCollection = viewModelScope.launch {
             chatRepository.receiveClientResponse()
 
@@ -98,6 +104,7 @@ class ChatViewModel(
     }
 
     private fun getChatMessages(chatId: String) {
+        if (jobMessagesCollection != null) return
         jobMessagesCollection = viewModelScope.launch {
             val messagesFlow = chatRepository.getChatMessages(GetChatMessagesRequest(chatId))
             messagesFlow.collect { messagesResult ->
@@ -109,12 +116,10 @@ class ChatViewModel(
                             getChatMessagesResult = messagesResult
                         ) }
 
-                        if (_chatState.value.messagesList.last().isAI) {
-                            _chatState.update {
-                                it.copy(
-                                    isWaitingForResponse = chatBotStateRepository.changeResponseWaiting()
-                                )
-                            }
+                        if (!_chatState.value.messagesList.last().isAI && !_chatState.value.isWaitingForResponse) {
+                            chatBotStateRepository.changeResponseWaiting()
+                        } else if (_chatState.value.messagesList.last().isAI && _chatState.value.isWaitingForResponse) {
+                            chatBotStateRepository.changeResponseWaiting()
                         }
                     }
                     .onError {
@@ -123,20 +128,15 @@ class ChatViewModel(
                         ) }
                     }
             }
-
-            chatBotStateRepository.startConnection()
-            collectConnectionStatus()
         }
     }
 
     private fun leaveChat() {
-        viewModelScope.launch {
+        stopMessageCollections()
+        jobConnectionStatusCollection?.cancel()
+        jobConnectionStatusCollection = null
+        viewModelScope.launch(Dispatchers.IO) {
             chatBotStateRepository.stopConnection()
-            _chatState.update { it.copy(
-                currentChat = null,
-                messagesList = emptyList(),
-                joinChatResult = null
-            ) }
         }
     }
 
@@ -151,11 +151,7 @@ class ChatViewModel(
             ) }
             chatRepository.sendRequest(clientRequest)
         }.invokeOnCompletion {
-            _chatState.update {
-                it.copy(
-                    isWaitingForResponse = chatBotStateRepository.changeResponseWaiting()
-                )
-            }
+            chatBotStateRepository.changeResponseWaiting()
         }
     }
 
