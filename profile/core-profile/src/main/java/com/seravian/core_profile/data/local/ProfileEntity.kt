@@ -28,7 +28,7 @@ data class ProfileEntity(
     val isProfileSetupComplete: Boolean,
 )
 
-fun ProfileEntity.toProfile(): Profile {
+fun ProfileEntity.extractProfile(): Profile {
     return Profile(
         id = id,
         email = email,

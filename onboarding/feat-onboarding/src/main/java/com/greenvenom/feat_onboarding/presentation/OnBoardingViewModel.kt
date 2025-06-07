@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.greenvenom.core_onboarding.data.dto.request.OnBoardingRequest
 import com.greenvenom.validation.ValidateInput
 import com.greenvenom.validation.domain.onSuccess
-import com.greenvenom.feat_onboarding.domain.OnBoardingRepository
+import com.greenvenom.feat_onboarding.domain.repository.OnBoardingRepository
 import com.greenvenom.core_ui.presentation.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -60,10 +60,11 @@ class OnBoardingViewModel(
     }
 
     private fun validateFullName(fullName: String) {
-        val validationResult = ValidateInput.validateFullName(fullName)
+        val trimmedName = fullName.trim()
+        val validationResult = ValidateInput.validateFullName(trimmedName)
         validationResult.onSuccess {
             updateUserDetailsState(
-                fullName = fullName
+                fullName = trimmedName
             )
         }
         _onBoardingState.update {
@@ -86,7 +87,7 @@ class OnBoardingViewModel(
                 userDetails = currentState.userDetails.copy(
                     fullName = fullName ?: currentState.userDetails.fullName,
                     role = userType ?: currentState.userDetails.role,
-                    dateOfBirth = birthDate ?: currentState.userDetails.dateOfBirth,
+                    dateOfBirth = birthDate?.trim() ?: currentState.userDetails.dateOfBirth,
                     gender = gender ?: currentState.userDetails.gender
                 )
             ).let { updatedState ->

@@ -52,6 +52,8 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.auth)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

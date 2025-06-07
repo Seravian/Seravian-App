@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.seravian.core_chat.domain.MessageType
 import com.seravian.core_chat.domain.models.Message
 
 @Entity(
@@ -30,12 +31,15 @@ data class MessageEntity(
     @ColumnInfo(name = "timestamp")
     val timestamp: String = "",
     @ColumnInfo(name = "isAI")
-    val isAI: Boolean = false
+    val isAI: Boolean = false,
+    @ColumnInfo(name = "messageType")
+    val messageType: MessageType = MessageType.TEXT
 ) {
     fun extractMessage() = Message(
         id = Pair(id, null),
         content = content,
         timestamp = timestamp,
-        isAI = isAI
+        isAI = isAI,
+        messageType = messageType
     )
 }

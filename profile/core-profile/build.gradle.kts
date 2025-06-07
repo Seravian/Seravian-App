@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
-    id("com.google.devtools.ksp")
+    alias(libs.plugins.google.ksp)
 }
 
 android {
@@ -35,7 +35,6 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.runtime.android)
     val room = "2.6.1"
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
@@ -46,6 +45,7 @@ dependencies {
     implementation("androidx.room:room-paging:$room")
 
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.runtime.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

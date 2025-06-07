@@ -1,6 +1,6 @@
 package com.greenvenom.core_network.domain.repository
 
-import com.greenvenom.core_network.domain.SessionDestinations
+import com.greenvenom.core_network.data.SessionDestinations
 import kotlinx.coroutines.flow.StateFlow
 
 interface SessionRepository {

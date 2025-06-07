@@ -15,7 +15,9 @@ val localModule = module {
             androidContext(),
             SeravianDatabase::class.java,
             name = "seravian.db"
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     single {
