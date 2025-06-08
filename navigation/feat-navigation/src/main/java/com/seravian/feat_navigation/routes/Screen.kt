@@ -64,6 +64,10 @@ sealed class Screen: Destination {
     data object Doctors: Screen() {
         override val destinationType: DestinationType = DestinationType.MAIN
     }
+    @Serializable
+    data class DoctorDetails(val doctorId: String = ""): Screen() {
+        override val destinationType: DestinationType = DestinationType.SIDE
+    }
 
     @Serializable
     data object Sessions: Screen() {
@@ -74,4 +78,6 @@ sealed class Screen: Destination {
     data object Profile: Screen() {
         override val destinationType: DestinationType = DestinationType.MAIN
     }
+
+
 }

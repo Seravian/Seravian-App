@@ -9,6 +9,7 @@ import com.seravian.feat_home.di.homeModule
 import com.greenvenom.feat_onboarding.di.onBoardingModule
 import com.greenvenom.feat_tokens.di.tokensModule
 import com.seravian.feat_chat.di.chatModule
+import com.seravian.feat_doctors.di.doctorModule
 import com.seravian.feat_local.di.localModule
 import com.seravian.feat_navigation.di.navigationFeatureModule
 import com.seravian.feat_network.di.networkModule
@@ -36,7 +37,8 @@ class SeravianApp: Application() {
                 onBoardingModule,
                 homeModule,
                 chatModule,
-                profileModule
+                profileModule,
+                doctorModule
             )
         }
     }

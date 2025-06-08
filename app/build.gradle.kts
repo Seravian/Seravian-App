@@ -68,6 +68,8 @@ dependencies {
     implementation(project(":profile:core-profile"))
     implementation(project(":profile:feat-profile"))
 
+    implementation(project(":doctors:core-doctors"))
+    implementation(project(":doctors:feat-doctors"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.appcompat.resources)

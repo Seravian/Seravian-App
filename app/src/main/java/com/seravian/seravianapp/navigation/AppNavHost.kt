@@ -1,6 +1,5 @@
 package com.seravian.seravianapp.navigation
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,7 +14,6 @@ import androidx.navigation.toRoute
 import com.greenvenom.core_navigation.data.NavigationType
 import com.greenvenom.core_navigation.data.repository.NavigationStateRepository
 import com.greenvenom.core_navigation.utils.AppNavigator
-import com.greenvenom.core_network.domain.repository.SessionRepository
 import com.greenvenom.feat_auth.presentation.login.LoginScreen
 import com.greenvenom.feat_auth.presentation.otp.OtpScreen
 import com.greenvenom.feat_auth.presentation.register.RegisterScreen
@@ -29,6 +27,8 @@ import com.greenvenom.feat_onboarding.presentation.screens.OnBoardingScreen
 import com.seravian.feat_chat.presentation.screen.ChatListScreen
 import com.seravian.feat_chat.presentation.screen.ChatScreen
 import com.seravian.feat_chat.presentation.screen.VoiceModeScreen
+import com.seravian.feat_doctors.presentation.screen.DoctorDetailsScreen
+import com.seravian.feat_doctors.presentation.screen.DoctorsScreen
 import com.seravian.feat_profile.presentation.screen.ProfileScreen
 import com.seravian.seravianapp.navigation.utils.SessionDestinationHandler
 import org.koin.compose.koinInject
@@ -174,12 +174,21 @@ fun AppNavHost(modifier: Modifier = Modifier) {
                 Text(text = "Sessions")
             }
             composable<Screen.Doctors> {
-                Text(text = "Doctors")
+                DoctorsScreen(
+                    onDoctorClicked = { doctorId->
+                        navigationRepository.navigate(
+                            NavigationType.Standard(Screen.DoctorDetails(doctorId = doctorId)))}
+                )
+            }
+            composable<Screen.DoctorDetails> {
+                val args = it.toRoute<Screen.DoctorDetails>()
+                DoctorDetailsScreen(
+                    doctorId = args.doctorId,
+                    navigateBack = { navigationRepository.navigate(NavigationType.Back) }
+                )
             }
             composable<Screen.Profile> {
-                ProfileScreen(
-
-                )
+                ProfileScreen()
             }
         }
 
