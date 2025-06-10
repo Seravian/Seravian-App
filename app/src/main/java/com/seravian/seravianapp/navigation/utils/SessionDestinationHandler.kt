@@ -1,9 +1,10 @@
 package com.seravian.seravianapp.navigation.utils
 
-import com.greenvenom.core_navigation.data.NavigationType
+import com.greenvenom.core_navigation.data.NavigationType.ClearBackStack
 import com.greenvenom.core_navigation.data.repository.NavigationStateRepository
 import com.greenvenom.core_network.data.SessionDestinations
 import com.greenvenom.core_network.domain.repository.SessionRepository
+import com.seravian.core_profile.domain.utils.Role
 import com.seravian.feat_navigation.routes.SubGraph
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -27,14 +28,23 @@ class SessionDestinationHandler(
             SessionDestinations.INITIALIZE -> {
 
             }
+
             SessionDestinations.AUTH -> {
-                navigationStateRepository.navigate(NavigationType.ClearBackStack(SubGraph.Auth))
+                navigationStateRepository.navigate(ClearBackStack(SubGraph.Auth))
             }
+
             SessionDestinations.ONBOARDING -> {
-                navigationStateRepository.navigate(NavigationType.ClearBackStack(SubGraph.OnBoarding))
+                navigationStateRepository.navigate(ClearBackStack(SubGraph.OnBoarding))
             }
-            SessionDestinations.MAIN -> {
-                navigationStateRepository.navigate(NavigationType.ClearBackStack(SubGraph.Main))
+
+            SessionDestinations.PATIENT -> {
+                navigationStateRepository.updateAccountType(Role.PATIENT.ordinal)
+                navigationStateRepository.navigate(ClearBackStack(SubGraph.Patient))
+            }
+
+            SessionDestinations.DOCTOR -> {
+                navigationStateRepository.updateAccountType(Role.DOCTOR.ordinal)
+                navigationStateRepository.navigate(ClearBackStack(SubGraph.Doctor))
             }
         }
     }

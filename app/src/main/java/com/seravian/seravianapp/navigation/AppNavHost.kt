@@ -20,16 +20,18 @@ import com.greenvenom.feat_auth.presentation.register.RegisterScreen
 import com.greenvenom.feat_auth.presentation.reset_password.screens.NewPasswordScreen
 import com.greenvenom.feat_auth.presentation.reset_password.screens.VerifyEmailScreen
 import com.greenvenom.feat_auth.presentation.splash.SplashScreen
-import com.seravian.feat_navigation.routes.Screen
-import com.seravian.feat_navigation.routes.SubGraph
-import com.seravian.feat_home.presentation.HomeScreen
 import com.greenvenom.feat_onboarding.presentation.screens.OnBoardingScreen
 import com.seravian.feat_chat.presentation.screen.ChatListScreen
 import com.seravian.feat_chat.presentation.screen.ChatScreen
 import com.seravian.feat_chat.presentation.screen.VoiceModeScreen
 import com.seravian.feat_doctors.presentation.screen.DoctorDetailsScreen
 import com.seravian.feat_doctors.presentation.screen.DoctorsScreen
+import com.seravian.feat_home.presentation.HomeScreen
+import com.seravian.feat_navigation.routes.Screen
+import com.seravian.feat_navigation.routes.SubGraph
 import com.seravian.feat_profile.presentation.screen.ProfileScreen
+import com.seravian.feat_verification.presentation.screens.RequestDetailsScreen
+import com.seravian.feat_verification.presentation.screens.VerificationRequestsScreen
 import com.seravian.seravianapp.navigation.utils.SessionDestinationHandler
 import org.koin.compose.koinInject
 
@@ -148,38 +150,63 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             composable<Screen.OnBoarding> {
                 OnBoardingScreen(
                     navigateToNextScreen = {
-                        navigationRepository.navigate(
-                            NavigationType.ClearBackStack(SubGraph.Main)
-                        )
+
                     }
                 )
             }
         }
 
-        navigation<SubGraph.Main>(startDestination = Screen.Home) {
+        navigation<SubGraph.Patient>(startDestination = Screen.Home) {
             composable<Screen.Home> {
                 HomeScreen()
             }
-            composable<Screen.ChatsList> {
-                ChatListScreen(
-                    navigateToChat = { chatId ->
-                        navigationRepository.navigate(
-                            NavigationType.Standard(SubGraph.AIChat(chatId))
-                        )
-                    },
-                    navigateBack = { navigationRepository.navigate(NavigationType.Back) }
-                )
+
+            navigation<SubGraph.AIChat>(startDestination = Screen.ChatsList) {
+                composable<Screen.ChatsList> {
+                    ChatListScreen(
+                        navigateToChat = { chatId ->
+                            navigationRepository.navigate(
+                                NavigationType.Standard(Screen.Chat(chatId))
+                            )
+                        },
+                        navigateBack = { navigationRepository.navigate(NavigationType.Back) }
+                    )
+                }
+
+                composable<Screen.Chat> {
+                    val args = it.toRoute<Screen.Chat>()
+                    ChatScreen(
+                        chatId = args.chatId,
+                        navigateToVoiceMode = {
+                            navigationRepository.navigate(
+                                NavigationType.Standard(Screen.VoiceMode)
+                            )
+                        },
+                        navigateBack = { navigationRepository.navigate(NavigationType.Back) }
+                    )
+                }
+
+                composable<Screen.VoiceMode> {
+                    VoiceModeScreen(
+                        navigateBack = { navigationRepository.navigate(NavigationType.Back) }
+                    )
+                }
             }
+
             composable<Screen.Sessions> {
                 Text(text = "Sessions")
             }
+
             composable<Screen.Doctors> {
                 DoctorsScreen(
                     onDoctorClicked = { doctorId->
                         navigationRepository.navigate(
-                            NavigationType.Standard(Screen.DoctorDetails(doctorId = doctorId)))}
+                            NavigationType.Standard(Screen.DoctorDetails(doctorId = doctorId))
+                        )
+                    }
                 )
             }
+
             composable<Screen.DoctorDetails> {
                 val args = it.toRoute<Screen.DoctorDetails>()
                 DoctorDetailsScreen(
@@ -187,28 +214,41 @@ fun AppNavHost(modifier: Modifier = Modifier) {
                     navigateBack = { navigationRepository.navigate(NavigationType.Back) }
                 )
             }
-            composable<Screen.Profile> {
+
+            composable<Screen.PatientProfile> {
                 ProfileScreen()
             }
         }
 
-        navigation<SubGraph.AIChat>(startDestination = Screen.Chat()) {
-            composable<Screen.Chat> {
-                val args = it.toRoute<Screen.Chat>()
-                ChatScreen(
-                    chatId = args.chatId,
-                    navigateToVoiceMode = {
-                        navigationRepository.navigate(
-                            NavigationType.Standard(Screen.VoiceMode)
-                        )
-                    },
-                    navigateBack = { navigationRepository.navigate(NavigationType.Back) }
-                )
+        navigation<SubGraph.Doctor>(startDestination = Screen.DoctorAppointments) {
+            composable<Screen.DoctorVerifications> {
+                VerificationRequestsScreen()
             }
-            composable<Screen.VoiceMode> {
-                VoiceModeScreen(
-                    navigateBack = { navigationRepository.navigate(NavigationType.Back) }
-                )
+
+            composable<Screen.DoctorVerificationDetails> {
+                val args = it.toRoute<Screen.DoctorVerificationDetails>()
+
+                RequestDetailsScreen(args.requestId)
+            }
+
+            composable<Screen.DoctorAppointments> {
+
+            }
+
+            composable<Screen.AppointmentDetails> {
+
+            }
+
+            composable<Screen.DoctorRequests> {
+
+            }
+
+            composable<Screen.RequestDetails> {
+
+            }
+
+            composable<Screen.DoctorProfile> {
+                ProfileScreen()
             }
         }
     }

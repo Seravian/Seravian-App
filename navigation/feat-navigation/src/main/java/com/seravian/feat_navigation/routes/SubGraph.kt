@@ -16,12 +16,17 @@ sealed class SubGraph: Destination {
     }
 
     @Serializable
-    data object Main: SubGraph() {
+    data object Patient: SubGraph() {
         override val destinationType: DestinationType = DestinationType.GRAPH
     }
 
     @Serializable
-    data class AIChat(val chatId: String = ""): SubGraph() {
+    data object AIChat: SubGraph() {
+        override val destinationType: DestinationType = DestinationType.GRAPH
+    }
+
+    @Serializable
+    data object Doctor: SubGraph() {
         override val destinationType: DestinationType = DestinationType.GRAPH
     }
 }

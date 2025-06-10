@@ -75,9 +75,42 @@ sealed class Screen: Destination {
     }
 
     @Serializable
-    data object Profile: Screen() {
+    data object PatientProfile: Screen() {
         override val destinationType: DestinationType = DestinationType.MAIN
     }
 
+    @Serializable
+    data object DoctorVerifications: Screen() {
+        override val destinationType: DestinationType = DestinationType.OTHER
+    }
 
+    @Serializable
+    data class DoctorVerificationDetails(val requestId: Int = 0): Screen() {
+        override val destinationType: DestinationType = DestinationType.OTHER
+    }
+
+    @Serializable
+    data object DoctorAppointments: Screen() {
+        override val destinationType: DestinationType = DestinationType.MAIN
+    }
+
+    @Serializable
+    data object AppointmentDetails: Screen() {
+        override val destinationType: DestinationType = DestinationType.SIDE
+    }
+
+    @Serializable
+    data object DoctorRequests: Screen() {
+        override val destinationType: DestinationType = DestinationType.MAIN
+    }
+
+    @Serializable
+    data object RequestDetails: Screen() {
+        override val destinationType: DestinationType = DestinationType.SIDE
+    }
+
+    @Serializable
+    data object DoctorProfile: Screen() {
+        override val destinationType: DestinationType = DestinationType.MAIN
+    }
 }
