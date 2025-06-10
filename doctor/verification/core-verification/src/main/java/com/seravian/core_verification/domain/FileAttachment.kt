@@ -19,16 +19,3 @@ fun getContentType(extension: String): String {
         else -> "application/octet-stream"
     }
 }
-
-fun File.withReplacedBaseName(newBase: String): String {
-    val original = this.name
-    // split on the LAST dot, if any
-    val idx = original.lastIndexOf('.')
-    return if (idx >= 0) {
-        // keep the dot and whatever comes after
-        "$newBase${original.substring(idx)}"
-    } else {
-        // no extension
-        newBase
-    }
-}

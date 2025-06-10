@@ -37,7 +37,9 @@ android {
 dependencies {
     val room = "2.6.1"
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+    implementation(project(":doctor:verification:core-verification"))
+
+    implementation(libs.kotlinx.serialization.json)
 
     implementation("androidx.room:room-runtime:$room")
     ksp("androidx.room:room-compiler:$room")

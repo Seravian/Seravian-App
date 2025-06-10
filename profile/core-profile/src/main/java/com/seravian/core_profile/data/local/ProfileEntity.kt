@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 import com.seravian.core_profile.domain.Profile
 import com.seravian.core_profile.domain.utils.Gender
 import com.seravian.core_profile.domain.utils.Role
+import com.seravian.core_verification.domain.utils.DoctorTitle
 
 @Entity(tableName = "profile")
 data class ProfileEntity(
@@ -18,16 +19,22 @@ data class ProfileEntity(
     val fullName: String?,
     @ColumnInfo(name = "date_of_birth")
     val dateOfBirth: String?,
+    @ColumnInfo(name = "created_at_utc")
+    val createdAtUtc: String,
     @ColumnInfo(name = "gender")
     val gender: Gender?,
     @ColumnInfo(name = "role")
     val role: Role?,
     @ColumnInfo(name = "is_email_verified")
     val isEmailVerified: Boolean,
-    @ColumnInfo(name = "is_doctor_verified")
-    val isDoctorVerified: Boolean?,
     @ColumnInfo(name = "is_profile_setup_complete")
     val isProfileSetupComplete: Boolean,
+    @ColumnInfo(name = "doctor_title")
+    val doctorTitle: DoctorTitle?,
+    @ColumnInfo(name = "doctor_description")
+    val doctorDescription: String?,
+    @ColumnInfo(name = "doctor_verified_at_utc")
+    val doctorVerifiedAtUtc: String?,
 )
 
 fun ProfileEntity.extractProfile(): Profile {
@@ -36,11 +43,14 @@ fun ProfileEntity.extractProfile(): Profile {
         email = email,
         fullName = fullName,
         dateOfBirth = dateOfBirth,
+        createdAtUtc = createdAtUtc,
         gender = gender,
         role = role,
         isEmailVerified = isEmailVerified,
-        isDoctorVerified = isDoctorVerified,
-        isProfileSetupComplete = isProfileSetupComplete
+        isProfileSetupComplete = isProfileSetupComplete,
+        doctorTitle = doctorTitle,
+        doctorDescription = doctorDescription,
+        doctorVerifiedAtUtc = doctorVerifiedAtUtc,
     )
 }
 
