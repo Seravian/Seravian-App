@@ -1,4 +1,4 @@
-package com.seravian.feat_profile.data
+package com.seravian.core_profile.domain.utils
 
 enum class Role(val value: String) {
     PATIENT("Patient"),
