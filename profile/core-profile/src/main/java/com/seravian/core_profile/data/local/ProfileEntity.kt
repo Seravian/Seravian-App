@@ -33,6 +33,8 @@ data class ProfileEntity(
     val doctorTitle: DoctorTitle?,
     @ColumnInfo(name = "doctor_description")
     val doctorDescription: String?,
+    @ColumnInfo(name = "doctor_session_price")
+    val doctorSessionPrice: Int?,
     @ColumnInfo(name = "doctor_verified_at_utc")
     val doctorVerifiedAtUtc: String?,
 )
@@ -50,6 +52,7 @@ fun ProfileEntity.extractProfile(): Profile {
         isProfileSetupComplete = isProfileSetupComplete,
         doctorTitle = doctorTitle,
         doctorDescription = doctorDescription,
+        doctorSessionPrice = doctorSessionPrice,
         doctorVerifiedAtUtc = doctorVerifiedAtUtc,
     )
 }

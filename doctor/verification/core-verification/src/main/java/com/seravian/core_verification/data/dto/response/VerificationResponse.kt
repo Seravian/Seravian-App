@@ -13,6 +13,7 @@ data class VerificationResponse(
     val status: Int,
     val title: Int,
     val description: String,
+    val sessionPrice: Int,
     val deletedAtUtc: String? = null,
     val reviewedAtUtc: String? = null,
     val rejectionNotes: String? = null
@@ -25,6 +26,7 @@ data class VerificationResponse(
             status = VerificationStatus.entries[status],
             title = DoctorTitle.entries[title],
             description = description,
+            sessionPrice = sessionPrice,
             deletedAtUtc = deletedAtUtc,
             reviewedAtUtc = reviewedAtUtc,
             rejectionNotes = rejectionNotes

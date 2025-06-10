@@ -17,6 +17,7 @@ data class Profile(
     val isProfileSetupComplete: Boolean,
     val doctorTitle: DoctorTitle? = null,
     val doctorDescription: String? = null,
+    val doctorSessionPrice: Int? = null,
     val doctorVerifiedAtUtc: String? = null,
 ) {
     fun toProfileEntity() = ProfileEntity(
@@ -31,6 +32,7 @@ data class Profile(
         isProfileSetupComplete = isProfileSetupComplete,
         doctorTitle = doctorTitle,
         doctorDescription = doctorDescription,
+        doctorSessionPrice = doctorSessionPrice,
         doctorVerifiedAtUtc = doctorVerifiedAtUtc
     )
 }

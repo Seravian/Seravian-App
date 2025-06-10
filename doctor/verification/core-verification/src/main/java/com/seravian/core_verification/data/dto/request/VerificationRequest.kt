@@ -14,6 +14,7 @@ import kotlinx.serialization.Transient
 data class VerificationRequest(
     val doctorTitle: DoctorTitle,
     val description: String,
+    val sessionPrice: Int,
     @Transient
     val attachments: List<FileAttachment> = emptyList()
 ) {

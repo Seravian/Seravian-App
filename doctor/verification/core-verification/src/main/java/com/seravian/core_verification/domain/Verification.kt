@@ -13,6 +13,7 @@ data class Verification(
     val status: VerificationStatus,
     val title: DoctorTitle,
     val description: String,
+    val sessionPrice: Int,
     val deletedAtUtc: String? = null,
     val reviewedAtUtc: String? = null,
     val rejectionNotes: String? = null
