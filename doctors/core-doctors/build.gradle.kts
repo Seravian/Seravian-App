@@ -35,6 +35,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":profile:core-profile"))
+    implementation(project(":doctor:verification:core-verification"))
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
 
     implementation(libs.androidx.core.ktx)

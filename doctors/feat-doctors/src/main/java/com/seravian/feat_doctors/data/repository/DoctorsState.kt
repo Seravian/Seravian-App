@@ -1,7 +1,8 @@
 package com.seravian.feat_doctors.data.repository
 
-import com.seravian.feat_doctors.presentation.model.Doctor
+import com.seravian.core_doctors.domain.models.Doctor
+
 
 data class DoctorsState(
-    val currentDoctor: Doctor? = null
+    val currentDoctor: String? = null
 )

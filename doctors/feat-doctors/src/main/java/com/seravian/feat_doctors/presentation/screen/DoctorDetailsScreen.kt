@@ -1,39 +1,3 @@
-//package com.seravian.feat_doctors.presentation.screen
-//
-//import android.annotation.SuppressLint
-//import androidx.compose.foundation.layout.Column
-//import androidx.compose.foundation.layout.Spacer
-//import androidx.compose.foundation.layout.height
-//import androidx.compose.foundation.layout.padding
-//import androidx.compose.material3.MaterialTheme
-//import androidx.compose.material3.Text
-//import androidx.compose.runtime.Composable
-//import androidx.compose.ui.Modifier
-//import androidx.compose.ui.graphics.Color
-//import androidx.compose.ui.tooling.preview.Preview
-//import androidx.compose.ui.unit.dp
-//import androidx.lifecycle.viewmodel.compose.viewModel
-//import com.seravian.feat_doctors.presentation.viewModel.doctor.DoctorViewModel
-//
-//@SuppressLint("StateFlowValueCalledInComposition")
-//@Composable
-//fun DoctorDetailsScreen(doctorId: String, viewModel: DoctorViewModel = viewModel()) {
-//    val doctor = viewModel.doctorState.value.doctors.find { it.id == doctorId }
-//    doctor?.let {
-//        Column(modifier = Modifier.padding(16.dp)) {
-//            Text(text = it.name, style = MaterialTheme.typography.headlineMedium)
-//            Text(text = it.salary, color = Color.Gray)
-//            Spacer(modifier = Modifier.height(8.dp))
-//            Text(text = it.description)
-//        }
-//    }
-//}
-//
-//@Preview()
-//@Composable
-//fun DoctorDetailsScreenPreview(modifier: Modifier = Modifier) {
-//    DoctorDetailsScreen("")
-//}
 package com.seravian.feat_doctors.presentation.screen
 
 import androidx.compose.foundation.Image
@@ -57,7 +21,7 @@ import com.greenvenom.core_ui.components.TopAppBar
 import com.greenvenom.core_ui.R
 import com.greenvenom.core_ui.presentation.BaseAction
 import com.greenvenom.core_ui.presentation.BaseScreen
-import com.seravian.feat_doctors.presentation.model.Doctor
+import com.seravian.core_doctors.domain.models.Doctor
 import com.seravian.feat_doctors.presentation.viewModel.detailsDoctor.DoctorDetailsAction
 import com.seravian.feat_doctors.presentation.viewModel.detailsDoctor.DoctorDetailsState
 import com.seravian.feat_doctors.presentation.viewModel.detailsDoctor.DoctorDetailsViewModel
@@ -120,19 +84,19 @@ fun DoctorDetailsContent(
                     modifier = Modifier.padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Image(
-                        painter = painterResource(id = doctorDetailsState.doctor?.imageRes?:1),
-                        contentDescription = "Doctor Image",
-                        modifier = Modifier
-                            .size(150.dp)
-                            .clip(RoundedCornerShape(16.dp)),
-                        contentScale = ContentScale.Crop
-                    )
+//                    Image(
+//                        painter = painterResource(id = doctorDetailsState.doctor?.doctorImageUrl?:),
+//                        contentDescription = "Doctor Image",
+//                        modifier = Modifier
+//                            .size(150.dp)
+//                            .clip(RoundedCornerShape(16.dp)),
+//                        contentScale = ContentScale.Crop
+//                    )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
-                        text = doctorDetailsState.doctor?.name?:"",
+                        text = doctorDetailsState.doctor?.doctorFullName?:"",
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold
                     )
@@ -140,7 +104,7 @@ fun DoctorDetailsContent(
                     Spacer(modifier = Modifier.height(4.dp))
 
                     Text(
-                        text = doctorDetailsState.doctor?.salary?:"",
+                        text = doctorDetailsState.doctor?.doctorSessionPrice.toString()?:"",
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.Gray
                     )
@@ -148,7 +112,7 @@ fun DoctorDetailsContent(
                     Spacer(modifier = Modifier.height(12.dp))
 
                     Text(
-                        text = doctorDetailsState.doctor?.description?:"",
+                        text = doctorDetailsState.doctor?.doctorDescription?:"",
                         style = MaterialTheme.typography.bodyLarge
                     )
 
@@ -170,12 +134,12 @@ fun DoctorDetailsContent(
 @Preview(showBackground = true)
 @Composable
 fun DoctorDetailsScreenPreview() {
-    val sampleDoctor = Doctor(
-        id = "1",
-        imageRes = R.drawable.logo,
-        name = "Dr. Kareem Essam",
-        salary = "$50/hr",
-        description = "Specialist in mental health with 10+ years of experience in psychotherapy and counseling."
-    )
-    DoctorDetailsContent(doctorDetailsState = DoctorDetailsState(sampleDoctor), doctorDetailsAction = {}, baseAction = {})
+//    val sampleDoctor = Doctor(
+//        doctorId = "1",
+//        doctorImageUrl = R.drawable.logo,
+//        name = "Dr. Kareem Essam",
+//        salary = "$50/hr",
+//        description = "Specialist in mental health with 10+ years of experience in psychotherapy and counseling."
+//    )
+//    DoctorDetailsContent(doctorDetailsState = DoctorDetailsState(sampleDoctor), doctorDetailsAction = {}, baseAction = {})
 }

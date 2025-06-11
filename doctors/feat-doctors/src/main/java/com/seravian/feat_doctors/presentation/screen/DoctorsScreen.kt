@@ -14,7 +14,7 @@ import com.greenvenom.core_ui.components.TopAppBar
 import com.greenvenom.core_ui.presentation.BaseAction
 import com.greenvenom.core_ui.presentation.BaseScreen
 import com.seravian.feat_doctors.presentation.components.DoctorCard
-import com.seravian.feat_doctors.presentation.model.Doctor
+import com.seravian.feat_doctors.presentation.model.toDoctorUI
 import com.seravian.feat_doctors.presentation.viewModel.doctor.DoctorAction
 import com.seravian.feat_doctors.presentation.viewModel.doctor.DoctorState
 import com.seravian.feat_doctors.presentation.viewModel.doctor.DoctorViewModel
@@ -41,7 +41,7 @@ fun DoctorsScreen(
                 doctorState = state,
                 doctorAction = {
                     when (it) {
-                        is DoctorAction.OnDoctorClick -> onDoctorClicked(it.doctor.id)
+                        is DoctorAction.OnDoctorClick -> onDoctorClicked(it.doctor.doctorId)
                         else -> {}
                     }
                     viewModel.doctorAction(it)
@@ -62,11 +62,9 @@ fun DoctorsList(
 ) {
     LazyColumn(modifier = modifier) {
         items(doctorState.doctors) { doctor ->
+
             DoctorCard(
-                imageRes = doctor.imageRes,
-                name = doctor.name,
-                salary = doctor.salary,
-                description = doctor.description,
+                doctorUI = doctor.toDoctorUI(),
                 onClick = { doctorAction(DoctorAction.OnDoctorClick(doctor)) }
             )
         }
@@ -76,13 +74,13 @@ fun DoctorsList(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun PreviewDoctorsScreen() {
-    DoctorsList(
-        doctorState = DoctorState(
-            doctors = listOf(
-                Doctor("1", com.greenvenom.core_ui.R.drawable.logo, "Kareem", "$20", "Specialist")
-            )
-        ),
-        doctorAction = {},
-        baseAction = {}
-    )
+//    DoctorsList(
+//        doctorState = DoctorState(
+//            doctors = listOf(
+//                Doctor("1", com.greenvenom.core_ui.R.drawable.logo, "Kareem", "$20", "Specialist")
+//            )
+//        ),
+//        doctorAction = {},
+//        baseAction = {}
+//    )
 }

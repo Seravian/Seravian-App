@@ -35,10 +35,14 @@ android {
 }
 
 dependencies {
+    implementation(project(":profile:core-profile"))
+    implementation(project(":doctor:verification:core-verification"))
     implementation(project(":doctors:core-doctors"))
     implementation(project(":core-ui"))
     implementation(project(":network:core-network"))
     implementation(project(":local:core-local"))
+
+
 
     implementation(libs.androidx.core.ktx)
     implementation(platform(libs.androidx.compose.bom))
@@ -48,6 +52,8 @@ dependencies {
     implementation(libs.ktor.client.core)
     implementation(libs.permissions.compose)
 
+    implementation(libs.bundles.coil)
+    
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
