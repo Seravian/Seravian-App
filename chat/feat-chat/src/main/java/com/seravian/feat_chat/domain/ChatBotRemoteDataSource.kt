@@ -1,15 +1,16 @@
 package com.seravian.feat_chat.domain
 
+import com.greenvenom.core_network.data.ConnectionStatus
 import com.greenvenom.core_network.data.EmptyResult
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
-import com.greenvenom.core_network.data.ConnectionStatus
 import com.seravian.core_chat.data.dto.request.ClientRequest
 import com.seravian.core_chat.data.dto.request.CreateChatRequest
 import com.seravian.core_chat.data.dto.request.DeleteChatRequest
 import com.seravian.core_chat.data.dto.request.EditChatRequest
 import com.seravian.core_chat.data.dto.request.FetchAIAudioRequest
 import com.seravian.core_chat.data.dto.request.GetChatMessagesRequest
+import com.seravian.core_chat.data.dto.request.IsProcessingRequest
 import com.seravian.core_chat.data.dto.request.JoinChatRequest
 import com.seravian.core_chat.data.dto.request.SyncMessagesRequest
 import com.seravian.core_chat.data.dto.request.UploadVoiceRequest
@@ -22,6 +23,7 @@ import com.seravian.core_chat.data.dto.respose.ClientResponse
 import com.seravian.core_chat.data.dto.respose.ConfirmedMessageResponse
 import com.seravian.core_chat.data.dto.respose.CreateChatResponse
 import com.seravian.core_chat.data.dto.respose.EditChatResponse
+import com.seravian.core_chat.data.dto.respose.IsProcessingResponse
 import com.seravian.core_chat.data.dto.respose.MessageResponse
 import kotlinx.coroutines.flow.Flow
 
@@ -49,6 +51,10 @@ interface ChatBotRemoteDataSource {
     suspend fun uploadUserVoice(
         uploadVoiceRequest: UploadVoiceRequest
     ): EmptyResult<NetworkError>
+
+    suspend fun isProcessing(
+        isProcessingRequest: IsProcessingRequest
+    ): NetworkResult<IsProcessingResponse, NetworkError>
 
     suspend fun fetchAIAudioResponse(
         fetchAIAudioRequest: FetchAIAudioRequest

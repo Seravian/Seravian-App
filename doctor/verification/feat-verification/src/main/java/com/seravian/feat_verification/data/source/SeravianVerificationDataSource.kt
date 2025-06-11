@@ -15,7 +15,6 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.delete
 import io.ktor.client.request.forms.submitFormWithBinaryData
 import io.ktor.client.request.get
-import io.ktor.client.request.setBody
 
 class SeravianVerificationDataSource(
     private val authorizedHttpClient: HttpClient
@@ -60,7 +59,9 @@ class SeravianVerificationDataSource(
     ): EmptyResult<NetworkError> {
         return safeCall {
             authorizedHttpClient.delete(constructUrl("doctor/delete-doctor-verification-request")) {
-                setBody(request)
+                url {
+                    parameters.append("requestId", request.requestId.toString())
+                }
             }
         }
     }
