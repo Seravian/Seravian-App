@@ -13,7 +13,7 @@ composeBom = "2025.06.00"
 composeNavigation = "2.9.0"
 koin = "4.1.0"
 ktor = "3.0.3"
-coil = "2.7.0"
+coil = "3.2.0"
 datastore = "1.1.7"
 appcompatVersion = "1.7.1"
 material = "1.12.0"
@@ -70,6 +70,7 @@ androidx-datastore = { group = "androidx.datastore", name = "datastore-preferenc
 
 # Image Loading with Coil
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
 
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompatVersion" }
 androidx-runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroid" }
@@ -96,6 +97,12 @@ ktor = [
     "ktor-client-core",
     "ktor-client-auth",
     "ktor-client-okhttp"
+]
+
+coil = [
+    "coil-compose",
+    "coil-network-ktor3",
+    "ktor-client-cio"
 ]
 
 dependency-injection = [

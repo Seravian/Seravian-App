@@ -7,7 +7,6 @@ import com.greenvenom.core_network.domain.repository.SessionRepository
 import com.greenvenom.core_tokens.domain.Tokens
 import com.greenvenom.core_tokens.domain.repo.TokensDataSource
 import com.seravian.core_local.domain.LocalDataSource
-import com.seravian.core_profile.data.local.extractProfile
 import com.seravian.core_profile.domain.utils.Role
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

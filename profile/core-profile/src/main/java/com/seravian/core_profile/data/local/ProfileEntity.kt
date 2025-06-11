@@ -37,23 +37,25 @@ data class ProfileEntity(
     val doctorSessionPrice: Int?,
     @ColumnInfo(name = "doctor_verified_at_utc")
     val doctorVerifiedAtUtc: String?,
-)
-
-fun ProfileEntity.extractProfile(): Profile {
-    return Profile(
-        id = id,
-        email = email,
-        fullName = fullName,
-        dateOfBirth = dateOfBirth,
-        createdAtUtc = createdAtUtc,
-        gender = gender,
-        role = role,
-        isEmailVerified = isEmailVerified,
-        isProfileSetupComplete = isProfileSetupComplete,
-        doctorTitle = doctorTitle,
-        doctorDescription = doctorDescription,
-        doctorSessionPrice = doctorSessionPrice,
-        doctorVerifiedAtUtc = doctorVerifiedAtUtc,
-    )
+    @ColumnInfo(name = "profile_image_url")
+    val profileImageUrl: String? = null
+) {
+    fun extractProfile(): Profile {
+        return Profile(
+            id = id,
+            email = email,
+            fullName = fullName,
+            dateOfBirth = dateOfBirth,
+            createdAtUtc = createdAtUtc,
+            gender = gender,
+            role = role,
+            isEmailVerified = isEmailVerified,
+            isProfileSetupComplete = isProfileSetupComplete,
+            doctorTitle = doctorTitle,
+            doctorDescription = doctorDescription,
+            doctorSessionPrice = doctorSessionPrice,
+            doctorVerifiedAtUtc = doctorVerifiedAtUtc,
+            profileImageUrl = profileImageUrl
+        )
+    }
 }
-

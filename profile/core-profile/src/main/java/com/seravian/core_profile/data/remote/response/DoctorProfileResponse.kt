@@ -18,6 +18,7 @@ data class DoctorProfileResponse(
     val gender: Gender?,
     val createdAtUtc: String,
     val verifiedAtUtc: String? = null,
+    val profileImageUrl: String? = null
 ) {
     fun extractProfile(): Profile {
         return Profile(
@@ -33,7 +34,8 @@ data class DoctorProfileResponse(
             doctorTitle = title,
             doctorDescription = doctorDescription,
             doctorSessionPrice = doctorSessionPrice,
-            doctorVerifiedAtUtc = verifiedAtUtc
+            doctorVerifiedAtUtc = verifiedAtUtc,
+            profileImageUrl = profileImageUrl
         )
     }
 }
