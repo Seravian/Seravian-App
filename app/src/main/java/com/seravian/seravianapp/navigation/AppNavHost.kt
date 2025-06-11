@@ -222,13 +222,18 @@ fun AppNavHost(modifier: Modifier = Modifier) {
 
         navigation<SubGraph.Doctor>(startDestination = Screen.DoctorAppointments) {
             composable<Screen.DoctorVerifications> {
-                VerificationRequestsScreen()
+                VerificationRequestsScreen(
+                    navigateBack = { navigationRepository.navigate(NavigationType.Back) }
+                )
             }
 
             composable<Screen.DoctorVerificationDetails> {
                 val args = it.toRoute<Screen.DoctorVerificationDetails>()
 
-                RequestDetailsScreen(args.requestId)
+                RequestDetailsScreen(
+                    requestId = args.requestId,
+                    navigateBack = { navigationRepository.navigate(NavigationType.Back) }
+                )
             }
 
             composable<Screen.DoctorAppointments> {

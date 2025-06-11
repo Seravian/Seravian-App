@@ -7,6 +7,7 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun RequestDetailsScreen(
     requestId: Int,
+    navigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -19,10 +20,10 @@ private fun RequestDetailsContent(
 
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun PreviewRequestDetailsScreen() {
-    RequestDetailsScreen(
-        requestId = 1
+    RequestDetailsContent(
+
     )
 }
