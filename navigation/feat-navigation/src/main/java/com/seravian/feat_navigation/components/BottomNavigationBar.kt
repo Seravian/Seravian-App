@@ -51,7 +51,13 @@ private fun BottomBarContent(
         if (currentAccountTypeIndex == 0) {
             PatientDestination.entries.forEach { destination ->
                 NavigationBarItem(
-                    onClick = { defaultNavigationMethod(NavigationType.BottomNavigation(destination.target)) },
+                    onClick = {
+                        if (currentDestination::class != destination.target::class) {
+                            defaultNavigationMethod(
+                                NavigationType.BottomNavigation(destination.target)
+                            )
+                        }
+                    },
                     icon = {
                         Icon(
                             painter = painterResource(destination.icon),
