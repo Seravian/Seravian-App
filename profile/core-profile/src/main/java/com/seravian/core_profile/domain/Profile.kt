@@ -19,6 +19,7 @@ data class Profile(
     val doctorDescription: String? = null,
     val doctorSessionPrice: Int? = null,
     val doctorVerifiedAtUtc: String? = null,
+    val profileImageUrl: String? = null
 ) {
     fun toProfileEntity() = ProfileEntity(
         id = id,
@@ -33,6 +34,7 @@ data class Profile(
         doctorTitle = doctorTitle,
         doctorDescription = doctorDescription,
         doctorSessionPrice = doctorSessionPrice,
-        doctorVerifiedAtUtc = doctorVerifiedAtUtc
+        doctorVerifiedAtUtc = doctorVerifiedAtUtc,
+        profileImageUrl = profileImageUrl
     )
 }

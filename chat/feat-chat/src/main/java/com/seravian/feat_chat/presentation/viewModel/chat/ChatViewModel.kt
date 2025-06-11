@@ -1,16 +1,12 @@
 package com.seravian.feat_chat.presentation.viewModel.chat
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.greenvenom.core_network.data.ConnectionStatus
 import com.greenvenom.core_network.data.NetworkResult
 import com.greenvenom.core_network.data.onError
 import com.greenvenom.core_network.data.onSuccess
 import com.greenvenom.core_ui.presentation.BaseViewModel
 import com.seravian.core_chat.data.dto.request.ClientRequest
-import com.seravian.core_chat.data.dto.request.FetchAIAudioRequest
 import com.seravian.core_chat.data.dto.request.GetChatMessagesRequest
-import com.seravian.core_chat.domain.MessageType
 import com.seravian.core_chat.domain.models.Message
 import com.seravian.feat_chat.data.repository.ChatBotStateRepository
 import com.seravian.feat_chat.domain.repository.ChatRepository
@@ -34,18 +30,10 @@ class ChatViewModel(
     private var jobMessagesCollection: Job ?= null
 
     init {
-        viewModelScope.launch {
-            collectConnectionStatus()
+        collectConnectionStatus()
 
-            chatBotStateRepository.chatBotState.collect { newState ->
-                _chatState.update {
-                    it.copy(
-                        currentChat = newState.currentChat,
-                        isWaitingForResponse = newState.isWaitingForResponse,
-                        joinChatResult = newState.joinChatResult
-                    )
-                }
-            }
+        viewModelScope.launch {
+            chatBotStateRepository.checkResponseProcessing()
         }
     }
 
@@ -63,8 +51,16 @@ class ChatViewModel(
 
     private fun collectConnectionStatus() {
         jobConnectionStatusCollection = viewModelScope.launch {
-            chatBotStateRepository.chatBotState.collect { status ->
-                when(status.joinChatResult) {
+            chatBotStateRepository.chatBotState.collect { newState ->
+                _chatState.update {
+                    it.copy(
+                        currentChat = newState.currentChat,
+                        isWaitingForResponse = newState.isWaitingForResponse,
+                        joinChatResult = newState.joinChatResult
+                    )
+                }
+
+                when(newState.joinChatResult) {
                     is NetworkResult.Success -> {
                         getChatMessages(chatBotStateRepository.chatBotState.value.currentChat?.id ?: "")
                         collectMessageResponses()
@@ -114,12 +110,7 @@ class ChatViewModel(
                             messagesList = result.second,
                             getChatMessagesResult = messagesResult
                         ) }
-
-                        if (!_chatState.value.messagesList.last().isAI && !_chatState.value.isWaitingForResponse) {
-                            chatBotStateRepository.changeResponseWaiting()
-                        } else if (_chatState.value.messagesList.last().isAI && _chatState.value.isWaitingForResponse) {
-                            chatBotStateRepository.changeResponseWaiting()
-                        }
+                        chatBotStateRepository.checkResponseProcessing()
                     }
                     .onError {
                         _chatState.update { it.copy(
@@ -150,7 +141,7 @@ class ChatViewModel(
             ) }
             chatRepository.sendRequest(clientRequest)
         }.invokeOnCompletion {
-            chatBotStateRepository.changeResponseWaiting()
+
         }
     }
 

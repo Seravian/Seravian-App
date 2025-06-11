@@ -5,6 +5,8 @@ import com.greenvenom.core_network.data.ConnectionStatus
 import com.greenvenom.core_network.data.ErrorType
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
+import com.greenvenom.core_network.data.onSuccess
+import com.seravian.core_chat.data.dto.request.IsProcessingRequest
 import com.seravian.core_chat.data.dto.request.JoinChatRequest
 import com.seravian.core_chat.domain.models.Chat
 import com.seravian.core_chat.domain.models.Message
@@ -13,7 +15,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,7 +22,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class ChatBotStateRepository(
     private val seravianChatBotDataSource: ChatBotRemoteDataSource
@@ -39,15 +39,8 @@ class ChatBotStateRepository(
     fun updateCurrentChat(newChat: Chat?) {
         _chatBotState.update {
             it.copy(
-                previousChat = it.currentChat ?: it.previousChat,
                 currentChat = newChat
-            ).also {
-                if (it.currentChat != it.previousChat) {
-                    it.copy(
-                        isWaitingForResponse = false
-                    )
-                }
-            }
+            )
         }
     }
 
@@ -59,11 +52,16 @@ class ChatBotStateRepository(
         }
     }
 
-    fun changeResponseWaiting() {
-        _chatBotState.update {
-            it.copy(
-                isWaitingForResponse = !it.isWaitingForResponse
-            )
+    suspend fun checkResponseProcessing() {
+        val isWaitingForResponse = seravianChatBotDataSource.isProcessing(
+            IsProcessingRequest(_chatBotState.value.currentChat?.id ?: "")
+        )
+        isWaitingForResponse.onSuccess { response ->
+            _chatBotState.update {
+                it.copy(
+                    isWaitingForResponse = response.isProcessing
+                )
+            }
         }
     }
 

@@ -36,16 +36,7 @@ class VoiceModeViewModel(
         collectConnectionStatus()
 
         viewModelScope.launch {
-            chatBotStateRepository.chatBotState.collect { newState ->
-                _voiceState.update {
-                    it.copy(
-                        isWaitingForResponse = newState.isWaitingForResponse,
-                        lastAudioId = newState.lastMessage?.id?.first,
-                        currentChat = newState.currentChat
-                    )
-                }
-
-            }
+            chatBotStateRepository.checkResponseProcessing()
         }
     }
 
@@ -71,8 +62,16 @@ class VoiceModeViewModel(
 
     private fun collectConnectionStatus() {
         viewModelScope.launch {
-            chatBotStateRepository.chatBotState.collect { status ->
-                when(status.joinChatResult) {
+            chatBotStateRepository.chatBotState.collect { newState ->
+                _voiceState.update {
+                    it.copy(
+                        isWaitingForResponse = newState.isWaitingForResponse,
+                        lastAudioId = newState.lastMessage?.id?.first,
+                        currentChat = newState.currentChat
+                    )
+                }
+
+                when(newState.joinChatResult) {
                     is NetworkResult.Success -> {
                         getLastAudioResponse()
                         collectAudioResponse()
@@ -120,8 +119,6 @@ class VoiceModeViewModel(
                 )
             }
 
-            chatBotStateRepository.changeResponseWaiting()
-
             val audioResult = runBlocking {
                 voiceModeRepository.fetchAIAudio(
                     FetchAIAudioRequest(lastMessage?.id?.first ?: -1)
@@ -160,7 +157,6 @@ class VoiceModeViewModel(
                         isStreamingVoice = false
                     )
                 }
-                chatBotStateRepository.changeResponseWaiting()
 
                 viewModelScope.launch {
                     val uploadAudioResult = withContext(Dispatchers.IO) {
@@ -221,7 +217,6 @@ class VoiceModeViewModel(
                         voiceUploadResult = null
                     )
                 }
-                chatBotStateRepository.changeResponseWaiting()
                 startStreaming()
             },
             onPlaybackComplete = {

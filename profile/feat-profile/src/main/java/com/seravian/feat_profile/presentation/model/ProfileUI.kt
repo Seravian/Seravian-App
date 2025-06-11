@@ -9,7 +9,8 @@ data class ProfileUI(
     val gender: String = "",
     val role: String = "",
     val isEmailVerified: Boolean = true,
-    val isDoctorVerified: Boolean ?= true
+    val isDoctorVerified: Boolean ?= true,
+    val profileImageUrl: String? = null
 )
 
 fun Profile.toProfileUI() = ProfileUI(
@@ -19,5 +20,6 @@ fun Profile.toProfileUI() = ProfileUI(
     gender = gender?.value ?: "",
     role = role?.value ?: "",
     isEmailVerified = isEmailVerified,
-    isDoctorVerified = doctorVerifiedAtUtc != null
+    isDoctorVerified = doctorVerifiedAtUtc != null,
+    profileImageUrl = profileImageUrl
 )

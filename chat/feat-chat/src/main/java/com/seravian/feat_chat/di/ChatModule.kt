@@ -40,13 +40,15 @@ val chatModule = module {
     single<ChatRepository> {
         ChatRepositoryImpl(
             seravianChatBotDataSource = get(),
-            roomDataSource = get()
+            roomDataSource = get(),
+            chatBotStateRepository = get()
         )
     }
 
     single<VoiceModeRepository> {
         VoiceModeRepositoryImpl(
             seravianChatBotDataSource = get(),
+            chatBotStateRepository = get()
         )
     }
 

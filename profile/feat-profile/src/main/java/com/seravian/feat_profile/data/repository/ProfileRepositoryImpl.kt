@@ -7,7 +7,6 @@ import com.greenvenom.core_tokens.domain.Tokens
 import com.greenvenom.core_tokens.domain.repo.TokensDataSource
 import com.seravian.core_local.domain.LocalDataSource
 import com.seravian.core_local.domain.PrefsDataSource
-import com.seravian.core_profile.data.local.extractProfile
 import com.seravian.core_profile.data.remote.request.LogoutRequest
 import com.seravian.core_profile.domain.Profile
 import com.seravian.feat_profile.domain.ProfileRemoteDataSource

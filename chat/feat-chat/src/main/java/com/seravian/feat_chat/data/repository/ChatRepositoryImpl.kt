@@ -24,7 +24,8 @@ import kotlinx.coroutines.flow.onEach
 
 class ChatRepositoryImpl(
     private val seravianChatBotDataSource: ChatBotRemoteDataSource,
-    private val roomDataSource: LocalDataSource
+    private val roomDataSource: LocalDataSource,
+    private val chatBotStateRepository: ChatBotStateRepository
 ): ChatRepository {
     private var currentChatId: String = ""
 
@@ -93,12 +94,14 @@ class ChatRepositoryImpl(
 
     override fun receiveClientResponse() {
         seravianChatBotDataSource.receiveClientResponse { response ->
+            chatBotStateRepository.checkResponseProcessing()
             roomDataSource.insertMessage(response.extractMessage().toEntity(currentChatId))
         }
     }
 
     override fun receiveAIResponse() {
         seravianChatBotDataSource.receiveAIResponse { response ->
+            chatBotStateRepository.checkResponseProcessing()
             roomDataSource.insertMessage(response.extractMessage().toEntity(currentChatId))
         }
     }
