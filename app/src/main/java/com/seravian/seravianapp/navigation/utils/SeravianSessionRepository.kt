@@ -34,8 +34,6 @@ class SeravianSessionRepository(
     override fun collectSessionStatus() {
         scope.launch {
             tokensDataSource.getStoredTokensFlow().collect { tokens ->
-                val currentProfile = roomDataSource.getProfile().extractProfile()
-
                 when {
                     tokens == Tokens() -> _sessionDestination.update { SessionDestinations.AUTH }
                     tokens.accessToken.isNotEmpty() && tokens.refreshToken.isNullOrEmpty() ->
@@ -50,6 +48,8 @@ class SeravianSessionRepository(
                                     }
                                 }
                         } else {
+                            val currentProfile = roomDataSource.getProfile().extractProfile()
+
                             if (currentProfile.role == Role.PATIENT) {
                                 _sessionDestination.update { SessionDestinations.PATIENT }
                             } else {
