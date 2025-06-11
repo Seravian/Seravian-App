@@ -1,4 +1,4 @@
-package com.seravian.feat_doctors.domain
+package com.seravian.feat_doctors.domain.remoteDataSource
 
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult

@@ -6,6 +6,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,6 +29,8 @@ import com.seravian.feat_doctors.presentation.viewModel.detailsDoctor.DoctorDeta
 import com.seravian.feat_doctors.presentation.viewModel.detailsDoctor.DoctorDetailsState
 import com.seravian.feat_doctors.presentation.viewModel.detailsDoctor.DoctorDetailsViewModel
 import com.seravian.feat_doctors.R.string.doctors
+import com.seravian.feat_doctors.presentation.components.BookingDialog
+
 @Composable
 fun DoctorDetailsScreen(
     doctorId: String,
@@ -70,6 +75,23 @@ fun DoctorDetailsContent(
             )
         }
     ) { innerPadding ->
+        var showBookingDialog by remember { mutableStateOf(false) }
+
+        if (showBookingDialog) {
+            BookingDialog(
+                doctorId = doctorDetailsState.doctor?.doctorId.orEmpty(),
+                onDismiss = { showBookingDialog = false },
+                onBook = { fromUtc, toUtc ->
+                    doctorDetailsAction(DoctorDetailsAction.BookSession(
+                        patientIsAvailableToUtc = toUtc,
+                        patientIsAvailableFromUtc = fromUtc,
+                        patientNote = ""
+                    ))
+                    showBookingDialog = false
+                }
+            )
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -119,7 +141,7 @@ fun DoctorDetailsContent(
                     Spacer(modifier = Modifier.height(24.dp))
 
                     Button(
-                        onClick = { /* TODO: Navigate to booking or action */ },
+                        onClick = { showBookingDialog = true  },
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {

@@ -1,9 +1,13 @@
 package com.seravian.feat_doctors.di
 
-import com.seravian.feat_doctors.data.SeravianDoctorDataSource
+import com.seravian.feat_doctors.data.dataSource.CreateSessionDataSource
+import com.seravian.feat_doctors.data.dataSource.SeravianDoctorDataSource
+import com.seravian.feat_doctors.data.repository.CreateSessionRepositoryImpl
 import com.seravian.feat_doctors.data.repository.DoctorListRepositoryImpl
 import com.seravian.feat_doctors.data.repository.DoctorsStateRepository
-import com.seravian.feat_doctors.domain.DoctorRemoteDataSource
+import com.seravian.feat_doctors.domain.remoteDataSource.CreateSessionRemoteDataSource
+import com.seravian.feat_doctors.domain.remoteDataSource.DoctorRemoteDataSource
+import com.seravian.feat_doctors.domain.repository.CreateSessionRepository
 import com.seravian.feat_doctors.domain.repository.DoctorRepository
 import com.seravian.feat_doctors.presentation.viewModel.detailsDoctor.DoctorDetailsViewModel
 import com.seravian.feat_doctors.presentation.viewModel.doctor.DoctorViewModel
@@ -13,6 +17,18 @@ import org.koin.core.qualifier.named
 
 
 val doctorModule = module {
+
+    single<CreateSessionRepository>{
+        CreateSessionRepositoryImpl(
+            createSessionDataSource = get()
+        )
+    }
+
+    single<CreateSessionRemoteDataSource> {
+        CreateSessionDataSource(
+            authorizedHttpClient = get(named("authorizedClient"))
+        )
+    }
 
     single <DoctorRemoteDataSource>{
         SeravianDoctorDataSource(
@@ -39,6 +55,7 @@ val doctorModule = module {
     viewModel {
         DoctorDetailsViewModel(
             doctorRepository = get(),
-            doctorsStateRepository = get())
+            doctorsStateRepository = get(),
+            createSessionRepository = get())
     }
 }

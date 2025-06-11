@@ -39,6 +39,7 @@ dependencies {
     implementation(project(":doctor:verification:core-verification"))
     implementation(project(":doctors:core-doctors"))
     implementation(project(":core-ui"))
+    implementation(project(":validation"))
     implementation(project(":network:core-network"))
     implementation(project(":local:core-local"))
 
