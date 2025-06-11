@@ -1,0 +1,83 @@
+package com.seravian.seravianapp.navigation.graphs
+
+import androidx.compose.material3.Text
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
+import androidx.navigation.navigation
+import androidx.navigation.toRoute
+import com.greenvenom.core_navigation.data.NavigationType
+import com.seravian.feat_chat.presentation.screen.ChatListScreen
+import com.seravian.feat_chat.presentation.screen.ChatScreen
+import com.seravian.feat_chat.presentation.screen.VoiceModeScreen
+import com.seravian.feat_doctors.presentation.screen.DoctorDetailsScreen
+import com.seravian.feat_doctors.presentation.screen.DoctorsScreen
+import com.seravian.feat_home.presentation.HomeScreen
+import com.seravian.feat_navigation.routes.Screen
+import com.seravian.feat_navigation.routes.SubGraph
+import com.seravian.feat_profile.presentation.screen.ProfileScreen
+
+fun NavGraphBuilder.patientGraph(navigate: (NavigationType) -> Unit) {
+    navigation<SubGraph.Patient>(startDestination = Screen.Home) {
+        composable<Screen.Home> {
+            HomeScreen()
+        }
+
+        navigation<SubGraph.AIChat>(startDestination = Screen.ChatsList) {
+            composable<Screen.ChatsList> {
+                ChatListScreen(
+                    navigateToChat = { chatId ->
+                        navigate(
+                            NavigationType.Standard(Screen.Chat(chatId))
+                        )
+                    },
+                    navigateBack = { navigate(NavigationType.Back) }
+                )
+            }
+
+            composable<Screen.Chat> {
+                val args = it.toRoute<Screen.Chat>()
+                ChatScreen(
+                    chatId = args.chatId,
+                    navigateToVoiceMode = {
+                        navigate(
+                            NavigationType.Standard(Screen.VoiceMode)
+                        )
+                    },
+                    navigateBack = { navigate(NavigationType.Back) }
+                )
+            }
+
+            composable<Screen.VoiceMode> {
+                VoiceModeScreen(
+                    navigateBack = { navigate(NavigationType.Back) }
+                )
+            }
+        }
+
+        composable<Screen.Sessions> {
+            Text(text = "Sessions")
+        }
+
+        composable<Screen.Doctors> {
+            DoctorsScreen(
+                onDoctorClicked = { doctorId->
+                    navigate(
+                        NavigationType.Standard(Screen.DoctorDetails(doctorId = doctorId))
+                    )
+                }
+            )
+        }
+
+        composable<Screen.DoctorDetails> {
+            val args = it.toRoute<Screen.DoctorDetails>()
+            DoctorDetailsScreen(
+                doctorId = args.doctorId,
+                navigateBack = { navigate(NavigationType.Back) }
+            )
+        }
+
+        composable<Screen.PatientProfile> {
+            ProfileScreen()
+        }
+    }
+}

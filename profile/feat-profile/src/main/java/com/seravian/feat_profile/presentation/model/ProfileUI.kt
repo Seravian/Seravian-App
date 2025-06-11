@@ -19,5 +19,5 @@ fun Profile.toProfileUI() = ProfileUI(
     gender = gender?.value ?: "",
     role = role?.value ?: "",
     isEmailVerified = isEmailVerified,
-    isDoctorVerified = isDoctorVerified
+    isDoctorVerified = doctorVerifiedAtUtc != null
 )
