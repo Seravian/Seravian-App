@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="select_file">Select File</string>
+    <string name="remove_file">Remove file</string>
+    <string name="attachment">Attachment %1$s</string>
+    <string name="submit_request">Submit Request</string>
+    <string name="please_fill_in_all_required_fields">Please fill in all required fields</string>
+    <string name="add_attachment_field">Add Attachment Field</string>
+    <string name="attachments_pdf_png_jpeg_only">Attachments (PDF, PNG, JPEG only)</string>
+    <string name="session_price">Session Price</string>
+    <string name="description">Description</string>
+    <string name="doctor_title">Doctor Title</string>
+    <string name="close">Close</string>
+    <string name="new_verification_request">New Verification Request</string>
+    <string name="error_selecting_file">Error selecting file: %1$s</string>
+    <string name="unsupported_file_type_please_select_pdf_png_or_jpeg_files_only">Unsupported file type. Please select PDF, PNG, or JPEG files only.</string>
+    <string name="create_new_verification_request">Create new verification request</string>
+</resources>

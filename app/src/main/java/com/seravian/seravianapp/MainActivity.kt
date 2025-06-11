@@ -1,8 +1,6 @@
 package com.seravian.seravianapp
 
 import android.os.Bundle
-import androidx.activity.addCallback
-import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -13,16 +11,14 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.greenvenom.core_navigation.data.NavigationType
-import com.seravian.feat_navigation.components.BottomNavigationBar
 import com.greenvenom.core_navigation.data.repository.NavigationStateRepository
-import com.seravian.feat_navigation.routes.Screen
-import com.seravian.seravianapp.navigation.AppNavHost
 import com.greenvenom.core_ui.theme.AppTheme
 import com.seravian.core_local.domain.PrefsDataSource
+import com.seravian.feat_navigation.components.BottomNavigationBar
+import com.seravian.feat_navigation.routes.Screen
+import com.seravian.seravianapp.navigation.AppNavHost
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
@@ -61,6 +57,7 @@ class MainActivity : AppCompatActivity() {
 
                         BottomNavigationBar(
                             defaultNavigationMethod = navigationRepository::navigate,
+                            currentAccountTypeIndex = navigationState.accountTypeIndex,
                             currentDestination = navigationState.currentDestination ?: Screen.Home,
                             isVisible = navigationState.bottomBarState
                         )

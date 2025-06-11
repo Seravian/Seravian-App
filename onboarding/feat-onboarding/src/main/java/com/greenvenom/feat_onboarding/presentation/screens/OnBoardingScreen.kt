@@ -30,6 +30,8 @@ import com.greenvenom.feat_onboarding.presentation.components.SectionedProgressI
 import com.greenvenom.core_ui.presentation.BaseAction
 import com.greenvenom.core_ui.presentation.BaseScreen
 import com.greenvenom.core_ui.theme.AppTheme
+import com.seravian.core_profile.domain.utils.Gender
+import com.seravian.core_profile.domain.utils.Role
 
 @Composable
 fun OnBoardingScreen(
@@ -58,10 +60,6 @@ private fun OnBoardingContent(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-
-//    LaunchedEffect(state.isDataFull == true) {
-//        detailsAction(OnBoardingAction.UploadDetailsAuth)
-//    }
 
     LaunchedEffect(state.uploadingDetailsResult) {
         baseAction(BaseAction.HideLoading)
@@ -108,7 +106,7 @@ private fun OnBoardingContent(
             when (state.currentStep) {
                 1 -> OnBoardingTypeContent(
                     onOptionSelected = {
-                        detailsAction(OnBoardingAction.UpdateAuthUserType(it))
+                        detailsAction(OnBoardingAction.UpdateAuthUserType(Role.entries[it]))
                         detailsAction(OnBoardingAction.NavigateForm(true))
                     },
                     options = listOf(
@@ -120,7 +118,7 @@ private fun OnBoardingContent(
 
                 2 -> OnBoardingTypeContent(
                     onOptionSelected = {
-                        detailsAction(OnBoardingAction.UpdateAuthUserGender(it))
+                        detailsAction(OnBoardingAction.UpdateAuthUserGender(Gender.entries[it]))
                         detailsAction(OnBoardingAction.NavigateForm(true))
                     },
                     options = listOf(
