@@ -1,6 +1,5 @@
 package com.seravian.feat_doctors.presentation.components
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -16,80 +15,6 @@ import com.greenvenom.validation.components.TimePickerField
 import java.time.*
 import java.time.format.DateTimeFormatter
 
-//@Composable
-//fun BookingDialog(
-//    doctorId: String,
-//    onDismiss: () -> Unit,
-//    onBook: (String, String) -> Unit // Now accepting UTC strings
-//) {
-//    val today = remember { LocalDate.now() }
-//    var selectedDate by remember { mutableStateOf(today) }
-//    var fromTime by remember { mutableStateOf(LocalTime.of(9, 0)) }
-//    var toTime by remember { mutableStateOf(LocalTime.of(10, 0)) }
-//
-//    AlertDialog(
-//        onDismissRequest = onDismiss,
-//        confirmButton = {
-//            Button(onClick = {
-//                val localFrom = LocalDateTime.of(selectedDate, fromTime)
-//                val localTo = LocalDateTime.of(selectedDate, toTime)
-//
-//                val fromUtc = localFrom.atZone(ZoneId.systemDefault())
-//                    .withZoneSameInstant(ZoneOffset.UTC).toInstant()
-//
-//                val toUtc = localTo.atZone(ZoneId.systemDefault())
-//                    .withZoneSameInstant(ZoneOffset.UTC).toInstant()
-//
-//                val formatter = DateTimeFormatter.ISO_INSTANT
-//
-//                val fromUtcString = formatter.format(fromUtc)
-//                val toUtcString = formatter.format(toUtc)
-//
-//                onBook(fromUtcString, toUtcString)
-//
-//            }) {
-//                Text("Confirm Booking")
-//            }
-//        },
-//        dismissButton = {
-//            TextButton(onClick = onDismiss) {
-//                Text("Cancel")
-//            }
-//        },
-//        title = { Text("Book Appointment") },
-//        text = {
-//            Column {
-//
-//                DatePickerField(
-//                    label = "Select Date",
-//                    onDateSelected = { dateString ->
-//                        // Assumes "yyyy-MM-dd"
-//                        selectedDate =
-//                            LocalDate.parse(dateString, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-//                    }
-//                )
-//
-//                Spacer(Modifier.height(8.dp))
-//
-//                TimePickerField(
-//                    label = "From Time",
-//                    onTimeSelected = { timeString ->
-//                        fromTime = LocalTime.parse(timeString, DateTimeFormatter.ofPattern("HH:mm"))
-//                    }
-//                )
-//
-//                Spacer(Modifier.height(8.dp))
-//
-//                TimePickerField(
-//                    label = "To Time",
-//                    onTimeSelected = { timeString ->
-//                        toTime = LocalTime.parse(timeString, DateTimeFormatter.ofPattern("HH:mm"))
-//                    }
-//                )
-//            }
-//        }
-//    )
-//}
 @Composable
 fun BookingDialog(
     doctorId: String,
