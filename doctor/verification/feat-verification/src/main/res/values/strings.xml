@@ -15,4 +15,6 @@
     <string name="error_selecting_file">Error selecting file: %1$s</string>
     <string name="unsupported_file_type_please_select_pdf_png_or_jpeg_files_only">Unsupported file type. Please select PDF, PNG, or JPEG files only.</string>
     <string name="create_new_verification_request">Create new verification request</string>
+    <string name="verification_request">Verification Request #%1$s</string>
+    <string name="logout">Logout Button</string>
 </resources>

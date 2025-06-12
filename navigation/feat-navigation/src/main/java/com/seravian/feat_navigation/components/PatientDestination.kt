@@ -5,7 +5,6 @@ import androidx.annotation.StringRes
 import com.greenvenom.core_navigation.domain.Destination
 import com.seravian.feat_navigation.R
 import com.seravian.feat_navigation.routes.Screen
-import com.seravian.feat_navigation.routes.SubGraph
 
 enum class PatientDestination(
     @DrawableRes val icon: Int,
@@ -20,7 +19,7 @@ enum class PatientDestination(
     AIChat(
         icon = R.drawable.chat_ic,
         label = R.string.ai_chat,
-        target = SubGraph.AIChat
+        target = Screen.ChatsList
     ),
     Sessions(
         icon = R.drawable.sessions_ic,

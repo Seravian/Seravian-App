@@ -22,7 +22,7 @@ data class VerificationResponse(
         return Verification(
             id = id,
             requestedAtUtc = requestedAtUtc,
-            attachments = attachments,
+            attachments = attachments.map { it.extractAttachment() },
             status = VerificationStatus.entries[status],
             title = DoctorTitle.entries[title],
             description = description,

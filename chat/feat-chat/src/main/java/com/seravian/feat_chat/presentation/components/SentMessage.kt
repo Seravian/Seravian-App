@@ -51,7 +51,7 @@ fun SentMessageCard(
                         alpha = 0.4f
                     )
                 } else {
-                    colorScheme.tertiary
+                    colorScheme.tertiaryContainer
                 },
                 contentColor = if (message.messageType == MessageType.VOICE_MODE_TEXT) {
                     colorScheme.onSurface.copy(

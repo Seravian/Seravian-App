@@ -36,7 +36,10 @@ class ProfileRepositoryImpl(
         appPrefsDataSource.changeLanguage(languageTag)
     }
 
-    override suspend fun getProfile(): Profile {
+    override suspend fun getProfile(isDoctor: Boolean): Profile {
+        if (isDoctor) {
+            fetchDoctorProfile()
+        }
         return roomDataSource.getProfile().extractProfile()
     }
 
@@ -51,6 +54,14 @@ class ProfileRepositoryImpl(
 
     private suspend fun getStoredTokens(): Tokens {
         return tokensDataSource.getStoredTokens()
+    }
+
+    private suspend fun fetchDoctorProfile() {
+        val result = profileDataSource.getDoctorProfile()
+        result.onSuccess {
+            roomDataSource.deleteProfile()
+            roomDataSource.insertProfile(it.extractProfile().toProfileEntity())
+        }
     }
 }
 
