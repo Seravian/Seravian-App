@@ -27,7 +27,7 @@ fun NavGraphBuilder.patientGraph(navigate: (NavigationType) -> Unit) {
                 ChatListScreen(
                     navigateToChat = { chatId ->
                         navigate(
-                            NavigationType.Standard(Screen.Chat(chatId))
+                            NavigationType.Standard(Screen.Chat)
                         )
                     },
                     navigateBack = { navigate(NavigationType.Back) }
@@ -35,12 +35,15 @@ fun NavGraphBuilder.patientGraph(navigate: (NavigationType) -> Unit) {
             }
 
             composable<Screen.Chat> {
-                val args = it.toRoute<Screen.Chat>()
                 ChatScreen(
-                    chatId = args.chatId,
                     navigateToVoiceMode = {
                         navigate(
                             NavigationType.Standard(Screen.VoiceMode)
+                        )
+                    },
+                    navigateToDiagnosesList = {
+                        navigate(
+                            NavigationType.Standard(Screen.DiagnosesList)
                         )
                     },
                     navigateBack = { navigate(NavigationType.Back) }
@@ -51,6 +54,14 @@ fun NavGraphBuilder.patientGraph(navigate: (NavigationType) -> Unit) {
                 VoiceModeScreen(
                     navigateBack = { navigate(NavigationType.Back) }
                 )
+            }
+
+            composable<Screen.DiagnosesList> {
+                Text(text = "Diagnoses")
+            }
+
+            composable<Screen.DiagnosisDetails> {
+                Text(text = "Diagnosis Details")
             }
         }
 

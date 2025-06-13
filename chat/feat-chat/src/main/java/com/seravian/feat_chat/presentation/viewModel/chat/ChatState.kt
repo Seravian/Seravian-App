@@ -12,6 +12,8 @@ data class ChatState(
     val currentChat: Chat ?= null,
     val messagesList: List<Message> = listOf(),
     val isWaitingForResponse: Boolean = false,
+    val isWaitingForDiagnosis: Boolean = false,
     val getChatMessagesResult: NetworkResult<Pair<Chat, List<Message>>, NetworkError> ?= null,
-    val joinChatResult: EmptyResult<NetworkError> ?= null
+    val joinChatResult: EmptyResult<NetworkError> ?= null,
+    val diagnosisRequestResult: EmptyResult<NetworkError> ?= null
 )

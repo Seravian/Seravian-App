@@ -3,9 +3,9 @@ package com.seravian.feat_chat.domain.repository
 import com.greenvenom.core_network.data.EmptyResult
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
-import com.seravian.core_chat.data.dto.request.CreateChatRequest
-import com.seravian.core_chat.data.dto.request.DeleteChatRequest
-import com.seravian.core_chat.data.dto.request.EditChatRequest
+import com.seravian.core_chat.data.dto.request.chat.CreateChatRequest
+import com.seravian.core_chat.data.dto.request.chat.DeleteChatRequest
+import com.seravian.core_chat.data.dto.request.chat.EditChatRequest
 import com.seravian.core_chat.domain.models.Chat
 import kotlinx.coroutines.flow.Flow
 

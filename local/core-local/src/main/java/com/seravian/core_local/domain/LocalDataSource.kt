@@ -1,6 +1,7 @@
 package com.seravian.core_local.domain
 
 import com.seravian.core_chat.data.entity.ChatEntity
+import com.seravian.core_chat.data.entity.DiagnosisEntity
 import com.seravian.core_chat.data.entity.MessageEntity
 import com.seravian.core_profile.data.local.ProfileEntity
 import kotlinx.coroutines.flow.Flow
@@ -21,4 +22,8 @@ interface LocalDataSource {
     suspend fun insertMessage(message: MessageEntity)
     suspend fun insertMessages(messages: List<MessageEntity>)
     suspend fun deleteMessages(messages: List<MessageEntity>)
+    suspend fun getChatDiagnoses(chatId: String): Flow<List<DiagnosisEntity>>
+    suspend fun insertDiagnosis(diagnosis: DiagnosisEntity)
+    suspend fun insertDiagnoses(diagnoses: List<DiagnosisEntity>)
+    suspend fun deleteAllData()
 }

@@ -5,10 +5,13 @@ import com.greenvenom.core_network.data.ConnectionStatus
 import com.greenvenom.core_network.data.ErrorType
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
+import com.greenvenom.core_network.data.onError
 import com.greenvenom.core_network.data.onSuccess
-import com.seravian.core_chat.data.dto.request.IsProcessingRequest
-import com.seravian.core_chat.data.dto.request.JoinChatRequest
+import com.seravian.core_chat.data.dto.request.chat.IsProcessingRequest
+import com.seravian.core_chat.data.dto.request.chat.JoinChatRequest
+import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisCheckRequest
 import com.seravian.core_chat.domain.models.Chat
+import com.seravian.core_chat.domain.models.Diagnosis
 import com.seravian.core_chat.domain.models.Message
 import com.seravian.feat_chat.domain.ChatBotRemoteDataSource
 import kotlinx.coroutines.CoroutineScope
@@ -44,10 +47,18 @@ class ChatBotStateRepository(
         }
     }
 
-    fun updateLastMessage(message: Message) {
+    fun updateLastMessage(message: Message?) {
         _chatBotState.update {
             it.copy(
                 lastMessage = message
+            )
+        }
+    }
+
+    fun updateCurrentDiagnosis(diagnosis: Diagnosis?) {
+        _chatBotState.update {
+            it.copy(
+                currentDiagnosis = diagnosis
             )
         }
     }
@@ -86,6 +97,7 @@ class ChatBotStateRepository(
                     ConnectionStatus.CONNECTED -> {
                         if (_chatBotState.value.joinChatResult == null || _chatBotState.value.joinChatResult is NetworkResult.Error) {
                             joinChat(JoinChatRequest(_chatBotState.value.currentChat?.id ?: ""))
+                            observeDiagnoses()
                         }
                     }
                     ConnectionStatus.RECONNECTING -> {
@@ -106,7 +118,7 @@ class ChatBotStateRepository(
         }
     }
 
-    suspend fun joinChat(joinChatRequest: JoinChatRequest) {
+    private suspend fun joinChat(joinChatRequest: JoinChatRequest) {
         try {
             seravianChatBotDataSource.joinChat(joinChatRequest)
             _chatBotState.update {
@@ -122,5 +134,35 @@ class ChatBotStateRepository(
                 )
             }
         }
+    }
+
+    private fun observeDiagnoses() {
+        seravianChatBotDataSource.receiveDiagnosisReadyResponse { callback ->
+            checkDiagnosis()
+            _chatBotState.update {
+                it.copy(
+                    lastNotifiedDiagnosisId = callback.chatDiagnoseId,
+                    isWaitingForDiagnosis = false
+                )
+            }
+        }
+    }
+
+    suspend fun checkDiagnosis() {
+        val checkingResult = seravianChatBotDataSource.isDiagnosing(
+            DiagnosisCheckRequest(_chatBotState.value.currentChat?.id ?: "")
+        )
+
+        checkingResult
+            .onSuccess { response ->
+                _chatBotState.update {
+                    it.copy(
+                        isWaitingForDiagnosis = response.isDiagnosing
+                    )
+                }
+            }
+            .onError {
+                checkDiagnosis()
+            }
     }
 }

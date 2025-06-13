@@ -6,9 +6,9 @@ import com.greenvenom.core_network.data.NetworkResult
 import com.greenvenom.core_network.data.map
 import com.greenvenom.core_network.data.onError
 import com.greenvenom.core_network.data.onSuccess
-import com.seravian.core_chat.data.dto.request.CreateChatRequest
-import com.seravian.core_chat.data.dto.request.DeleteChatRequest
-import com.seravian.core_chat.data.dto.request.EditChatRequest
+import com.seravian.core_chat.data.dto.request.chat.CreateChatRequest
+import com.seravian.core_chat.data.dto.request.chat.DeleteChatRequest
+import com.seravian.core_chat.data.dto.request.chat.EditChatRequest
 import com.seravian.core_chat.domain.models.Chat
 import com.seravian.core_local.domain.LocalDataSource
 import com.seravian.feat_chat.domain.ChatBotRemoteDataSource

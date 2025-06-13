@@ -14,4 +14,6 @@
     <string name="unmuted">UnMuted</string>
     <string name="muted">Muted</string>
     <string name="voice_mode_message">Voice Mode Message</string>
+    <string name="diagnosis_requested">The Diagnosis is being created as requested.</string>
+    <string name="diagnoses">Diagnoses List Button</string>
 </resources>

@@ -2,11 +2,13 @@ package com.seravian.feat_chat.presentation.viewModel.chat
 
 import androidx.lifecycle.viewModelScope
 import com.greenvenom.core_network.data.NetworkResult
+import com.greenvenom.core_network.data.map
 import com.greenvenom.core_network.data.onError
 import com.greenvenom.core_network.data.onSuccess
 import com.greenvenom.core_ui.presentation.BaseViewModel
-import com.seravian.core_chat.data.dto.request.ClientRequest
-import com.seravian.core_chat.data.dto.request.GetChatMessagesRequest
+import com.seravian.core_chat.data.dto.request.message.ClientRequest
+import com.seravian.core_chat.data.dto.request.chat.GetChatMessagesRequest
+import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisCreationRequest
 import com.seravian.core_chat.domain.models.Message
 import com.seravian.feat_chat.data.repository.ChatBotStateRepository
 import com.seravian.feat_chat.domain.repository.ChatRepository
@@ -16,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.UUID
 
 class ChatViewModel(
@@ -42,10 +45,12 @@ class ChatViewModel(
             is ChatAction.GetChatMessages -> getChatMessages(action.chatId)
             ChatAction.LeaveChat -> leaveChat()
             is ChatAction.SendMessage -> sendRequest(action.message)
+            ChatAction.RequestDiagnosis -> requestDiagnosis()
             is ChatAction.StopMessageCollections -> stopMessageCollections()
             is ChatAction.NavigateToVoiceMode -> {
                 chatBotStateRepository.updateLastMessage(_chatState.value.messagesList.last())
             }
+            ChatAction.NavigateToDiagnosesList -> {}
         }
     }
 
@@ -56,6 +61,7 @@ class ChatViewModel(
                     it.copy(
                         currentChat = newState.currentChat,
                         isWaitingForResponse = newState.isWaitingForResponse,
+                        isWaitingForDiagnosis = newState.isWaitingForDiagnosis,
                         joinChatResult = newState.joinChatResult
                     )
                 }
@@ -100,23 +106,26 @@ class ChatViewModel(
 
     private fun getChatMessages(chatId: String) {
         if (jobMessagesCollection != null) return
+
         jobMessagesCollection = viewModelScope.launch {
-            val messagesFlow = chatRepository.getChatMessages(GetChatMessagesRequest(chatId))
-            messagesFlow.collect { messagesResult ->
+
+            chatRepository.getChatMessages(
+                GetChatMessagesRequest(chatId)
+            ).collect { messagesResult ->
                 messagesResult
                     .onSuccess { result ->
                         _chatState.update { it.copy(
                             currentChat = result.first,
                             messagesList = result.second,
-                            getChatMessagesResult = messagesResult
                         ) }
                         chatBotStateRepository.checkResponseProcessing()
                     }
-                    .onError {
-                        _chatState.update { it.copy(
-                            getChatMessagesResult = messagesResult
-                        ) }
-                    }
+
+                _chatState.update {
+                    it.copy(
+                        getChatMessagesResult = messagesResult
+                    )
+                }
             }
         }
     }
@@ -142,6 +151,24 @@ class ChatViewModel(
             chatRepository.sendRequest(clientRequest)
         }.invokeOnCompletion {
 
+        }
+    }
+
+    private fun requestDiagnosis() {
+        viewModelScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                chatRepository.sendDiagnosisCreationRequest(
+                    DiagnosisCreationRequest(
+                        chatBotStateRepository.chatBotState.value.currentChat?.id ?: ""
+                    )
+                ).onSuccess { chatBotStateRepository.checkDiagnosis() }
+            }
+
+            _chatState.update {
+                it.copy(
+                    diagnosisRequestResult = result.map {  }
+                )
+            }
         }
     }
 

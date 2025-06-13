@@ -5,8 +5,8 @@ import com.greenvenom.core_network.data.ErrorType
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
 import com.greenvenom.core_network.data.map
-import com.seravian.core_chat.data.dto.request.FetchAIAudioRequest
-import com.seravian.core_chat.data.dto.request.UploadVoiceRequest
+import com.seravian.core_chat.data.dto.request.voice.FetchAIAudioRequest
+import com.seravian.core_chat.data.dto.request.voice.UploadVoiceRequest
 import com.seravian.core_chat.domain.models.Audio
 import com.seravian.feat_chat.domain.ChatBotRemoteDataSource
 import com.seravian.feat_chat.domain.repository.VoiceModeRepository

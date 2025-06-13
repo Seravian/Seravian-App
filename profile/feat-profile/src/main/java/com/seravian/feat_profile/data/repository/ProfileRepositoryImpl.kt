@@ -46,8 +46,7 @@ class ProfileRepositoryImpl(
     override suspend fun logoutUser(): EmptyResult<NetworkError> {
         return profileDataSource.logoutUser(LogoutRequest(getStoredTokens().refreshToken ?: ""))
             .onSuccess {
-                roomDataSource.deleteProfile()
-                roomDataSource.deleteAllChats()
+                roomDataSource.deleteAllData()
                 tokensDataSource.deleteTokens()
             }
     }
