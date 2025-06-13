@@ -42,8 +42,6 @@ dependencies {
     implementation(project(":local:core-local"))
     implementation(project(":tokens:core-tokens"))
 
-    implementation(libs.koin.android.compose)
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
@@ -51,6 +49,8 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.auth)
+    implementation(libs.koin.android.compose)
+    implementation(libs.bundles.coil)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

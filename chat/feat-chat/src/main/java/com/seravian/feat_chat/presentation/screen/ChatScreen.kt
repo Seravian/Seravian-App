@@ -1,5 +1,6 @@
 package com.seravian.feat_chat.presentation.screen
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -65,8 +66,8 @@ import com.seravian.feat_chat.presentation.viewModel.voice.VoiceState
 
 @Composable
 fun ChatScreen(
-    chatId: String,
     navigateToVoiceMode: () -> Unit,
+    navigateToDiagnosesList: () -> Unit,
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -87,6 +88,7 @@ fun ChatScreen(
             chatAction = {
                 when(it) {
                     is ChatAction.NavigateToVoiceMode -> navigateToVoiceMode()
+                    is ChatAction.NavigateToDiagnosesList -> navigateToDiagnosesList()
                     is ChatAction.LeaveChat -> navigateBack()
                     else -> {}
                 }
@@ -106,7 +108,6 @@ private fun ChatScreenContent(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val analyzeSymptomsPrompt = "Analyse all previous messages and tell me if I suffer from any mental health problems. If I do, tell me what it is exactly and provide reasoning."
     var input by rememberSaveable { mutableStateOf("") }
     val listState = rememberLazyListState()
 
@@ -127,6 +128,22 @@ private fun ChatScreenContent(
             ))
         }
 
+    chatState.diagnosisRequestResult
+        ?.onSuccess {
+            baseAction(BaseAction.HideLoading)
+            Toast.makeText(
+                context,
+                stringResource(R.string.diagnosis_requested),
+                Toast.LENGTH_LONG
+            ).show()
+        }
+        ?.onError {
+            baseAction(BaseAction.HideLoading)
+            baseAction(BaseAction.ShowErrorMessage(
+                errorMessage = it.errorType?.toString(context) ?: ""
+            ))
+        }
+
     Scaffold (
         topBar = {
             TopAppBar(
@@ -144,6 +161,15 @@ private fun ChatScreenContent(
                         Icon(
                             painter = painterResource(id = R.drawable.ic_voice_mode),
                             contentDescription = stringResource(R.string.voice_mode),
+                            modifier = Modifier.size(32.dp)
+                        )
+                    }
+                    IconButton(onClick = {
+                        chatAction(ChatAction.NavigateToDiagnosesList)
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_diagnosis),
+                            contentDescription = stringResource(R.string.diagnoses),
                             modifier = Modifier.size(32.dp)
                         )
                     }
@@ -227,9 +253,12 @@ private fun ChatScreenContent(
                         trailingIcon = {
                             IconButton(
                                 onClick = {
-                                    chatAction(ChatAction.SendMessage(analyzeSymptomsPrompt))
+                                    baseAction(BaseAction.ShowLoading)
+                                    chatAction(ChatAction.RequestDiagnosis)
                                 },
-                                enabled = false
+                                enabled = chatState.messagesList.isNotEmpty()
+                                    && chatState.messagesList.any { it.isAI }
+                                    && chatState.isWaitingForDiagnosis
                             ) {
                                 Icon(
                                     painter = painterResource(R.drawable.ic_analyze_symptoms),

@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.greenvenom.core_network.data.NetworkResult
 import com.greenvenom.core_network.data.onSuccess
 import com.greenvenom.core_ui.presentation.BaseViewModel
-import com.seravian.core_chat.data.dto.request.FetchAIAudioRequest
+import com.seravian.core_chat.data.dto.request.voice.FetchAIAudioRequest
 import com.seravian.core_chat.domain.MessageType
 import com.seravian.core_chat.domain.models.Message
 import com.seravian.feat_chat.data.repository.ChatBotStateRepository
@@ -43,7 +43,9 @@ class VoiceModeViewModel(
     fun voiceAction(action: VoiceAction) {
         when(action) {
             is VoiceAction.StartStreaming -> startStreaming()
-            is VoiceAction.StartCollectingAIAudio -> collectAudioResponse()
+            is VoiceAction.StartCollectingAIAudio -> if (jobAudioResponseCollection == null) {
+                collectAudioResponse()
+            }
             is VoiceAction.ChangeMicState -> changeMicState()
             is VoiceAction.BuildAudioPlayer -> buildAudioPlayer()
             is VoiceAction.StopStreaming -> stopStreaming()
@@ -53,6 +55,7 @@ class VoiceModeViewModel(
             is VoiceAction.LeaveVoiceMode -> {
                 stopAudioResponseCollection(true)
                 stopStreaming()
+                chatBotStateRepository.updateLastMessage(null)
                 viewModelScope.launch(Dispatchers.IO) {
                     chatBotStateRepository.stopConnection()
                 }
@@ -193,6 +196,7 @@ class VoiceModeViewModel(
 
     private fun collectAudioResponse() {
         if (jobAudioResponseCollection != null) return
+
         jobAudioResponseCollection = viewModelScope.launch {
             voiceModeRepository.receiveAIAudioResponse { audioResult ->
                 _voiceState.update {

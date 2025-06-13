@@ -17,7 +17,7 @@ interface ChatDao {
     @Query("SELECT * FROM chats ORDER BY created_at DESC")
     fun getChats(): Flow<List<ChatEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Upsert
     suspend fun insertChat(chatEntity: ChatEntity)
 
     @Update
@@ -38,9 +38,18 @@ interface ChatDao {
     @Upsert
     suspend fun insertMessage(message: MessageEntity)
 
-    @Insert
+    @Upsert
     suspend fun insertMessages(messages: List<MessageEntity>)
 
     @Delete
     suspend fun deleteMessages(messages: List<MessageEntity>)
+
+    @Query("SELECT * FROM diagnoses WHERE chatId = :chatId ORDER BY requestedAtUtc DESC")
+    fun getChatDiagnoses(chatId: String): Flow<List<DiagnosisEntity>>
+
+    @Upsert
+    suspend fun insertDiagnosis(diagnosis: DiagnosisEntity)
+
+    @Upsert
+    suspend fun insertDiagnoses(diagnoses: List<DiagnosisEntity>)
 }

@@ -6,4 +6,13 @@
     <string name="welcome">مرحبا, %1$s</string>
     <string name="user">مستخدم</string>
     <string name="avatar">الصورة شخصية</string>
+    <string name="gender">الجنس</string>
+    <string name="date_of_birth">تاريخ الميلاد</string>
+    <string name="member_since">عضو منذ</string>
+    <string name="title">اللقب</string>
+    <string name="description">الوصف</string>
+    <string name="session_price">سعر الجلسة</string>
+    <string name="verified_at">تم التحقق في</string>
+    <string name="view_verification_requests">عرض طلبات التحقق</string>
+    <string name="doctor_information">معلومات الطبيب</string>
 </resources>

@@ -14,4 +14,6 @@
     <string name="unmuted">الصوت مسموع</string>
     <string name="muted">الصوت غير مسموع</string>
     <string name="voice_mode_message">رسالة صوتية</string>
+    <string name="diagnosis_requested">يتم إنشاء التشخيص</string>
+    <string name="diagnoses">زر قائمة التشخيصات</string>
 </resources>

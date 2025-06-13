@@ -9,5 +9,6 @@ sealed interface VerificationRequestsAction {
         val description: String,
         val sessionPrice: Int,
         val attachments: List<FileAttachment>
-    ) : VerificationRequestsAction
+    ): VerificationRequestsAction
+    data object NavigateBack: VerificationRequestsAction
 }

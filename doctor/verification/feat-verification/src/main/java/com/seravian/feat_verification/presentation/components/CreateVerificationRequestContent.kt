@@ -249,7 +249,7 @@ fun CreateVerificationRequestContent(
 
                     onSubmit(
                         VerificationRequestsAction.SendVerificationRequest(
-                            doctorTitle = selectedDoctorTitle!!,
+                            doctorTitle = selectedDoctorTitle ?: DoctorTitle.PSYCHIATRIST,
                             description = description,
                             sessionPrice = parsedPrice,
                             attachments = validAttachments

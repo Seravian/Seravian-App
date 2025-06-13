@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -43,7 +44,7 @@ fun TopAppBar(
     navigateBack: () -> Unit = {},
     logo: Painter = painterResource(R.drawable.logo),
     title: String = stringResource(R.string.app_name),
-    action: @Composable () -> Unit = {}
+    action: @Composable (RowScope.() -> Unit) = {}
 ) {
     AnimatedVisibility(
         visible = isVisible,
@@ -72,7 +73,7 @@ private fun TopBarContent(
     logo: Painter,
     title: String,
     modifier: Modifier = Modifier,
-    action: @Composable () -> Unit
+    action: @Composable (RowScope.() -> Unit)
 ) {
     val bowlbyFontFamily = FontFamily(
         Font(R.font.bowlby_one_sc, weight = FontWeight.Normal)
@@ -97,10 +98,9 @@ private fun TopBarContent(
             )
         },
         actions = {
-            AnimatedVisibility(
-                visible = isActionEnabled,
-                content = { action() }
-            )
+            if (isActionEnabled) {
+                action()
+            }
         },
         title = {
             Row(
@@ -142,14 +142,24 @@ private fun TopAppBarPreview() {
             navigateBack = {  },
             logo = painterResource(R.drawable.logo),
             title = "Testsdgd",
-            action = { IconButton(onClick = {  }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.short_back_arrow),
-                    contentDescription = stringResource(R.string.back_button),
-                    tint = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.fillMaxSize()
-                )
-            } }
+            action = {
+                IconButton(onClick = {  }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.short_back_arrow),
+                        contentDescription = stringResource(R.string.back_button),
+                        tint = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+                IconButton(onClick = {  }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.add_ic),
+                        contentDescription = stringResource(R.string.back_button),
+                        tint = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+            }
         )
     }
 }

@@ -4,13 +4,17 @@ import com.seravian.feat_chat.data.SeravianChatBotDataSource
 import com.seravian.feat_chat.data.repository.ChatBotStateRepository
 import com.seravian.feat_chat.data.repository.ChatRepositoryImpl
 import com.seravian.feat_chat.data.repository.ChatsListRepositoryImpl
+import com.seravian.feat_chat.data.repository.DiagnosisRepositoryImpl
 import com.seravian.feat_chat.data.repository.VoiceModeRepositoryImpl
 import com.seravian.feat_chat.domain.ChatBotRemoteDataSource
 import com.seravian.feat_chat.domain.repository.ChatRepository
 import com.seravian.feat_chat.domain.repository.ChatsListRepository
+import com.seravian.feat_chat.domain.repository.DiagnosisRepository
 import com.seravian.feat_chat.domain.repository.VoiceModeRepository
 import com.seravian.feat_chat.presentation.viewModel.chat.ChatViewModel
 import com.seravian.feat_chat.presentation.viewModel.chats_list.ChatsListViewModel
+import com.seravian.feat_chat.presentation.viewModel.diagnosis.details.DiagnosisDetailsViewModel
+import com.seravian.feat_chat.presentation.viewModel.diagnosis.list.DiagnosesListViewModel
 import com.seravian.feat_chat.presentation.viewModel.voice.VoiceModeViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named
@@ -52,6 +56,14 @@ val chatModule = module {
         )
     }
 
+    single<DiagnosisRepository> {
+        DiagnosisRepositoryImpl(
+            remoteDataSource = get(),
+            localDataSource = get(),
+            chatBotStateRepository = get()
+        )
+    }
+
     viewModel {
         ChatsListViewModel(
             chatsListRepository = get(),
@@ -70,6 +82,20 @@ val chatModule = module {
         VoiceModeViewModel(
             voiceModeRepository = get(),
             chatBotStateRepository = get(),
+        )
+    }
+
+    viewModel {
+        DiagnosesListViewModel(
+            diagnosisRepository = get(),
+            chatBotStateRepository = get()
+        )
+    }
+
+    viewModel {
+        DiagnosisDetailsViewModel(
+            diagnosisRepository = get(),
+            chatBotStateRepository = get()
         )
     }
 }

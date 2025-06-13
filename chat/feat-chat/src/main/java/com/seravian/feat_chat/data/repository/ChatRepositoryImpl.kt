@@ -6,10 +6,12 @@ import com.greenvenom.core_network.data.NetworkResult
 import com.greenvenom.core_network.data.map
 import com.greenvenom.core_network.data.onError
 import com.greenvenom.core_network.data.onSuccess
-import com.seravian.core_chat.data.dto.request.ClientRequest
-import com.seravian.core_chat.data.dto.request.GetChatMessagesRequest
-import com.seravian.core_chat.data.dto.request.SyncMessagesRequest
-import com.seravian.core_chat.data.dto.respose.ConfirmedMessageResponse
+import com.seravian.core_chat.data.dto.request.message.ClientRequest
+import com.seravian.core_chat.data.dto.request.chat.GetChatMessagesRequest
+import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisCreationRequest
+import com.seravian.core_chat.data.dto.request.message.SyncMessagesRequest
+import com.seravian.core_chat.data.dto.respose.diagnosis.DiagnosisCreationResponse
+import com.seravian.core_chat.data.dto.respose.message.ConfirmedMessageResponse
 import com.seravian.core_chat.domain.models.Chat
 import com.seravian.core_chat.domain.models.Message
 import com.seravian.core_local.domain.LocalDataSource
@@ -38,8 +40,8 @@ class ChatRepositoryImpl(
     ): Flow<NetworkResult<Pair<Chat, List<Message>>, NetworkError>> = channelFlow {
         currentChatId = getChatMessagesRequest.id
         val messagesList = mutableListOf<Message>()
-        val storedChat = roomDataSource.getChat(getChatMessagesRequest.id)
-        roomDataSource.getChatMessages(getChatMessagesRequest.id)
+        val storedChat = roomDataSource.getChat(currentChatId)
+        roomDataSource.getChatMessages(currentChatId)
             .onEach { messages ->
                 send(NetworkResult.Success(
                     storedChat.extractChat() to messages.map { it.extractMessage() }
@@ -65,7 +67,7 @@ class ChatRepositoryImpl(
                 }
         } else {
             syncMessages(
-                SyncMessagesRequest(messagesList.last().id.first ?: 0, getChatMessagesRequest.id)
+                SyncMessagesRequest(messagesList.last().id.first ?: 0, currentChatId)
             )
         }
     }.onCompletion {  }
@@ -82,6 +84,12 @@ class ChatRepositoryImpl(
 
     override suspend fun insertConfirmedMessage(message: Message) {
         roomDataSource.insertMessage(message.toEntity(currentChatId))
+    }
+
+    override suspend fun sendDiagnosisCreationRequest(
+        diagnosisCreationRequest: DiagnosisCreationRequest
+    ): NetworkResult<DiagnosisCreationResponse, NetworkError> {
+        return seravianChatBotDataSource.createDiagnosis(diagnosisCreationRequest)
     }
 
     //////////////////////////////////

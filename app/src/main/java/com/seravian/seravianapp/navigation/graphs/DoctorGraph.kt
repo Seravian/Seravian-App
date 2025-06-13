@@ -15,7 +15,10 @@ fun NavGraphBuilder.doctorGraph(navigate: (NavigationType) -> Unit) {
     navigation<SubGraph.Doctor>(startDestination = Screen.DoctorAppointments) {
         composable<Screen.DoctorVerifications> {
             VerificationRequestsScreen(
-                navigateBack = { navigate(NavigationType.Back) }
+                navigateBack = { navigate(NavigationType.Back) },
+                navigateToRequestDetails = { requestId ->
+                    navigate(NavigationType.Standard(Screen.DoctorVerificationDetails(requestId)))
+                }
             )
         }
 
@@ -45,7 +48,11 @@ fun NavGraphBuilder.doctorGraph(navigate: (NavigationType) -> Unit) {
         }
 
         composable<Screen.DoctorProfile> {
-            ProfileScreen()
+            ProfileScreen(
+                navigateToVerificationRequests = {
+                    navigate(NavigationType.Standard(Screen.DoctorVerifications))
+                }
+            )
         }
     }
 }
