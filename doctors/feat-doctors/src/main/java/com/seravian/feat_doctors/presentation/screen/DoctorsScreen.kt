@@ -1,6 +1,5 @@
 package com.seravian.feat_doctors.presentation.screen
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -62,7 +61,6 @@ fun DoctorsList(
 ) {
     LazyColumn(modifier = modifier) {
         items(doctorState.doctors) { doctor ->
-
             DoctorCard(
                 doctorUI = doctor.toDoctorUI(),
                 onClick = { doctorAction(DoctorAction.OnDoctorClick(doctor)) }

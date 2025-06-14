@@ -1,6 +1,5 @@
 package com.seravian.feat_doctors.presentation.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,10 +8,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -68,14 +67,13 @@ fun DoctorCard(
                )
            }
             if(doctorUI.profileImageUrl==null){
-                Image(
+                Icon(
                     painter = painterResource(id = R.drawable.person_ic),
                     contentDescription = "Profile Image",
                     modifier = Modifier
                         .width(100.dp)
                         .height(100.dp)
-                        .clip(RoundedCornerShape(10.dp)),
-                    contentScale = ContentScale.Crop
+                        .clip(RoundedCornerShape(10.dp))
                 )
             }
 

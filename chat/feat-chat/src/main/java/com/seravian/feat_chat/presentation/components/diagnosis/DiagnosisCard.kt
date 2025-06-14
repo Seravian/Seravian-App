@@ -48,8 +48,13 @@ fun DiagnosisCard(
         colors = CardDefaults.elevatedCardColors(
             containerColor = when {
                 diagnosis.completedAtUtc == null -> MaterialTheme.colorScheme.surface
-                diagnosis.isFailed -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.1f)
-                else -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.1f)
+                else -> {
+                    if (diagnosis.completedAtUtc != null && !diagnosis.isFailed) {
+                        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.1f)
+                    } else {
+                        MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.1f)
+                    }
+                }
             }
         )
     ) {
@@ -100,77 +105,74 @@ fun DiagnosisCard(
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
-
-                    // Failed diagnosis
-                    diagnosis.isFailed -> {
-                        Surface(
-                            color = MaterialTheme.colorScheme.errorContainer,
-                            shape = RoundedCornerShape(16.dp)
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_error),
-                                    contentDescription = stringResource(R.string.failed),
-                                    tint = MaterialTheme.colorScheme.onErrorContainer,
-                                    modifier = Modifier.size(16.dp)
-                                )
-                                Spacer(modifier = Modifier.width(6.dp))
-                                Text(
-                                    text = stringResource(R.string.failed),
-                                    color = MaterialTheme.colorScheme.onErrorContainer,
-                                    style = MaterialTheme.typography.labelLarge.copy(
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                )
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.weight(1f))
-
-                        Text(
-                            text = stringResource(R.string.completed, diagnosis.completedAtUtc),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                        )
-                    }
-
-                    // Successful diagnosis
                     else -> {
-                        Surface(
-                            color = MaterialTheme.colorScheme.primaryContainer,
-                            shape = RoundedCornerShape(16.dp)
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                        if (!diagnosis.isFailed && diagnosis.completedAtUtc != null) {
+                            Surface(
+                                color = MaterialTheme.colorScheme.primaryContainer,
+                                shape = RoundedCornerShape(16.dp)
                             ) {
-                                Icon(
-                                    imageVector = Icons.Default.CheckCircle,
-                                    contentDescription = stringResource(R.string.success),
-                                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                                    modifier = Modifier.size(16.dp)
-                                )
-                                Spacer(modifier = Modifier.width(6.dp))
-                                Text(
-                                    text = stringResource(R.string.success),
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                    style = MaterialTheme.typography.labelLarge.copy(
-                                        fontWeight = FontWeight.Bold
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.CheckCircle,
+                                        contentDescription = stringResource(R.string.success),
+                                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                        modifier = Modifier.size(16.dp)
                                     )
-                                )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(
+                                        text = stringResource(R.string.success),
+                                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                        style = MaterialTheme.typography.labelLarge.copy(
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    )
+                                }
                             }
+
+                            Spacer(modifier = Modifier.weight(1f))
+
+                            Text(
+                                text = stringResource(R.string.completed, diagnosis.completedAtUtc),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                            )
+                        } else {
+                            Surface(
+                                color = MaterialTheme.colorScheme.errorContainer,
+                                shape = RoundedCornerShape(16.dp)
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                                ) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.ic_error),
+                                        contentDescription = stringResource(R.string.failed),
+                                        tint = MaterialTheme.colorScheme.onErrorContainer,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(
+                                        text = stringResource(R.string.failed),
+                                        color = MaterialTheme.colorScheme.onErrorContainer,
+                                        style = MaterialTheme.typography.labelLarge.copy(
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    )
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.weight(1f))
+
+                            Text(
+                                text = stringResource(R.string.completed, diagnosis.completedAtUtc),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                            )
                         }
-
-                        Spacer(modifier = Modifier.weight(1f))
-
-                        Text(
-                            text = stringResource(R.string.completed, diagnosis.completedAtUtc),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                        )
                     }
                 }
             }
