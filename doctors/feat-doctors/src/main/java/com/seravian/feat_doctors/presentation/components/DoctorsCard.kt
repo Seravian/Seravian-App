@@ -1,5 +1,6 @@
 package com.seravian.feat_doctors.presentation.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -67,16 +68,8 @@ fun DoctorCard(
                )
            }
             if(doctorUI.profileImageUrl==null){
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
                 Image(
                     painter = painterResource(id = R.drawable.doctor_ic),
-=======
->>>>>>> Stashed changes
-                Icon(
-                    painter = painterResource(id = R.drawable.person_ic),
->>>>>>> 98ddcf5b762b0ce60ef30ce9ed61a2fe57177550
                     contentDescription = "Profile Image",
                     modifier = Modifier
                         .width(100.dp)

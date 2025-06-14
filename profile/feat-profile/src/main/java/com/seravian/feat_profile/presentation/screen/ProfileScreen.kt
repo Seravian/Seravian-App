@@ -318,7 +318,7 @@ fun ProfileContent(
                                     InfoRow(
                                         icon = painterResource(R.drawable.ic_attach_money),
                                         label = stringResource(R.string.session_price),
-                                        value = profileUI.doctorSessionPrice
+                                        value = it
                                     )
                                 }
 
