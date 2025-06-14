@@ -4,6 +4,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class DiagnosisReadyResponse(
-    val chatId: String,
-    val chatDiagnoseId: Long,
+    val id: Long,
+    val requestedAtUtc: String,
+    val completedAtUtc: String,
+    val diagnosedProblem: String?,
+    val reasoning: String?,
+    val prescriptions: List<String>?,
+    val failureReason: String?
 )

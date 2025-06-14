@@ -1,5 +1,6 @@
-package com.seravian.feat_chat.presentation.components
+package com.seravian.feat_chat.presentation.components.chat
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -39,18 +40,13 @@ fun ReceivedMessageCard(
     ) {
         Card(
             shape = MaterialTheme.shapes.extraLarge,
-            colors = CardDefaults.cardColors().copy(
-                containerColor = colorScheme.tertiaryContainer,
-                contentColor = colorScheme.onTertiaryContainer
-            ),
             modifier = Modifier.align(Alignment.Bottom)
         ) {
-            Icon(
-                painter = painterResource(R.drawable.chatbot_ic),
+            Image(
+                painter = painterResource(R.drawable.logo),
                 contentDescription = stringResource(R.string.chatbot_ic),
                 modifier = Modifier
-                    .padding(6.dp)
-                    .size(24.dp)
+                    .size(40.dp)
             )
         }
         Spacer(modifier = Modifier.width(8.dp))

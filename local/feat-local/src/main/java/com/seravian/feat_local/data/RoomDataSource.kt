@@ -33,7 +33,7 @@ class RoomDataSource(
         return chatDao.getChat(chatId)
     }
 
-    override suspend fun getChats(): Flow<List<ChatEntity>> {
+    override fun getChats(): Flow<List<ChatEntity>> {
         return chatDao.getChats()
     }
 
@@ -57,7 +57,7 @@ class RoomDataSource(
         chatDao.deleteAllChats()
     }
 
-    override suspend fun getChatMessages(chatId: String): Flow<List<MessageEntity>> {
+    override fun getChatMessages(chatId: String): Flow<List<MessageEntity>> {
         return chatDao.getChatMessages(chatId)
     }
 
@@ -73,7 +73,7 @@ class RoomDataSource(
         chatDao.deleteMessages(messages)
     }
 
-    override suspend fun getChatDiagnoses(chatId: String): Flow<List<DiagnosisEntity>> {
+    override fun getChatDiagnoses(chatId: String): Flow<List<DiagnosisEntity>> {
         return chatDao.getChatDiagnoses(chatId)
     }
 
@@ -83,6 +83,14 @@ class RoomDataSource(
 
     override suspend fun insertDiagnoses(diagnoses: List<DiagnosisEntity>) {
         chatDao.insertDiagnoses(diagnoses)
+    }
+
+    override suspend fun deleteDiagnosis(diagnosisId: Long) {
+        chatDao.deleteDiagnosis(diagnosisId)
+    }
+
+    override suspend fun deleteDiagnoses(chatId: String) {
+        chatDao.deleteDiagnoses(chatId)
     }
 
     override suspend fun deleteAllData() {

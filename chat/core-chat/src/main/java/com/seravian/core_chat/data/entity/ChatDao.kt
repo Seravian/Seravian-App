@@ -32,7 +32,7 @@ interface ChatDao {
     @Query("DELETE FROM chats")
     suspend fun deleteAllChats()
 
-    @Query("SELECT * FROM messages WHERE chatId = :chatId ORDER BY timestamp ASC")
+    @Query("SELECT * FROM messages WHERE chat_id = :chatId ORDER BY timestamp ASC")
     fun getChatMessages(chatId: String): Flow<List<MessageEntity>>
 
     @Upsert
@@ -44,7 +44,7 @@ interface ChatDao {
     @Delete
     suspend fun deleteMessages(messages: List<MessageEntity>)
 
-    @Query("SELECT * FROM diagnoses WHERE chatId = :chatId ORDER BY requestedAtUtc DESC")
+    @Query("SELECT * FROM diagnoses WHERE chat_id = :chatId ORDER BY requested_at_utc DESC")
     fun getChatDiagnoses(chatId: String): Flow<List<DiagnosisEntity>>
 
     @Upsert
@@ -52,4 +52,10 @@ interface ChatDao {
 
     @Upsert
     suspend fun insertDiagnoses(diagnoses: List<DiagnosisEntity>)
+
+    @Query("DELETE FROM diagnoses WHERE id = :diagnosisId")
+    suspend fun deleteDiagnosis(diagnosisId: Long)
+
+    @Query("DELETE FROM diagnoses WHERE chat_id = :chatId")
+    suspend fun deleteDiagnoses(chatId: String)
 }

@@ -101,25 +101,19 @@ private fun OtpContent(
 ) {
     val context = LocalContext.current
 
-    LaunchedEffect(state.otpNetworkResult) {
-        baseActions(BaseAction.HideLoading)
-        state.otpNetworkResult?.onSuccess {
+    state.otpNetworkResult
+        ?.onSuccess {
+            baseActions(BaseAction.HideLoading)
             navigateToNextScreen()
-        }
-        state.otpNetworkResult?.onError {
-            baseActions(
-                BaseAction.ShowErrorMessage(
-                it.errorType?.toString(context)?: context.getString(R.string.something_went_wrong)
-            ))
-            otpActions(OtpAction.ResetNetworkResult)
-        }
-    }
-
-    DisposableEffect(Unit) {
-        onDispose {
             otpActions(OtpAction.ResetState)
         }
-    }
+        ?.onError {
+            baseActions(
+                BaseAction.ShowErrorMessage(
+                    it.errorType?.toString(context)?: context.getString(R.string.something_went_wrong)
+                ))
+            otpActions(OtpAction.ResetNetworkResult)
+        }
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(

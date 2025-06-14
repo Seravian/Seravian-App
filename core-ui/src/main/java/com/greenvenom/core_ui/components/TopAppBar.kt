@@ -111,7 +111,7 @@ private fun TopBarContent(
                 // Logo
                 Box(
                     modifier = Modifier
-                        .size(40.dp)
+                        .size(48.dp)
                 ) {
                     Image(
                         painter = logo,

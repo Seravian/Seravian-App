@@ -13,29 +13,38 @@ import com.seravian.core_chat.domain.models.Diagnosis
         ForeignKey(
             entity = ChatEntity::class,
             parentColumns = ["id"],
-            childColumns = ["chatId"],
+            childColumns = ["chat_id"],
             onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [Index(value = ["chatId"])]
+    indices = [Index(value = ["chat_id"])]
 )
 data class DiagnosisEntity(
     @PrimaryKey
     @ColumnInfo(name = "id")
     val id: Long = -1,
-    @ColumnInfo(name = "chatId")
+    @ColumnInfo(name = "chat_id")
     val chatId: String = "",
-    @ColumnInfo(name = "description")
-    val description: String? = null,
-    @ColumnInfo(name = "requestedAtUtc")
+    @ColumnInfo(name = "requested_at_utc")
     val requestedAtUtc: String = "",
-    @ColumnInfo(name = "completedAtUtc")
-    val completedAtUtc: String? = null
+    @ColumnInfo(name = "completed_at_utc")
+    val completedAtUtc: String? = null,
+    @ColumnInfo(name = "diagnosed_problem")
+    val diagnosedProblem: String? = null,
+    @ColumnInfo(name = "reasoning")
+    val reasoning: String? = null,
+    @ColumnInfo(name = "prescriptions")
+    val prescriptions: List<String>? = null,
+    @ColumnInfo(name = "failure_reason")
+    val failureReason: String? = null
 ) {
     fun extractDiagnosis() = Diagnosis(
         id = id,
-        description = description,
         requestedAtUtc = requestedAtUtc,
-        completedAtUtc = completedAtUtc
+        completedAtUtc = completedAtUtc,
+        diagnosedProblem = diagnosedProblem,
+        reasoning = reasoning,
+        prescriptions = prescriptions,
+        failureReason = failureReason
     )
 }

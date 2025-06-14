@@ -33,7 +33,7 @@ import com.meticha.permissions_compose.AppPermission
 import com.meticha.permissions_compose.PermissionLifeCycleCheckEffect
 import com.meticha.permissions_compose.rememberAppPermissionState
 import com.seravian.feat_chat.R
-import com.seravian.feat_chat.presentation.components.PulseCircle
+import com.seravian.feat_chat.presentation.components.voice.PulseCircle
 import com.seravian.feat_chat.presentation.viewModel.voice.VoiceAction
 import com.seravian.feat_chat.presentation.viewModel.voice.VoiceModeViewModel
 import com.seravian.feat_chat.presentation.viewModel.voice.VoiceState
@@ -46,7 +46,7 @@ fun VoiceModeScreen(
         permissions = listOf(
             AppPermission(
                 permission = Manifest.permission.RECORD_AUDIO,
-                description = "Microphone access is needed for voice recording and streaming. Please grant this permission.",
+                description = stringResource(R.string.microphone_access_is_needed),
                 isRequired = true
             )
         )
@@ -60,10 +60,6 @@ fun VoiceModeScreen(
             navigateBack()
         },
         enableLifecycleObservation = true,
-        onPauseAction = { viewModel ->
-            viewModel.voiceAction(VoiceAction.StopStreaming)
-            viewModel.voiceAction(VoiceAction.StopCollectingAIAudio(true))
-        },
         onResumeAction = { viewModel ->
             if (permissions.allRequiredGranted()) {
                 viewModel.voiceAction(VoiceAction.StartStreaming)

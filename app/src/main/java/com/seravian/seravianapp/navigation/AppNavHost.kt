@@ -24,7 +24,6 @@ import org.koin.compose.koinInject
 fun AppNavHost(modifier: Modifier = Modifier) {
     val appNavigator = koinInject<AppNavigator>()
     val navigationRepository = koinInject<NavigationStateRepository>()
-    val navigationState by navigationRepository.navigationState.collectAsStateWithLifecycle()
     val destinationHandler = koinInject<SessionDestinationHandler>()
 
     appNavigator.config(
@@ -45,7 +44,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             )
         }
 
-        authGraph(navigationRepository::navigate, navigationState)
+        authGraph(navigationRepository::navigate, navigationRepository)
 
         navigation<SubGraph.OnBoarding>(startDestination = Screen.OnBoarding) {
             composable<Screen.OnBoarding> {

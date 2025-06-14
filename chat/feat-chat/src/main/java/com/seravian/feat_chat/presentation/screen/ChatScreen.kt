@@ -54,15 +54,13 @@ import com.greenvenom.core_ui.components.TopAppBar
 import com.greenvenom.core_ui.presentation.BaseAction
 import com.greenvenom.core_ui.theme.AppTheme
 import com.seravian.core_chat.domain.models.Message
-import com.seravian.feat_chat.presentation.components.AITypingIndicator
+import com.seravian.feat_chat.presentation.components.chat.AITypingIndicator
 import com.seravian.feat_chat.presentation.viewModel.chat.ChatAction
-import com.seravian.feat_chat.presentation.components.ChatInputTextField
-import com.seravian.feat_chat.presentation.components.ReceivedMessageCard
-import com.seravian.feat_chat.presentation.components.SentMessageCard
+import com.seravian.feat_chat.presentation.components.chat.ChatInputTextField
+import com.seravian.feat_chat.presentation.components.chat.ReceivedMessageCard
+import com.seravian.feat_chat.presentation.components.chat.SentMessageCard
 import com.seravian.feat_chat.presentation.models.toMessageUI
 import com.seravian.feat_chat.presentation.viewModel.chat.ChatState
-import com.seravian.feat_chat.presentation.viewModel.voice.VoiceAction
-import com.seravian.feat_chat.presentation.viewModel.voice.VoiceState
 
 @Composable
 fun ChatScreen(
@@ -136,11 +134,13 @@ private fun ChatScreenContent(
                 stringResource(R.string.diagnosis_requested),
                 Toast.LENGTH_LONG
             ).show()
+            chatAction(ChatAction.ClearDiagnosisRequestResult)
         }
         ?.onError {
             baseAction(BaseAction.HideLoading)
             baseAction(BaseAction.ShowErrorMessage(
-                errorMessage = it.errorType?.toString(context) ?: ""
+                errorMessage = it.errorType?.toString(context) ?: "",
+                dismissAction = { chatAction(ChatAction.ClearDiagnosisRequestResult) }
             ))
         }
 
@@ -258,7 +258,7 @@ private fun ChatScreenContent(
                                 },
                                 enabled = chatState.messagesList.isNotEmpty()
                                     && chatState.messagesList.any { it.isAI }
-                                    && chatState.isWaitingForDiagnosis
+                                    && !chatState.isWaitingForDiagnosis
                             ) {
                                 Icon(
                                     painter = painterResource(R.drawable.ic_analyze_symptoms),

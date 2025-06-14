@@ -4,15 +4,21 @@ import com.seravian.core_chat.data.entity.DiagnosisEntity
 
 data class Diagnosis(
     val id: Long,
-    val description: String?,
     val requestedAtUtc: String,
-    val completedAtUtc: String?
+    val completedAtUtc: String?,
+    val diagnosedProblem: String?,
+    val reasoning: String?,
+    val prescriptions: List<String>?,
+    val failureReason: String?
 ) {
     fun toEntity(chatId: String) = DiagnosisEntity(
         id = id,
         chatId = chatId,
-        description = description,
         requestedAtUtc = requestedAtUtc,
         completedAtUtc = completedAtUtc,
+        diagnosedProblem = diagnosedProblem,
+        reasoning = reasoning,
+        prescriptions = prescriptions,
+        failureReason = failureReason
     )
 }

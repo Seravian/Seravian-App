@@ -7,5 +7,6 @@ sealed interface ChatAction {
     data object RequestDiagnosis : ChatAction
     data object NavigateToVoiceMode : ChatAction
     data object NavigateToDiagnosesList : ChatAction
+    data object ClearDiagnosisRequestResult : ChatAction
     data object StopMessageCollections : ChatAction
 }

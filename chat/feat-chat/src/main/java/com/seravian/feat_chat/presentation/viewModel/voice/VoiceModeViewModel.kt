@@ -55,10 +55,10 @@ class VoiceModeViewModel(
             is VoiceAction.LeaveVoiceMode -> {
                 stopAudioResponseCollection(true)
                 stopStreaming()
-                chatBotStateRepository.updateLastMessage(null)
                 viewModelScope.launch(Dispatchers.IO) {
                     chatBotStateRepository.stopConnection()
                 }
+                chatBotStateRepository.updateLastMessage(null)
             }
         }
     }

@@ -14,25 +14,25 @@ import com.seravian.core_chat.domain.models.Message
         ForeignKey(
             entity = ChatEntity::class,
             parentColumns = ["id"],
-            childColumns = ["chatId"],
+            childColumns = ["chat_id"],
             onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [Index(value = ["chatId"])]
+    indices = [Index(value = ["chat_id"])]
 )
 data class MessageEntity(
     @PrimaryKey
     @ColumnInfo(name = "id")
     val id: Long = -1,
-    @ColumnInfo(name = "chatId")
+    @ColumnInfo(name = "chat_id")
     val chatId: String = "",
     @ColumnInfo(name = "content")
     val content: String = "",
     @ColumnInfo(name = "timestamp")
     val timestamp: String = "",
-    @ColumnInfo(name = "isAI")
+    @ColumnInfo(name = "is_ai")
     val isAI: Boolean = false,
-    @ColumnInfo(name = "messageType")
+    @ColumnInfo(name = "message_type")
     val messageType: MessageType = MessageType.TEXT
 ) {
     fun extractMessage() = Message(

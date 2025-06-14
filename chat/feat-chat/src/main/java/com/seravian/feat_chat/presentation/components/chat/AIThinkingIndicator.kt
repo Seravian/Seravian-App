@@ -1,4 +1,4 @@
-package com.seravian.feat_chat.presentation.components
+package com.seravian.feat_chat.presentation.components.chat
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
@@ -7,6 +7,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -45,17 +46,12 @@ fun AITypingIndicator(
         // Chatbot icon container
         Card(
             shape = MaterialTheme.shapes.extraLarge,
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer
-            ),
             modifier = Modifier.padding(start = 16.dp)
         ) {
-            Icon(
-                painter = painterResource(R.drawable.chatbot_ic),
+            Image(
+                painter = painterResource(R.drawable.logo),
                 contentDescription = stringResource(R.string.chatbot_ic),
-                modifier = Modifier
-                    .padding(6.dp)
-                    .size(24.dp)
+                modifier = Modifier.size(24.dp)
             )
         }
 

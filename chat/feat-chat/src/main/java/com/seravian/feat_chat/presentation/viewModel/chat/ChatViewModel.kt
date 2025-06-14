@@ -51,6 +51,7 @@ class ChatViewModel(
                 chatBotStateRepository.updateLastMessage(_chatState.value.messagesList.last())
             }
             ChatAction.NavigateToDiagnosesList -> {}
+            ChatAction.ClearDiagnosisRequestResult -> clearDiagnosisRequestResult()
         }
     }
 
@@ -108,7 +109,6 @@ class ChatViewModel(
         if (jobMessagesCollection != null) return
 
         jobMessagesCollection = viewModelScope.launch {
-
             chatRepository.getChatMessages(
                 GetChatMessagesRequest(chatId)
             ).collect { messagesResult ->
@@ -123,7 +123,7 @@ class ChatViewModel(
 
                 _chatState.update {
                     it.copy(
-                        getChatMessagesResult = messagesResult
+                        getChatMessagesResult = messagesResult.map {  }
                     )
                 }
             }
@@ -161,7 +161,9 @@ class ChatViewModel(
                     DiagnosisCreationRequest(
                         chatBotStateRepository.chatBotState.value.currentChat?.id ?: ""
                     )
-                ).onSuccess { chatBotStateRepository.checkDiagnosis() }
+                ).onSuccess {
+                    chatBotStateRepository.checkDiagnosis()
+                }
             }
 
             _chatState.update {
@@ -169,6 +171,14 @@ class ChatViewModel(
                     diagnosisRequestResult = result.map {  }
                 )
             }
+        }
+    }
+
+    private fun clearDiagnosisRequestResult() {
+        _chatState.update {
+            it.copy(
+                diagnosisRequestResult = null
+            )
         }
     }
 
