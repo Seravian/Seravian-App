@@ -57,7 +57,7 @@ fun DoctorCard(
                        .data(doctorUI.profileImageUrl ?: "")
                        .crossfade(true)
                        .build(),
-                   placeholder = painterResource(R.drawable.person_ic),
+                   placeholder = painterResource(R.drawable.doctor_ic),
                    contentDescription = stringResource(R.string.description),
                    contentScale = ContentScale.Crop,
                    modifier = Modifier
@@ -67,8 +67,16 @@ fun DoctorCard(
                )
            }
             if(doctorUI.profileImageUrl==null){
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+                Image(
+                    painter = painterResource(id = R.drawable.doctor_ic),
+=======
+>>>>>>> Stashed changes
                 Icon(
                     painter = painterResource(id = R.drawable.person_ic),
+>>>>>>> 98ddcf5b762b0ce60ef30ce9ed61a2fe57177550
                     contentDescription = "Profile Image",
                     modifier = Modifier
                         .width(100.dp)

@@ -14,12 +14,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.greenvenom.core_ui.components.TopAppBar
 import com.greenvenom.core_ui.R
 import com.greenvenom.core_ui.presentation.BaseAction
@@ -106,14 +110,33 @@ fun DoctorDetailsContent(
                     modifier = Modifier.padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-//                    Image(
-//                        painter = painterResource(id = doctorDetailsState.doctor?.doctorImageUrl?:),
-//                        contentDescription = "Doctor Image",
-//                        modifier = Modifier
-//                            .size(150.dp)
-//                            .clip(RoundedCornerShape(16.dp)),
-//                        contentScale = ContentScale.Crop
-//                    )
+                    doctorDetailsState.doctor?.doctorImageUrl?.let {
+                        AsyncImage(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(doctorDetailsState.doctor.doctorImageUrl ?: "")
+                                .crossfade(true)
+                                .build(),
+                            placeholder = painterResource(com.seravian.feat_doctors.R.drawable.person_ic),
+                            contentDescription = stringResource(com.seravian.feat_doctors.R.string.description),
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(250.dp)
+                                .clip(RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp)),
+                        )
+                    }
+                    if(doctorDetailsState.doctor?.doctorImageUrl==null){
+                        Image(
+                            painter = painterResource(id = com.seravian.feat_doctors.R.drawable.doctor_ic),
+                            contentDescription = "Profile Image",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(250.dp)
+                                .clip(RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp)),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+
 
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -126,7 +149,8 @@ fun DoctorDetailsContent(
                     Spacer(modifier = Modifier.height(4.dp))
 
                     Text(
-                        text = doctorDetailsState.doctor?.doctorSessionPrice.toString()?:"",
+                        text = (doctorDetailsState.doctor?.doctorSessionPrice.toString() + " EGP")
+                            ?: "",
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.Gray
                     )
