@@ -37,8 +37,9 @@ class DiagnosisRepositoryImpl(
         // Emit initial local data
         localDataSource.getChatDiagnoses(currentChatId)
             .onEach { diagnoses ->
+                val extractedDiagnoses = diagnoses.map { it.extractDiagnosis() }
                 send(NetworkResult.Success(
-                    diagnoses.map { it.extractDiagnosis() }
+                    extractedDiagnoses
                 ))
             }
             .launchIn(this)
@@ -53,21 +54,17 @@ class DiagnosisRepositoryImpl(
         remoteDataSource.getChatDiagnoses(chatDiagnosesRequest)
             .map { response -> response.map { it.extractDiagnosis() } }
             .onSuccess { remoteDiagnoses ->
-                // Get current local diagnoses
-                val localDiagnoses = localDataSource.getChatDiagnoses(currentChatId)
-                    .first().map { it.extractDiagnosis() }
-
                 // Create sets of IDs for comparison
                 val remoteIds = remoteDiagnoses.map { it.id }.toSet()
-                val localIds = localDiagnoses.map { it.id }.toSet()
+                val localIds = diagnosesList.map { it.id }.toSet()
 
                 // Find diagnoses to delete (in local but not in remote)
                 val diagnosesToDelete = localIds - remoteIds
 
                 // Find diagnoses to insert/update (in remote but not in local, or different)
                 val diagnosesToInsertOrUpdate = remoteDiagnoses.filter { remoteDiagnosis ->
-                    val localDiagnosis = localDiagnoses.find { it.id == remoteDiagnosis.id }
-                    localDiagnosis == null || localDiagnosis != remoteDiagnosis
+                    val localDiagnosis = diagnosesList.find { it.id == remoteDiagnosis.id }
+                    localDiagnosis == null || localDiagnosis.id != remoteDiagnosis.id
                 }
 
                 // Delete obsolete diagnoses
