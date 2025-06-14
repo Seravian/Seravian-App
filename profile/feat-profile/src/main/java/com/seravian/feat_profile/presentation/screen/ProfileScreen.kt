@@ -1,7 +1,5 @@
 package com.seravian.feat_profile.presentation.screen
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -150,17 +148,15 @@ fun ProfileContent(
                         .size(100.dp)
                         .clip(CircleShape)
                         .border(2.dp, Color.Gray, CircleShape)
-                        .background(MaterialTheme.colorScheme.inverseSurface),
                 )
             } else {
-                Image(
+                Icon(
                     painter = painterResource(R.drawable.ic_account_circle),
                     contentDescription = stringResource(R.string.avatar),
                     modifier = Modifier
                         .size(100.dp)
                         .clip(CircleShape)
                         .border(2.dp, Color.Gray, CircleShape)
-                        .background(MaterialTheme.colorScheme.inverseSurface)
                 )
             }
 
