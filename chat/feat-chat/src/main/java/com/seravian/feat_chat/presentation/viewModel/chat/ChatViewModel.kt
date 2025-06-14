@@ -3,12 +3,11 @@ package com.seravian.feat_chat.presentation.viewModel.chat
 import androidx.lifecycle.viewModelScope
 import com.greenvenom.core_network.data.NetworkResult
 import com.greenvenom.core_network.data.map
-import com.greenvenom.core_network.data.onError
 import com.greenvenom.core_network.data.onSuccess
 import com.greenvenom.core_ui.presentation.BaseViewModel
-import com.seravian.core_chat.data.dto.request.message.ClientRequest
 import com.seravian.core_chat.data.dto.request.chat.GetChatMessagesRequest
 import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisCreationRequest
+import com.seravian.core_chat.data.dto.request.message.ClientRequest
 import com.seravian.core_chat.domain.models.Message
 import com.seravian.feat_chat.data.repository.ChatBotStateRepository
 import com.seravian.feat_chat.domain.repository.ChatRepository
@@ -137,6 +136,7 @@ class ChatViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             chatBotStateRepository.stopConnection()
         }
+        chatBotStateRepository.leaveChat()
     }
 
     private fun sendRequest(message: String) {

@@ -2,8 +2,6 @@ package com.seravian.core_chat.data.entity
 
 import androidx.room.Dao
 import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import androidx.room.Upsert
@@ -46,6 +44,9 @@ interface ChatDao {
 
     @Query("SELECT * FROM diagnoses WHERE chat_id = :chatId ORDER BY requested_at_utc DESC")
     fun getChatDiagnoses(chatId: String): Flow<List<DiagnosisEntity>>
+
+    @Query("SELECT * FROM diagnoses WHERE id = :diagnosisId")
+    suspend fun getChatDiagnosis(diagnosisId: Long): DiagnosisEntity
 
     @Upsert
     suspend fun insertDiagnosis(diagnosis: DiagnosisEntity)

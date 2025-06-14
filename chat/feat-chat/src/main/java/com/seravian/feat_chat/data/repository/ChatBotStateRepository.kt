@@ -19,10 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -33,9 +30,6 @@ class ChatBotStateRepository(
     val chatBotState = _chatBotState.asStateFlow()
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    private val connectionStatusSharedFlow: SharedFlow<ConnectionStatus> =
-        seravianChatBotDataSource.getSignalRConnectionStatus()
-            .shareIn(scope, SharingStarted.Lazily, replay = 1)
 
     private var jobInternalConnectionStatus: Job? = null
 
@@ -89,7 +83,7 @@ class ChatBotStateRepository(
         if (jobInternalConnectionStatus != null) return
 
         jobInternalConnectionStatus = scope.launch {
-            connectionStatusSharedFlow.collect { status ->
+            seravianChatBotDataSource.getSignalRConnectionStatus().collect { status ->
                 when (status) {
                     ConnectionStatus.CONNECTING -> {
 
@@ -104,11 +98,7 @@ class ChatBotStateRepository(
 
                     }
                     ConnectionStatus.DISCONNECTED -> {
-                        _chatBotState.update {
-                            it.copy(
-                                joinChatResult = null
-                            )
-                        }
+                        leaveChat()
                     }
                     ConnectionStatus.IDLE -> {
 
@@ -133,6 +123,14 @@ class ChatBotStateRepository(
                     joinChatResult = NetworkResult.Error(NetworkError(ErrorType.UNKNOWN_ERROR))
                 )
             }
+        }
+    }
+
+    fun leaveChat() {
+        _chatBotState.update {
+            it.copy(
+                joinChatResult = null
+            )
         }
     }
 

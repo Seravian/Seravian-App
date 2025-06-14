@@ -7,15 +7,17 @@ import kotlinx.serialization.Serializable
 data class ChatDiagnosisResponse(
     val id: Long,
     val requestedAtUtc: String,
-    val completedAtUtc: String?
+    val completedAtUtc: String?,
+    val diagnosedProblem: String?,
+    val failureReason: String?
 ) {
     fun extractDiagnosis() = Diagnosis(
         id = id,
         requestedAtUtc = requestedAtUtc,
         completedAtUtc = completedAtUtc,
-        diagnosedProblem = null,
+        diagnosedProblem = diagnosedProblem,
         reasoning = null,
         prescriptions = null,
-        failureReason = null
+        failureReason = failureReason
     )
 }

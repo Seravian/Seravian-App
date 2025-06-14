@@ -99,9 +99,27 @@ class DiagnosisRepositoryImpl(
     override suspend fun getDiagnosis(
         diagnosisDetailsRequest: DiagnosisDetailsRequest
     ): NetworkResult<Diagnosis, NetworkError> {
-        return remoteDataSource.getDiagnosisDetails(diagnosisDetailsRequest)
-            .map { it.extractDiagnosis() }
-            .onSuccess { localDataSource.insertDiagnosis(it.toEntity(currentChatId)) }
+        val localDiagnosis = localDataSource.getChatDiagnosis(
+            diagnosisDetailsRequest.chatDiagnosisId
+        ).extractDiagnosis()
+
+        return when {
+            // Return local if diagnosedProblem and reasoning are both not null
+            localDiagnosis.diagnosedProblem != null && localDiagnosis.reasoning != null -> {
+                NetworkResult.Success(localDiagnosis)
+            }
+            // Return local if diagnosedProblem is null and failureReason is not null
+            localDiagnosis.diagnosedProblem == null && localDiagnosis.failureReason != null -> {
+                NetworkResult.Success(localDiagnosis)
+            }
+            // Return remote if diagnosedProblem is not null but reasoning is null
+            // (or any other case not covered above)
+            else -> {
+                remoteDataSource.getDiagnosisDetails(diagnosisDetailsRequest)
+                    .map { it.extractDiagnosis() }
+                    .onSuccess { localDataSource.insertDiagnosis(it.toEntity(currentChatId)) }
+            }
+        }
     }
 
     override suspend fun deleteDiagnosis(

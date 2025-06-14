@@ -23,6 +23,7 @@ interface LocalDataSource {
     suspend fun insertMessages(messages: List<MessageEntity>)
     suspend fun deleteMessages(messages: List<MessageEntity>)
     fun getChatDiagnoses(chatId: String): Flow<List<DiagnosisEntity>>
+    suspend fun getChatDiagnosis(diagnosisId: Long): DiagnosisEntity
     suspend fun insertDiagnosis(diagnosis: DiagnosisEntity)
     suspend fun insertDiagnoses(diagnoses: List<DiagnosisEntity>)
     suspend fun deleteAllData()

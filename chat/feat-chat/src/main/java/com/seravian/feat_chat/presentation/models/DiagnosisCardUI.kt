@@ -14,5 +14,5 @@ fun Diagnosis.toCardUI() = DiagnosisCardUI(
     id = id,
     requestedAtUtc = formatDateTime(requestedAtUtc) ?: "",
     completedAtUtc = formatDateTime(completedAtUtc),
-    isFailed = failureReason != null
+    isFailed = failureReason != null && diagnosedProblem == null
 )

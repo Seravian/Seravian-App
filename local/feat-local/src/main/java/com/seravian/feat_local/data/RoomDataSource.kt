@@ -77,6 +77,10 @@ class RoomDataSource(
         return chatDao.getChatDiagnoses(chatId)
     }
 
+    override suspend fun getChatDiagnosis(diagnosisId: Long): DiagnosisEntity {
+        return chatDao.getChatDiagnosis(diagnosisId)
+    }
+
     override suspend fun insertDiagnosis(diagnosis: DiagnosisEntity) {
         chatDao.insertDiagnosis(diagnosis)
     }
