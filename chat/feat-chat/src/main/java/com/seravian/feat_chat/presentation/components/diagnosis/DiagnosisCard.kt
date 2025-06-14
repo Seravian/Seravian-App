@@ -39,7 +39,7 @@ fun DiagnosisCard(
     modifier: Modifier = Modifier
 ) {
     ElevatedCard(
-        elevation = CardDefaults.cardElevation(2.dp),
+        elevation = CardDefaults.cardElevation(4.dp),
         enabled = diagnosis.completedAtUtc != null,
         onClick = onClick,
         modifier = modifier
