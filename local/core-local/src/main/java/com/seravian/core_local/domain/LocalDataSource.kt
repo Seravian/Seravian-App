@@ -12,18 +12,20 @@ interface LocalDataSource {
     suspend fun updateProfile(profileEntity: ProfileEntity)
     suspend fun deleteProfile()
     suspend fun getChat(chatId: String): ChatEntity
-    suspend fun getChats(): Flow<List<ChatEntity>>
+    fun getChats(): Flow<List<ChatEntity>>
     suspend fun insertChat(chatEntity: ChatEntity)
     suspend fun updateChat(chatEntity: ChatEntity)
     suspend fun deleteChat(chatId: String)
     suspend fun deleteChats(chats: List<ChatEntity>)
     suspend fun deleteAllChats()
-    suspend fun getChatMessages(chatId: String): Flow<List<MessageEntity>>
+    fun getChatMessages(chatId: String): Flow<List<MessageEntity>>
     suspend fun insertMessage(message: MessageEntity)
     suspend fun insertMessages(messages: List<MessageEntity>)
     suspend fun deleteMessages(messages: List<MessageEntity>)
-    suspend fun getChatDiagnoses(chatId: String): Flow<List<DiagnosisEntity>>
+    fun getChatDiagnoses(chatId: String): Flow<List<DiagnosisEntity>>
     suspend fun insertDiagnosis(diagnosis: DiagnosisEntity)
     suspend fun insertDiagnoses(diagnoses: List<DiagnosisEntity>)
     suspend fun deleteAllData()
+    suspend fun deleteDiagnosis(diagnosisId: Long)
+    suspend fun deleteDiagnoses(chatId: String)
 }

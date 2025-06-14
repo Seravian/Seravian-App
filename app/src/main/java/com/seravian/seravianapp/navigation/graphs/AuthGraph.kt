@@ -4,7 +4,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.greenvenom.core_navigation.data.NavigationType
-import com.greenvenom.core_navigation.data.repository.NavigationState
+import com.greenvenom.core_navigation.data.repository.NavigationStateRepository
+import com.greenvenom.core_navigation.domain.Destination
 import com.greenvenom.feat_auth.presentation.login.LoginScreen
 import com.greenvenom.feat_auth.presentation.otp.OtpScreen
 import com.greenvenom.feat_auth.presentation.register.RegisterScreen
@@ -12,8 +13,32 @@ import com.greenvenom.feat_auth.presentation.reset_password.screens.NewPasswordS
 import com.greenvenom.feat_auth.presentation.reset_password.screens.VerifyEmailScreen
 import com.seravian.feat_navigation.routes.Screen
 import com.seravian.feat_navigation.routes.SubGraph
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-fun NavGraphBuilder.authGraph(navigate: (NavigationType) -> Unit, navigationState: NavigationState) {
+fun NavGraphBuilder.authGraph(
+    navigate: (NavigationType) -> Unit,
+    navigationStateRepository: NavigationStateRepository
+) {
+    var otpNextScreen: Destination = Screen.Login
+
+    CoroutineScope(Dispatchers.Main).launch {
+        navigationStateRepository.navigationState.collect {
+            when(it.previousDestination) {
+                is Screen.Login -> {
+                    otpNextScreen = Screen.Login
+                }
+                is Screen.Register -> {
+                    otpNextScreen = Screen.Login
+                }
+                is Screen.VerifyEmail -> {
+                    otpNextScreen = Screen.NewPassword
+                }
+            }
+        }
+    }
+
     navigation<SubGraph.Auth>(startDestination = Screen.Login) {
         composable<Screen.Login> {
             LoginScreen(
@@ -67,7 +92,7 @@ fun NavGraphBuilder.authGraph(navigate: (NavigationType) -> Unit, navigationStat
                     navigate(NavigationType.Back)
                 },
                 navigateToNextScreen = {
-                    when (navigationState.previousDestination) {
+                    when (otpNextScreen) {
                         is Screen.Login -> {
                             navigate(
                                 NavigationType.ClearBackStack(Screen.Login)

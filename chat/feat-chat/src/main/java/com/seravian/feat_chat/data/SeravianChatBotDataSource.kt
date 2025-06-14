@@ -17,8 +17,10 @@ import com.seravian.core_chat.data.dto.request.chat.GetChatMessagesRequest
 import com.seravian.core_chat.data.dto.request.chat.IsProcessingRequest
 import com.seravian.core_chat.data.dto.request.chat.JoinChatRequest
 import com.seravian.core_chat.data.dto.request.diagnosis.ChatDiagnosesRequest
+import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosesDeletionRequest
 import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisCheckRequest
 import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisCreationRequest
+import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisDeletionRequest
 import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisDetailsRequest
 import com.seravian.core_chat.data.dto.request.message.SyncMessagesRequest
 import com.seravian.core_chat.data.dto.request.voice.UploadVoiceRequest
@@ -224,6 +226,30 @@ class SeravianChatBotDataSource(
             authorizedHttpClient.get(constructUrl("chat/is-diagnosing")) {
                 url {
                     parameters.append("chatId", diagnosingCheckRequest.chatId)
+                }
+            }
+        }
+    }
+
+    override suspend fun deleteDiagnosis(
+        diagnosisDeletionRequest: DiagnosisDeletionRequest
+    ): EmptyResult<NetworkError> {
+        return safeCall {
+            authorizedHttpClient.delete(constructUrl("chat/delete-completed-chat-diagnosis")) {
+                url {
+                    parameters.append("chatDiagnosisId", diagnosisDeletionRequest.chatDiagnosisId.toString())
+                }
+            }
+        }
+    }
+
+    override suspend fun deleteDiagnoses(
+        diagnosesDeletionRequest: DiagnosesDeletionRequest
+    ): EmptyResult<NetworkError> {
+        return safeCall {
+            authorizedHttpClient.delete(constructUrl("chat/delete-completed-chat-diagnoses")) {
+                url {
+                    parameters.append("chatId", diagnosesDeletionRequest.chatId)
                 }
             }
         }

@@ -13,8 +13,10 @@ import com.seravian.core_chat.data.dto.request.chat.GetChatMessagesRequest
 import com.seravian.core_chat.data.dto.request.chat.IsProcessingRequest
 import com.seravian.core_chat.data.dto.request.chat.JoinChatRequest
 import com.seravian.core_chat.data.dto.request.diagnosis.ChatDiagnosesRequest
+import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosesDeletionRequest
 import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisCheckRequest
 import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisCreationRequest
+import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisDeletionRequest
 import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisDetailsRequest
 import com.seravian.core_chat.data.dto.request.message.SyncMessagesRequest
 import com.seravian.core_chat.data.dto.request.voice.UploadVoiceRequest
@@ -84,6 +86,14 @@ interface ChatBotRemoteDataSource {
     suspend fun isDiagnosing(
         diagnosingCheckRequest: DiagnosisCheckRequest
     ): NetworkResult<DiagnosisCheckResponse, NetworkError>
+
+    suspend fun deleteDiagnosis(
+        diagnosisDeletionRequest: DiagnosisDeletionRequest
+    ): EmptyResult<NetworkError>
+
+    suspend fun deleteDiagnoses(
+        diagnosesDeletionRequest: DiagnosesDeletionRequest
+    ): EmptyResult<NetworkError>
 
     //////////////////////////////////
     ///////// REALTIME CHAT METHODS

@@ -1,4 +1,4 @@
-package com.seravian.feat_chat.presentation.components
+package com.seravian.feat_chat.presentation.components.chat
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

@@ -11,8 +11,11 @@ data class ChatDiagnosisResponse(
 ) {
     fun extractDiagnosis() = Diagnosis(
         id = id,
-        description = null,
         requestedAtUtc = requestedAtUtc,
-        completedAtUtc = completedAtUtc
+        completedAtUtc = completedAtUtc,
+        diagnosedProblem = null,
+        reasoning = null,
+        prescriptions = null,
+        failureReason = null
     )
 }

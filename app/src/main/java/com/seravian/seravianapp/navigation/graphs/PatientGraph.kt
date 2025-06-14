@@ -8,6 +8,8 @@ import androidx.navigation.toRoute
 import com.greenvenom.core_navigation.data.NavigationType
 import com.seravian.feat_chat.presentation.screen.ChatListScreen
 import com.seravian.feat_chat.presentation.screen.ChatScreen
+import com.seravian.feat_chat.presentation.screen.DiagnosesListScreen
+import com.seravian.feat_chat.presentation.screen.DiagnosisDetailsScreen
 import com.seravian.feat_chat.presentation.screen.VoiceModeScreen
 import com.seravian.feat_doctors.presentation.screen.DoctorDetailsScreen
 import com.seravian.feat_doctors.presentation.screen.DoctorsScreen
@@ -57,11 +59,20 @@ fun NavGraphBuilder.patientGraph(navigate: (NavigationType) -> Unit) {
             }
 
             composable<Screen.DiagnosesList> {
-                Text(text = "Diagnoses")
+                DiagnosesListScreen(
+                    navigateToDiagnosisDetails = {
+                        navigate(
+                            NavigationType.Standard(Screen.DiagnosisDetails)
+                        )
+                    },
+                    navigateBack = { navigate(NavigationType.Back) }
+                )
             }
 
             composable<Screen.DiagnosisDetails> {
-                Text(text = "Diagnosis Details")
+                DiagnosisDetailsScreen(
+                    navigateBack = { navigate(NavigationType.Back) }
+                )
             }
         }
 
@@ -71,7 +82,7 @@ fun NavGraphBuilder.patientGraph(navigate: (NavigationType) -> Unit) {
 
         composable<Screen.Doctors> {
             DoctorsScreen(
-                onDoctorClicked = { doctorId->
+                onDoctorClicked = { doctorId ->
                     navigate(
                         NavigationType.Standard(Screen.DoctorDetails(doctorId = doctorId))
                     )

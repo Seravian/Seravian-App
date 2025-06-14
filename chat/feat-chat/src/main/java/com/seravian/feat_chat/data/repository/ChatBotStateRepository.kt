@@ -137,11 +137,10 @@ class ChatBotStateRepository(
     }
 
     private fun observeDiagnoses() {
-        seravianChatBotDataSource.receiveDiagnosisReadyResponse { callback ->
-            checkDiagnosis()
+        seravianChatBotDataSource.receiveDiagnosisReadyResponse { readyResponse ->
             _chatBotState.update {
                 it.copy(
-                    lastNotifiedDiagnosisId = callback.chatDiagnoseId,
+                    lastNotifiedDiagnosisId = readyResponse.id,
                     isWaitingForDiagnosis = false
                 )
             }
