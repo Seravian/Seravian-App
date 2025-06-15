@@ -5,8 +5,8 @@ import com.greenvenom.core_network.data.ErrorType
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
 import com.greenvenom.core_network.data.map
-import com.seravian.core_chat.data.dto.request.FetchAIAudioRequest
-import com.seravian.core_chat.data.dto.request.UploadVoiceRequest
+import com.seravian.core_chat.data.dto.request.voice.FetchAIAudioRequest
+import com.seravian.core_chat.data.dto.request.voice.UploadVoiceRequest
 import com.seravian.core_chat.domain.models.Audio
 import com.seravian.feat_chat.domain.ChatBotRemoteDataSource
 import com.seravian.feat_chat.domain.repository.VoiceModeRepository
@@ -17,7 +17,8 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.sync.Mutex
 
 class VoiceModeRepositoryImpl(
-    private val seravianChatBotDataSource: ChatBotRemoteDataSource
+    private val seravianChatBotDataSource: ChatBotRemoteDataSource,
+    private val chatBotStateRepository: ChatBotStateRepository
 ): VoiceModeRepository {
     private val audioDownloadLock: Mutex = Mutex()
     private var downloadExecution: Deferred<NetworkResult<Audio, NetworkError>>? = null
@@ -28,7 +29,12 @@ class VoiceModeRepositoryImpl(
         capturedVoice: ByteArray,
         chatId: String
     ): EmptyResult<NetworkError> {
-        return seravianChatBotDataSource.uploadUserVoice(UploadVoiceRequest(capturedVoice, chatId))
+        val uploadResult = seravianChatBotDataSource.uploadUserVoice(
+            UploadVoiceRequest(capturedVoice, chatId)
+        )
+        chatBotStateRepository.checkResponseProcessing()
+
+        return uploadResult
     }
 
     override suspend fun receiveAIAudioResponse(callback: (NetworkResult<Audio, NetworkError>) -> Unit) {
@@ -65,7 +71,6 @@ class VoiceModeRepositoryImpl(
     ): NetworkResult<Audio, NetworkError> {
         if (!audioDownloadLock.tryLock()) {
             downloadExecution?.let {
-                println("Already Fetching Audio")
                 return NetworkResult.Error(NetworkError(ErrorType.TOO_MANY_REQUESTS))
             }
         }
@@ -80,6 +85,7 @@ class VoiceModeRepositoryImpl(
 
             deferred.await()
         } finally {
+            chatBotStateRepository.checkResponseProcessing()
             audioDownloadLock.unlock()
             downloadExecution = null
         }

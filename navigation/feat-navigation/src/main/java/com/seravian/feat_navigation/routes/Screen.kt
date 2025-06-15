@@ -51,7 +51,7 @@ sealed class Screen: Destination {
     }
 
     @Serializable
-    data class Chat(val chatId: String = ""): Screen() {
+    data object Chat: Screen() {
         override val destinationType: DestinationType = DestinationType.SIDE
     }
 
@@ -61,8 +61,23 @@ sealed class Screen: Destination {
     }
 
     @Serializable
+    data object DiagnosesList: Screen() {
+        override val destinationType: DestinationType = DestinationType.SIDE
+    }
+
+    @Serializable
+    data object DiagnosisDetails: Screen() {
+        override val destinationType: DestinationType = DestinationType.SIDE
+    }
+
+    @Serializable
     data object Doctors: Screen() {
         override val destinationType: DestinationType = DestinationType.MAIN
+    }
+
+    @Serializable
+    data class DoctorDetails(val doctorId: String = ""): Screen() {
+        override val destinationType: DestinationType = DestinationType.SIDE
     }
 
     @Serializable
@@ -71,7 +86,42 @@ sealed class Screen: Destination {
     }
 
     @Serializable
-    data object Profile: Screen() {
+    data object PatientProfile: Screen() {
+        override val destinationType: DestinationType = DestinationType.MAIN
+    }
+
+    @Serializable
+    data object DoctorVerifications: Screen() {
+        override val destinationType: DestinationType = DestinationType.OTHER
+    }
+
+    @Serializable
+    data class DoctorVerificationDetails(val requestId: Long = 0): Screen() {
+        override val destinationType: DestinationType = DestinationType.OTHER
+    }
+
+    @Serializable
+    data object DoctorAppointments: Screen() {
+        override val destinationType: DestinationType = DestinationType.MAIN
+    }
+
+    @Serializable
+    data object AppointmentDetails: Screen() {
+        override val destinationType: DestinationType = DestinationType.SIDE
+    }
+
+    @Serializable
+    data object DoctorRequests: Screen() {
+        override val destinationType: DestinationType = DestinationType.MAIN
+    }
+
+    @Serializable
+    data object RequestDetails: Screen() {
+        override val destinationType: DestinationType = DestinationType.SIDE
+    }
+
+    @Serializable
+    data object DoctorProfile: Screen() {
         override val destinationType: DestinationType = DestinationType.MAIN
     }
 }

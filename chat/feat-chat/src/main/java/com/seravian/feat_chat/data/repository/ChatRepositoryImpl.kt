@@ -6,10 +6,12 @@ import com.greenvenom.core_network.data.NetworkResult
 import com.greenvenom.core_network.data.map
 import com.greenvenom.core_network.data.onError
 import com.greenvenom.core_network.data.onSuccess
-import com.seravian.core_chat.data.dto.request.ClientRequest
-import com.seravian.core_chat.data.dto.request.GetChatMessagesRequest
-import com.seravian.core_chat.data.dto.request.SyncMessagesRequest
-import com.seravian.core_chat.data.dto.respose.ConfirmedMessageResponse
+import com.seravian.core_chat.data.dto.request.chat.GetChatMessagesRequest
+import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisCreationRequest
+import com.seravian.core_chat.data.dto.request.message.SendClientRequest
+import com.seravian.core_chat.data.dto.request.message.SyncMessagesRequest
+import com.seravian.core_chat.data.dto.respose.diagnosis.DiagnosisCreationResponse
+import com.seravian.core_chat.data.dto.respose.message.ConfirmedMessageResponse
 import com.seravian.core_chat.domain.models.Chat
 import com.seravian.core_chat.domain.models.Message
 import com.seravian.core_local.domain.LocalDataSource
@@ -24,7 +26,8 @@ import kotlinx.coroutines.flow.onEach
 
 class ChatRepositoryImpl(
     private val seravianChatBotDataSource: ChatBotRemoteDataSource,
-    private val roomDataSource: LocalDataSource
+    private val roomDataSource: LocalDataSource,
+    private val chatBotStateRepository: ChatBotStateRepository
 ): ChatRepository {
     private var currentChatId: String = ""
 
@@ -32,13 +35,21 @@ class ChatRepositoryImpl(
     /////////// CHAT METHODS
     /////////////////////////////////
 
+    override suspend fun sendClientRequest(
+        clientRequest: SendClientRequest
+    ): EmptyResult<NetworkError> {
+        return seravianChatBotDataSource.sendClientRequest(clientRequest).map { message ->
+            insertConfirmedMessage(message.buildMessage(clientRequest.message))
+        }
+    }
+
     override fun getChatMessages(
         getChatMessagesRequest: GetChatMessagesRequest
     ): Flow<NetworkResult<Pair<Chat, List<Message>>, NetworkError>> = channelFlow {
         currentChatId = getChatMessagesRequest.id
         val messagesList = mutableListOf<Message>()
-        val storedChat = roomDataSource.getChat(getChatMessagesRequest.id)
-        roomDataSource.getChatMessages(getChatMessagesRequest.id)
+        val storedChat = roomDataSource.getChat(currentChatId)
+        roomDataSource.getChatMessages(currentChatId)
             .onEach { messages ->
                 send(NetworkResult.Success(
                     storedChat.extractChat() to messages.map { it.extractMessage() }
@@ -64,7 +75,7 @@ class ChatRepositoryImpl(
                 }
         } else {
             syncMessages(
-                SyncMessagesRequest(messagesList.last().id.first ?: 0, getChatMessagesRequest.id)
+                SyncMessagesRequest(messagesList.last().id.first ?: 0, currentChatId)
             )
         }
     }.onCompletion {  }
@@ -83,27 +94,27 @@ class ChatRepositoryImpl(
         roomDataSource.insertMessage(message.toEntity(currentChatId))
     }
 
+    override suspend fun sendDiagnosisCreationRequest(
+        diagnosisCreationRequest: DiagnosisCreationRequest
+    ): NetworkResult<DiagnosisCreationResponse, NetworkError> {
+        return seravianChatBotDataSource.createDiagnosis(diagnosisCreationRequest)
+    }
+
     //////////////////////////////////
     ///////// REALTIME CHAT METHODS
     /////////////////////////////////
 
-    override suspend fun sendRequest(clientRequest: ClientRequest) {
-        seravianChatBotDataSource.sendRequest(clientRequest)
-    }
-
     override fun receiveClientResponse() {
         seravianChatBotDataSource.receiveClientResponse { response ->
+            chatBotStateRepository.checkResponseProcessing()
             roomDataSource.insertMessage(response.extractMessage().toEntity(currentChatId))
         }
     }
 
     override fun receiveAIResponse() {
         seravianChatBotDataSource.receiveAIResponse { response ->
+            chatBotStateRepository.checkResponseProcessing()
             roomDataSource.insertMessage(response.extractMessage().toEntity(currentChatId))
         }
-    }
-
-    override fun receiveMessageConfirmation(callback: suspend (ConfirmedMessageResponse) -> Unit) {
-        seravianChatBotDataSource.receiveMessageConfirmation { callback(it) }
     }
 }

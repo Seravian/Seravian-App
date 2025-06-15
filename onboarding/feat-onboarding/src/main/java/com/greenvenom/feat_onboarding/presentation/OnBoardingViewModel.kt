@@ -6,6 +6,8 @@ import com.greenvenom.validation.ValidateInput
 import com.greenvenom.validation.domain.onSuccess
 import com.greenvenom.feat_onboarding.domain.repository.OnBoardingRepository
 import com.greenvenom.core_ui.presentation.BaseViewModel
+import com.seravian.core_profile.domain.utils.Gender
+import com.seravian.core_profile.domain.utils.Role
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -77,9 +79,9 @@ class OnBoardingViewModel(
     private fun updateUserDetailsState(
         currentStep: Int? = null,
         fullName: String? = null,
-        userType: Int? = null,
+        userType: Role? = null,
         birthDate: String? = null,
-        gender: Int? = null,
+        gender: Gender? = null,
     ) {
         _onBoardingState.update { currentState ->
             currentState.copy(
@@ -113,8 +115,8 @@ class OnBoardingViewModel(
                 onBoardingRequest = OnBoardingRequest(
                     fullName = userDetails.fullName ?: "",
                     dateOfBirth = userDetails.dateOfBirth ?: "",
-                    gender = userDetails.gender ?: -1,
-                    role = userDetails.role ?: -1
+                    gender = userDetails.gender?.ordinal ?: -1,
+                    role = userDetails.role?.ordinal ?: -1
                 )
             )
             _onBoardingState.update {

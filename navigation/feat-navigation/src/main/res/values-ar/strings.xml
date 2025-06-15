@@ -6,5 +6,8 @@
     <string name="doctors">الأطباء</string>
     <string name="profile">الحساب</string>
     <string name="navigation_icon">%1$s أيكونة</string>
+    <string name="appointments">الجلسات</string>
+    <string name="requests">الطلبات</string>
+    <string name="support">الدعم النفسي</string>
 
 </resources>

@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,12 +19,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
@@ -43,7 +42,7 @@ fun TopAppBar(
     navigateBack: () -> Unit = {},
     logo: Painter = painterResource(R.drawable.logo),
     title: String = stringResource(R.string.app_name),
-    action: @Composable () -> Unit = {}
+    action: @Composable (RowScope.() -> Unit) = {}
 ) {
     AnimatedVisibility(
         visible = isVisible,
@@ -72,7 +71,7 @@ private fun TopBarContent(
     logo: Painter,
     title: String,
     modifier: Modifier = Modifier,
-    action: @Composable () -> Unit
+    action: @Composable (RowScope.() -> Unit)
 ) {
     val bowlbyFontFamily = FontFamily(
         Font(R.font.bowlby_one_sc, weight = FontWeight.Normal)
@@ -97,10 +96,9 @@ private fun TopBarContent(
             )
         },
         actions = {
-            AnimatedVisibility(
-                visible = isActionEnabled,
-                content = { action() }
-            )
+            if (isActionEnabled) {
+                action()
+            }
         },
         title = {
             Row(
@@ -111,7 +109,7 @@ private fun TopBarContent(
                 // Logo
                 Box(
                     modifier = Modifier
-                        .size(40.dp)
+                        .size(48.dp)
                 ) {
                     Image(
                         painter = logo,
@@ -124,7 +122,7 @@ private fun TopBarContent(
                 Text(
                     text = title,
                     fontFamily = bowlbyFontFamily,
-                    color = colorScheme.tertiary
+                    color = colorScheme.primaryContainer
                 )
             }
         },
@@ -142,14 +140,24 @@ private fun TopAppBarPreview() {
             navigateBack = {  },
             logo = painterResource(R.drawable.logo),
             title = "Testsdgd",
-            action = { IconButton(onClick = {  }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.short_back_arrow),
-                    contentDescription = stringResource(R.string.back_button),
-                    tint = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.fillMaxSize()
-                )
-            } }
+            action = {
+                IconButton(onClick = {  }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.short_back_arrow),
+                        contentDescription = stringResource(R.string.back_button),
+                        tint = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+                IconButton(onClick = {  }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.add_ic),
+                        contentDescription = stringResource(R.string.back_button),
+                        tint = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+            }
         )
     }
 }

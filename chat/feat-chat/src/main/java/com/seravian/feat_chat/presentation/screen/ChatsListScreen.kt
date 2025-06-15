@@ -1,20 +1,30 @@
 package com.seravian.feat_chat.presentation.screen
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -27,8 +37,9 @@ import com.greenvenom.core_ui.presentation.BaseAction
 import com.greenvenom.core_ui.presentation.BaseScreen
 import com.greenvenom.core_ui.theme.AppTheme
 import com.seravian.core_chat.domain.models.Chat
-import com.seravian.feat_chat.presentation.components.ChatListCard
-import com.seravian.feat_chat.presentation.components.NewChatPopUp
+import com.seravian.feat_chat.R
+import com.seravian.feat_chat.presentation.components.chats_list.ChatListCard
+import com.seravian.feat_chat.presentation.components.chats_list.NewChatPopUp
 import com.seravian.feat_chat.presentation.models.toChatUI
 import com.seravian.feat_chat.presentation.viewModel.chats_list.ChatsListAction
 import com.seravian.feat_chat.presentation.viewModel.chats_list.ChatsListState
@@ -165,30 +176,62 @@ private fun ChatListContent(
             )
         }
 
-        LazyColumn(
-            modifier = Modifier
-                .padding(modifiedPadding)
-                .fillMaxSize()
-        ) {
-            items(
-                items = chatsListState.chatsList.map { chat -> chat.toChatUI() },
-                key = { it.id }
-            ) { chat ->
-                ChatListCard(
-                    chat = chat,
-                    onClick = {
-                        chatsListAction(ChatsListAction.NavigateToChat(
-                            chatsListState.chatsList.find { it.id == chat.id } ?: Chat()
-                        ))
-                    },
-                    onEdit = { id, title ->
-                        isEdit = true
-                        newChatTitle = title
-                        chatId = id
-                        popupState = true
-                    },
-                    modifier = Modifier.padding(vertical = 8.dp)
-                )
+        if (chatsListState.chatsList.isEmpty()) {
+            // Empty state
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.chatbot_ic),
+                        contentDescription = null,
+                        modifier = Modifier.size(64.dp),
+                        tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = stringResource(R.string.no_chats_yet),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    )
+                    Text(
+                        text = stringResource(R.string.your_chats_will_appear_here),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
+                    )
+                }
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(modifiedPadding)
+                    .fillMaxSize()
+            ) {
+                items(
+                    items = chatsListState.chatsList.map { chat -> chat.toChatUI() },
+                    key = { it.id }
+                ) { chat ->
+                    ChatListCard(
+                        chat = chat,
+                        onClick = {
+                            chatsListAction(ChatsListAction.NavigateToChat(
+                                chatsListState.chatsList.find { it.id == chat.id } ?: Chat()
+                            ))
+                        },
+                        onEdit = { id, title ->
+                            isEdit = true
+                            newChatTitle = title
+                            chatId = id
+                            popupState = true
+                        },
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                }
             }
         }
     }
@@ -201,21 +244,21 @@ private fun ChatListScreenPreview() {
         ChatListContent(
             chatsListState = ChatsListState(
                 chatsList = listOf(
-                    Chat(
-                        id = "1",
-                        title = "ADHD Analysis",
-                        createdAt = "2023-06-05T14:30:40Z",
-                    ),
-                    Chat(
-                        id = "2",
-                        title = "ADHD Analysis",
-                        createdAt = "2023-06-05T14:30:40Z",
-                    ),
-                    Chat(
-                        id = "3",
-                        title = "ADHD Analysis",
-                        createdAt = "2023-06-05T14:30:40Z",
-                    ),
+//                    Chat(
+//                        id = "1",
+//                        title = "ADHD Analysis",
+//                        createdAt = "2023-06-05T14:30:40Z",
+//                    ),
+//                    Chat(
+//                        id = "2",
+//                        title = "ADHD Analysis",
+//                        createdAt = "2023-06-05T14:30:40Z",
+//                    ),
+//                    Chat(
+//                        id = "3",
+//                        title = "ADHD Analysis",
+//                        createdAt = "2023-06-05T14:30:40Z",
+//                    ),
                 )
             ),
             chatsListAction = {},

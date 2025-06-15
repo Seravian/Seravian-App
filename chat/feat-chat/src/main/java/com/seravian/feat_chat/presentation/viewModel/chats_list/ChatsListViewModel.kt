@@ -4,9 +4,9 @@ import androidx.lifecycle.viewModelScope
 import com.greenvenom.core_network.data.onError
 import com.greenvenom.core_network.data.onSuccess
 import com.greenvenom.core_ui.presentation.BaseViewModel
-import com.seravian.core_chat.data.dto.request.CreateChatRequest
-import com.seravian.core_chat.data.dto.request.DeleteChatRequest
-import com.seravian.core_chat.data.dto.request.EditChatRequest
+import com.seravian.core_chat.data.dto.request.chat.CreateChatRequest
+import com.seravian.core_chat.data.dto.request.chat.DeleteChatRequest
+import com.seravian.core_chat.data.dto.request.chat.EditChatRequest
 import com.seravian.feat_chat.data.repository.ChatBotStateRepository
 import com.seravian.feat_chat.domain.repository.ChatsListRepository
 import kotlinx.coroutines.flow.MutableStateFlow

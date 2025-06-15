@@ -2,4 +2,12 @@
 <resources>
     <string name="famous_doctors">أشهر الأطباء</string>
     <string name="chat_history">المحادثات السابقة</string>
+    <string name="support_center">مركز الدعم</string>
+    <string name="mental_health_advice">الصحة النفسية</string>
+    <string name="qa_section">الأسئلة والأجوبة</string>
+    <string name="no_advice_available">لا توجد نصائح متاحة</string>
+    <string name="advice_coming_soon">ستكون نصائح الصحة النفسية متاحة قريباً</string>
+    <string name="no_qa_available">لا توجد أسئلة وأجوبة متاحة</string>
+    <string name="qa_coming_soon">ستكون الأسئلة والأجوبة متاحة قريباً</string>
+    <string name="support">الدعم النفسي</string>
 </resources>

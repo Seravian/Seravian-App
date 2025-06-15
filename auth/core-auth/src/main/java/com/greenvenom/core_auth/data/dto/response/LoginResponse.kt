@@ -2,6 +2,8 @@ package com.greenvenom.core_auth.data.dto.response
 
 import com.greenvenom.core_tokens.data.dto.response.TokensResponse
 import com.seravian.core_profile.domain.Profile
+import com.seravian.core_profile.domain.utils.Gender
+import com.seravian.core_profile.domain.utils.Role
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -10,6 +12,7 @@ data class LoginResponse(
     val email: String,
     val fullName: String?,
     val dateOfBirth: String?,
+    val createdAtUtc: String,
     val gender: Int?,
     val role: Int?,
     val isEmailVerified: Boolean,
@@ -23,10 +26,10 @@ data class LoginResponse(
             email = this.email,
             fullName = this.fullName,
             dateOfBirth = this.dateOfBirth,
-            role = this.role,
-            gender = this.gender,
+            createdAtUtc = this.createdAtUtc,
+            role = Role.entries[this.role ?: 0],
+            gender = Gender.entries[this.gender ?: 0],
             isEmailVerified = this.isEmailVerified,
-            isDoctorVerified = this.isDoctorVerified,
             isProfileSetupComplete = this.isProfileSetupComplete
         )
     }

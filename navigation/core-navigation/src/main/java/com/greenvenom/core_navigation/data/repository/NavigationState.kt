@@ -9,5 +9,6 @@ data class NavigationState(
     val previousDestination: Destination? = null,
     val isCurrentDestinationSide: Boolean = false,
     val bottomBarState: Boolean = false,
-    val topBarState: Boolean = false
+    val topBarState: Boolean = false,
+    val accountTypeIndex: Int = 0
 )

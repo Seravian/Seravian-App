@@ -35,17 +35,12 @@ android {
 
 dependencies {
 
-    val koin = "4.0.0"
-
-
     implementation(project(":profile:core-profile"))
     implementation(project(":core-ui"))
+    implementation(project(":doctor:verification:core-verification"))
     implementation(project(":network:core-network"))
     implementation(project(":local:core-local"))
     implementation(project(":tokens:core-tokens"))
-
-    implementation(platform("io.insert-koin:koin-bom:$koin"))
-    implementation("io.insert-koin:koin-androidx-compose")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
@@ -54,6 +49,8 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.auth)
+    implementation(libs.koin.android.compose)
+    implementation(libs.bundles.coil)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

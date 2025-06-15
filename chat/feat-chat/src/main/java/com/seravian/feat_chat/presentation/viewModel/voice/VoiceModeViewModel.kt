@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.greenvenom.core_network.data.NetworkResult
 import com.greenvenom.core_network.data.onSuccess
 import com.greenvenom.core_ui.presentation.BaseViewModel
-import com.seravian.core_chat.data.dto.request.FetchAIAudioRequest
+import com.seravian.core_chat.data.dto.request.voice.FetchAIAudioRequest
 import com.seravian.core_chat.domain.MessageType
 import com.seravian.core_chat.domain.models.Message
 import com.seravian.feat_chat.data.repository.ChatBotStateRepository
@@ -36,23 +36,16 @@ class VoiceModeViewModel(
         collectConnectionStatus()
 
         viewModelScope.launch {
-            chatBotStateRepository.chatBotState.collect { newState ->
-                _voiceState.update {
-                    it.copy(
-                        isWaitingForResponse = newState.isWaitingForResponse,
-                        lastAudioId = newState.lastMessage?.id?.first,
-                        currentChat = newState.currentChat
-                    )
-                }
-
-            }
+            chatBotStateRepository.checkResponseProcessing()
         }
     }
 
     fun voiceAction(action: VoiceAction) {
         when(action) {
             is VoiceAction.StartStreaming -> startStreaming()
-            is VoiceAction.StartCollectingAIAudio -> collectAudioResponse()
+            is VoiceAction.StartCollectingAIAudio -> if (jobAudioResponseCollection == null) {
+                collectAudioResponse()
+            }
             is VoiceAction.ChangeMicState -> changeMicState()
             is VoiceAction.BuildAudioPlayer -> buildAudioPlayer()
             is VoiceAction.StopStreaming -> stopStreaming()
@@ -65,14 +58,23 @@ class VoiceModeViewModel(
                 viewModelScope.launch(Dispatchers.IO) {
                     chatBotStateRepository.stopConnection()
                 }
+                chatBotStateRepository.updateLastMessage(null)
             }
         }
     }
 
     private fun collectConnectionStatus() {
         viewModelScope.launch {
-            chatBotStateRepository.chatBotState.collect { status ->
-                when(status.joinChatResult) {
+            chatBotStateRepository.chatBotState.collect { newState ->
+                _voiceState.update {
+                    it.copy(
+                        isWaitingForResponse = newState.isWaitingForResponse,
+                        lastAudioId = newState.lastMessage?.id?.first,
+                        currentChat = newState.currentChat
+                    )
+                }
+
+                when(newState.joinChatResult) {
                     is NetworkResult.Success -> {
                         getLastAudioResponse()
                         collectAudioResponse()
@@ -120,8 +122,6 @@ class VoiceModeViewModel(
                 )
             }
 
-            chatBotStateRepository.changeResponseWaiting()
-
             val audioResult = runBlocking {
                 voiceModeRepository.fetchAIAudio(
                     FetchAIAudioRequest(lastMessage?.id?.first ?: -1)
@@ -160,7 +160,6 @@ class VoiceModeViewModel(
                         isStreamingVoice = false
                     )
                 }
-                chatBotStateRepository.changeResponseWaiting()
 
                 viewModelScope.launch {
                     val uploadAudioResult = withContext(Dispatchers.IO) {
@@ -197,6 +196,7 @@ class VoiceModeViewModel(
 
     private fun collectAudioResponse() {
         if (jobAudioResponseCollection != null) return
+
         jobAudioResponseCollection = viewModelScope.launch {
             voiceModeRepository.receiveAIAudioResponse { audioResult ->
                 _voiceState.update {
@@ -221,7 +221,6 @@ class VoiceModeViewModel(
                         voiceUploadResult = null
                     )
                 }
-                chatBotStateRepository.changeResponseWaiting()
                 startStreaming()
             },
             onPlaybackComplete = {

@@ -38,10 +38,11 @@ dependencies {
     implementation(project(":tokens:core-tokens"))
     implementation(project(":profile:core-profile"))
     implementation(project(":validation"))
+    implementation(project(":doctor:verification:core-verification"))
 
     implementation(libs.androidx.core.ktx)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+    implementation(libs.kotlinx.serialization.json)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

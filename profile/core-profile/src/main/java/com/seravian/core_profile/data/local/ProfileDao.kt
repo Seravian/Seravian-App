@@ -1,16 +1,17 @@
 package com.seravian.core_profile.data.local
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import androidx.room.Upsert
 
 @Dao
 interface ProfileDao {
     @Query("SELECT * FROM profile")
     suspend fun getProfile(): ProfileEntity
 
-    @Upsert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertProfile(profileEntity: ProfileEntity)
 
     @Update
