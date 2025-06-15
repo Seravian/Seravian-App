@@ -101,7 +101,9 @@ fun NavGraphBuilder.patientGraph(navigate: (NavigationType) -> Unit) {
         }
 
         composable<Screen.PatientProfile> {
-            ProfileScreen()
+            ProfileScreen(
+                navigateBack = { navigate(NavigationType.Back) }
+            )
         }
     }
 }
