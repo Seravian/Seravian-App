@@ -67,6 +67,10 @@ dependencies {
     implementation(project(":chat:feat-chat"))
     implementation(project(":profile:core-profile"))
     implementation(project(":profile:feat-profile"))
+    implementation(project(":doctors:core-doctors"))
+    implementation(project(":doctors:feat-doctors"))
+    implementation(project(":doctor:verification:core-verification"))
+    implementation(project(":doctor:verification:feat-verification"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

@@ -7,7 +7,6 @@ import com.greenvenom.core_tokens.domain.Tokens
 import com.greenvenom.core_tokens.domain.repo.TokensDataSource
 import com.seravian.core_local.domain.LocalDataSource
 import com.seravian.core_local.domain.PrefsDataSource
-import com.seravian.core_profile.data.local.extractProfile
 import com.seravian.core_profile.data.remote.request.LogoutRequest
 import com.seravian.core_profile.domain.Profile
 import com.seravian.feat_profile.domain.ProfileRemoteDataSource
@@ -37,21 +36,31 @@ class ProfileRepositoryImpl(
         appPrefsDataSource.changeLanguage(languageTag)
     }
 
-    override suspend fun getProfile(): Profile {
+    override suspend fun getProfile(isDoctor: Boolean): Profile {
+        if (isDoctor) {
+            fetchDoctorProfile()
+        }
         return roomDataSource.getProfile().extractProfile()
     }
 
     override suspend fun logoutUser(): EmptyResult<NetworkError> {
         return profileDataSource.logoutUser(LogoutRequest(getStoredTokens().refreshToken ?: ""))
             .onSuccess {
-                roomDataSource.deleteProfile()
-                roomDataSource.deleteAllChats()
+                roomDataSource.deleteAllData()
                 tokensDataSource.deleteTokens()
             }
     }
 
     private suspend fun getStoredTokens(): Tokens {
         return tokensDataSource.getStoredTokens()
+    }
+
+    private suspend fun fetchDoctorProfile() {
+        val result = profileDataSource.getDoctorProfile()
+        result.onSuccess {
+            roomDataSource.deleteProfile()
+            roomDataSource.insertProfile(it.extractProfile().toProfileEntity())
+        }
     }
 }
 

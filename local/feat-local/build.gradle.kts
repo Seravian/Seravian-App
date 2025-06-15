@@ -41,15 +41,16 @@ dependencies {
     implementation(project(":profile:core-profile"))
     implementation(project(":chat:core-chat"))
     implementation(project(":crypto"))
+    implementation(project(":doctor:verification:core-verification"))
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+    implementation(libs.kotlinx.serialization.json)
 
     implementation("androidx.room:room-runtime:$room")
     ksp("androidx.room:room-compiler:$room")
     implementation("androidx.room:room-ktx:$room")
     implementation("androidx.room:room-paging:$room")
 
-    implementation("androidx.datastore:datastore-preferences:1.1.3")
+    implementation(libs.androidx.datastore)
 
     implementation(libs.bundles.dependency.injection)
 

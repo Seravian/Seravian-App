@@ -4,5 +4,6 @@ enum class SessionDestinations {
     INITIALIZE,
     AUTH,
     ONBOARDING,
-    MAIN,
+    PATIENT,
+    DOCTOR
 }

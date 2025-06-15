@@ -20,6 +20,7 @@ import com.seravian.feat_navigation.routes.Screen
 @Composable
 fun BottomNavigationBar(
     defaultNavigationMethod: (NavigationType) -> Unit,
+    currentAccountTypeIndex: Int,
     currentDestination: Destination,
     isVisible: Boolean
 ) {
@@ -30,6 +31,7 @@ fun BottomNavigationBar(
         content = {
             BottomBarContent(
                 defaultNavigationMethod = defaultNavigationMethod,
+                currentAccountTypeIndex = currentAccountTypeIndex,
                 currentDestination = currentDestination
             )
         }
@@ -39,32 +41,69 @@ fun BottomNavigationBar(
 @Composable
 private fun BottomBarContent(
     defaultNavigationMethod: (NavigationType) -> Unit,
+    currentAccountTypeIndex: Int,
     currentDestination: Destination
 ) {
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.onSurface,
     ) {
-        BottomDestination.entries.forEach { destination ->
-            NavigationBarItem(
-                onClick = { defaultNavigationMethod(NavigationType.BottomNavigation(destination.target)) },
-                icon = {
-                    Icon(
-                        painter = painterResource(destination.icon),
-                        contentDescription = stringResource(
-                            R.string.navigation_icon,
-                            destination.label
+        if (currentAccountTypeIndex == 0) {
+            PatientDestination.entries.forEach { destination ->
+                NavigationBarItem(
+                    onClick = {
+                        if (currentDestination::class != destination.target::class) {
+                            defaultNavigationMethod(
+                                NavigationType.BottomNavigation(destination.target)
+                            )
+                        }
+                    },
+                    icon = {
+                        Icon(
+                            painter = painterResource(destination.icon),
+                            contentDescription = stringResource(
+                                R.string.navigation_icon,
+                                destination.label
+                            )
                         )
-                    )
-                },
-                label = {
-                    Text(
-                        text = stringResource(destination.label),
-                        style = MaterialTheme.typography.labelMedium
-                    )
-                },
-                selected = destination.target == currentDestination,
-            )
+                    },
+                    label = {
+                        Text(
+                            text = stringResource(destination.label),
+                            style = MaterialTheme.typography.labelMedium
+                        )
+                    },
+                    selected = destination.target == currentDestination,
+                )
+            }
+        } else {
+            DoctorDestination.entries.forEach { destination ->
+                NavigationBarItem(
+                    onClick = {
+                        if (currentDestination::class != destination.target::class) {
+                            defaultNavigationMethod(
+                                NavigationType.BottomNavigation(destination.target)
+                            )
+                        }
+                    },
+                    icon = {
+                        Icon(
+                            painter = painterResource(destination.icon),
+                            contentDescription = stringResource(
+                                R.string.navigation_icon,
+                                destination.label
+                            )
+                        )
+                    },
+                    label = {
+                        Text(
+                            text = stringResource(destination.label),
+                            style = MaterialTheme.typography.labelMedium
+                        )
+                    },
+                    selected = destination.target == currentDestination,
+                )
+            }
         }
     }
 }
@@ -74,6 +113,7 @@ private fun BottomBarContent(
 private fun BottomNavigationBarContent() {
     BottomBarContent(
         defaultNavigationMethod = {  },
+        currentAccountTypeIndex = 0,
         currentDestination = Screen.Home
     )
 }

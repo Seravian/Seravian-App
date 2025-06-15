@@ -4,6 +4,7 @@ sealed interface ProfileAction {
     data object LoadInfo : ProfileAction
     data class UpdateTheme(val isDark: Boolean) : ProfileAction
     data class UpdateLanguage(val languageTag: String) : ProfileAction
+    data object GoToVerificationRequests : ProfileAction
     data object Logout : ProfileAction
     data object ClearState : ProfileAction
 }

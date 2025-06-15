@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -30,12 +29,11 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.greenvenom.feat_auth.R
 import com.greenvenom.core_ui.theme.AppTheme
 import com.greenvenom.core_ui.theme.bluePrimary
+import com.greenvenom.feat_auth.R
 
 @Composable
 fun AuthHeader(
@@ -97,7 +95,7 @@ fun AuthHeader(
                     text = stringResource(R.string.app_name),
                     fontFamily = bowlbyFontFamily,
                     fontSize = 22.sp,
-                    color = MaterialTheme.colorScheme.tertiary,
+                    color = MaterialTheme.colorScheme.primaryContainer,
                     modifier = Modifier.padding(5.dp)
                 )
             }

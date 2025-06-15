@@ -39,7 +39,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(platform(libs.androidx.compose.bom))
-    implementation("com.github.arpitkatiyar1999:Country-Picker:2.1.0")
+    implementation("com.github.arpitkatiyar1999:Country-Picker:2.1.3")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

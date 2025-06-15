@@ -9,10 +9,12 @@ import com.seravian.feat_home.di.homeModule
 import com.greenvenom.feat_onboarding.di.onBoardingModule
 import com.greenvenom.feat_tokens.di.tokensModule
 import com.seravian.feat_chat.di.chatModule
+import com.seravian.feat_doctors.di.doctorModule
 import com.seravian.feat_local.di.localModule
 import com.seravian.feat_navigation.di.navigationFeatureModule
 import com.seravian.feat_network.di.networkModule
 import com.seravian.feat_profile.di.profileModule
+import com.seravian.feat_verification.di.verificationModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -36,7 +38,9 @@ class SeravianApp: Application() {
                 onBoardingModule,
                 homeModule,
                 chatModule,
-                profileModule
+                profileModule,
+                doctorModule,
+                verificationModule
             )
         }
     }

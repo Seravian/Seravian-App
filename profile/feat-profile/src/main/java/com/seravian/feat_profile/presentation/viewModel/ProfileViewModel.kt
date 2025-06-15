@@ -1,8 +1,8 @@
 package com.seravian.feat_profile.presentation.viewModel
 
+import androidx.lifecycle.viewModelScope
 import com.greenvenom.core_ui.presentation.BaseViewModel
 import com.seravian.feat_profile.domain.repository.ProfileRepository
-import androidx.lifecycle.viewModelScope
 import com.seravian.feat_profile.presentation.ProfileAction
 import com.seravian.feat_profile.presentation.ProfileState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,6 +23,7 @@ class ProfileViewModel(
             is ProfileAction.UpdateLanguage -> updateLanguage(action.languageTag)
             is ProfileAction.Logout -> logout()
             is ProfileAction.ClearState -> clearState()
+            ProfileAction.GoToVerificationRequests -> {}
         }
     }
 

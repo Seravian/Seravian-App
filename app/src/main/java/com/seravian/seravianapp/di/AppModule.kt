@@ -8,7 +8,8 @@ import org.koin.dsl.module
 val appModule = module {
     single<SessionRepository>(createdAtStart = true) {
         SeravianSessionRepository(
-            tokensDataSource = get()
+            tokensDataSource = get(),
+            roomDataSource = get()
         )
     }
 

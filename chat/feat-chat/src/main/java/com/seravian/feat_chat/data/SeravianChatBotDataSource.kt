@@ -8,25 +8,38 @@ import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
 import com.greenvenom.core_network.data.map
 import com.greenvenom.core_network.domain.RealtimeConnection
-import com.seravian.core_chat.data.dto.request.ClientRequest
-import com.seravian.core_chat.data.dto.request.CreateChatRequest
-import com.seravian.core_chat.data.dto.request.DeleteChatRequest
-import com.seravian.core_chat.data.dto.request.FetchAIAudioRequest
-import com.seravian.core_chat.data.dto.request.EditChatRequest
-import com.seravian.core_chat.data.dto.request.GetChatMessagesRequest
-import com.seravian.core_chat.data.dto.request.JoinChatRequest
-import com.seravian.core_chat.data.dto.request.SyncMessagesRequest
-import com.seravian.core_chat.data.dto.request.UploadVoiceRequest
-import com.seravian.core_chat.data.dto.respose.AIAudioReadyResponse
-import com.seravian.core_chat.data.dto.respose.AIAudioResponse
-import com.seravian.core_chat.data.dto.respose.AIResponse
-import com.seravian.core_chat.data.dto.respose.ChatMessagesResponse
-import com.seravian.core_chat.data.dto.respose.ChatResponse
-import com.seravian.core_chat.data.dto.respose.ClientResponse
-import com.seravian.core_chat.data.dto.respose.ConfirmedMessageResponse
-import com.seravian.core_chat.data.dto.respose.CreateChatResponse
-import com.seravian.core_chat.data.dto.respose.EditChatResponse
-import com.seravian.core_chat.data.dto.respose.MessageResponse
+import com.seravian.core_chat.data.dto.request.chat.CreateChatRequest
+import com.seravian.core_chat.data.dto.request.chat.DeleteChatRequest
+import com.seravian.core_chat.data.dto.request.chat.EditChatRequest
+import com.seravian.core_chat.data.dto.request.voice.FetchAIAudioRequest
+import com.seravian.core_chat.data.dto.request.chat.GetChatMessagesRequest
+import com.seravian.core_chat.data.dto.request.chat.IsProcessingRequest
+import com.seravian.core_chat.data.dto.request.chat.JoinChatRequest
+import com.seravian.core_chat.data.dto.request.diagnosis.ChatDiagnosesRequest
+import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosesDeletionRequest
+import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisCheckRequest
+import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisCreationRequest
+import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisDeletionRequest
+import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisDetailsRequest
+import com.seravian.core_chat.data.dto.request.message.SendClientRequest
+import com.seravian.core_chat.data.dto.request.message.SyncMessagesRequest
+import com.seravian.core_chat.data.dto.request.voice.UploadVoiceRequest
+import com.seravian.core_chat.data.dto.respose.voice.AIAudioReadyResponse
+import com.seravian.core_chat.data.dto.respose.voice.AIAudioResponse
+import com.seravian.core_chat.data.dto.respose.message.AIResponse
+import com.seravian.core_chat.data.dto.respose.message.ChatMessagesResponse
+import com.seravian.core_chat.data.dto.respose.chat.ChatResponse
+import com.seravian.core_chat.data.dto.respose.message.ClientResponse
+import com.seravian.core_chat.data.dto.respose.message.ConfirmedMessageResponse
+import com.seravian.core_chat.data.dto.respose.chat.CreateChatResponse
+import com.seravian.core_chat.data.dto.respose.chat.EditChatResponse
+import com.seravian.core_chat.data.dto.respose.chat.IsProcessingResponse
+import com.seravian.core_chat.data.dto.respose.diagnosis.ChatDiagnosisResponse
+import com.seravian.core_chat.data.dto.respose.diagnosis.DiagnosisCheckResponse
+import com.seravian.core_chat.data.dto.respose.diagnosis.DiagnosisCreationResponse
+import com.seravian.core_chat.data.dto.respose.diagnosis.DiagnosisDetailsResponse
+import com.seravian.core_chat.data.dto.respose.diagnosis.DiagnosisReadyResponse
+import com.seravian.core_chat.data.dto.respose.message.MessageResponse
 import com.seravian.feat_chat.domain.ChatBotRemoteDataSource
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -69,7 +82,9 @@ class SeravianChatBotDataSource(
     override suspend fun deleteChat(deleteChatRequest: DeleteChatRequest): EmptyResult<NetworkError> {
         return safeCall {
             authorizedHttpClient.delete(constructUrl("chat/delete")) {
-                setBody(deleteChatRequest)
+                url {
+                    parameters.append("id", deleteChatRequest.id)
+                }
             }
         }
     }
@@ -77,6 +92,16 @@ class SeravianChatBotDataSource(
     override suspend fun getChats(): NetworkResult<List<ChatResponse>, NetworkError> {
         return safeCall {
             authorizedHttpClient.get(constructUrl("chat/get-chats"))
+        }
+    }
+
+    override suspend fun sendClientRequest(
+        clientRequest: SendClientRequest
+    ): NetworkResult<ConfirmedMessageResponse, NetworkError> {
+        return safeCall {
+            authorizedHttpClient.post(constructUrl("chat/send-client-request")) {
+                setBody(clientRequest)
+            }
         }
     }
 
@@ -125,6 +150,18 @@ class SeravianChatBotDataSource(
         }
     }
 
+    override suspend fun isProcessing(
+        isProcessingRequest: IsProcessingRequest
+    ): NetworkResult<IsProcessingResponse, NetworkError> {
+        return safeCall {
+            authorizedHttpClient.get(constructUrl("chat/is-processing")) {
+                url {
+                    parameters.append("chatId", isProcessingRequest.chatId)
+                }
+            }
+        }
+    }
+
     override suspend fun fetchAIAudioResponse(
         fetchAIAudioRequest: FetchAIAudioRequest
     ): NetworkResult<AIAudioResponse, NetworkError> {
@@ -158,6 +195,76 @@ class SeravianChatBotDataSource(
         }
     }
 
+    override suspend fun createDiagnosis(
+        creationRequest: DiagnosisCreationRequest
+    ): NetworkResult<DiagnosisCreationResponse, NetworkError> {
+        return safeCall {
+            authorizedHttpClient.post(constructUrl("chat/create-chat-diagnosis")) {
+                setBody(creationRequest)
+            }
+        }
+    }
+
+    override suspend fun getChatDiagnoses(
+        chatDiagnosesRequest: ChatDiagnosesRequest
+    ): NetworkResult<List<ChatDiagnosisResponse>, NetworkError> {
+        return safeCall {
+            authorizedHttpClient.get(constructUrl("chat/get-chat-diagnoses")) {
+                url {
+                    parameters.append("chatId", chatDiagnosesRequest.chatId)
+                }
+            }
+        }
+    }
+
+    override suspend fun getDiagnosisDetails(
+        chatDiagnosesRequest: DiagnosisDetailsRequest
+    ): NetworkResult<DiagnosisDetailsResponse, NetworkError> {
+        return safeCall {
+            authorizedHttpClient.get(constructUrl("chat/get-chat-diagnosis-details")) {
+                url {
+                    parameters.append("chatDiagnosisId", chatDiagnosesRequest.chatDiagnosisId.toString())
+                }
+            }
+        }
+    }
+
+    override suspend fun isDiagnosing(
+        diagnosingCheckRequest: DiagnosisCheckRequest
+    ): NetworkResult<DiagnosisCheckResponse, NetworkError> {
+        return safeCall {
+            authorizedHttpClient.get(constructUrl("chat/is-diagnosing")) {
+                url {
+                    parameters.append("chatId", diagnosingCheckRequest.chatId)
+                }
+            }
+        }
+    }
+
+    override suspend fun deleteDiagnosis(
+        diagnosisDeletionRequest: DiagnosisDeletionRequest
+    ): EmptyResult<NetworkError> {
+        return safeCall {
+            authorizedHttpClient.delete(constructUrl("chat/delete-completed-chat-diagnosis")) {
+                url {
+                    parameters.append("chatDiagnosisId", diagnosisDeletionRequest.chatDiagnosisId.toString())
+                }
+            }
+        }
+    }
+
+    override suspend fun deleteDiagnoses(
+        diagnosesDeletionRequest: DiagnosesDeletionRequest
+    ): EmptyResult<NetworkError> {
+        return safeCall {
+            authorizedHttpClient.delete(constructUrl("chat/delete-completed-chat-diagnoses")) {
+                url {
+                    parameters.append("chatId", diagnosesDeletionRequest.chatId)
+                }
+            }
+        }
+    }
+
     //////////////////////////////////
     ///////// REALTIME CHAT METHODS
     /////////////////////////////////
@@ -179,10 +286,6 @@ class SeravianChatBotDataSource(
         signalRConnection.connection.invoke("join-chat", joinChatRequest)
     }
 
-    override suspend fun sendRequest(clientRequest: ClientRequest) {
-        signalRConnection.connection.invoke("send-client-request", clientRequest)
-    }
-
     override fun receiveClientResponse(callback: suspend (ClientResponse) -> Unit) {
         signalRConnection.connection.on(
             target = "receive-client-request",
@@ -199,20 +302,22 @@ class SeravianChatBotDataSource(
         }
     }
 
-    override fun receiveMessageConfirmation(callback: suspend (ConfirmedMessageResponse) -> Unit) {
-        signalRConnection.connection.on(
-            target = "confirm-client-request"
-        ) { confirmation: ConfirmedMessageResponse ->
-            callback(confirmation)
-        }
-    }
-
     override suspend fun receiveAIAudioReadyResponse(
         callback: suspend (AIAudioReadyResponse) -> Unit
     ) {
         signalRConnection.connection.on(
             target = "notify-ai-audio-response-ready"
         ) { response: AIAudioReadyResponse ->
+            callback(response)
+        }
+    }
+
+    override fun receiveDiagnosisReadyResponse(
+        callback: suspend (DiagnosisReadyResponse) -> Unit
+    ) {
+        signalRConnection.connection.on(
+            target = "notify-chat-diagnosis-ready"
+        ) { response: DiagnosisReadyResponse ->
             callback(response)
         }
     }

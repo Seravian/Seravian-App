@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="select_file">اختر ملفًا</string>
+    <string name="remove_file">إزالة الملف</string>
+    <string name="attachment">المرفق %1$s</string>
+    <string name="submit_request">إرسال الطلب</string>
+    <string name="please_fill_in_all_required_fields">يرجى ملء جميع الحقول المطلوبة</string>
+    <string name="add_attachment_field">إضافة حقل مرفق</string>
+    <string name="attachments_pdf_png_jpeg_only">المرفقات (PDF، PNG، JPEG فقط)</string>
+    <string name="session_price">سعر الجلسة بالجنيه المصري</string>
+    <string name="description">الوصف</string>
+    <string name="doctor_title">لقب الطبيب</string>
+    <string name="close">إغلاق</string>
+    <string name="new_verification_request">طلب تحقق جديد</string>
+    <string name="error_selecting_file">حدث خطأ أثناء اختيار الملف: %1$s</string>
+    <string name="unsupported_file_type_please_select_pdf_png_or_jpeg_files_only">نوع الملف غير مدعوم. يرجى اختيار ملفات PDF أو PNG أو JPEG فقط.</string>
+    <string name="create_new_verification_request">إنشاء طلب تحقق جديد</string>
+    <string name="verification_request">طلب التحقق رقم %1$s</string>
+    <string name="logout">تسجيل الخروج</string>
+</resources>
