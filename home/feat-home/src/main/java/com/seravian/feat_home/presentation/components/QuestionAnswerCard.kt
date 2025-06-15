@@ -38,10 +38,10 @@ fun QuestionAnswerCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(6.dp)
+            .padding(vertical = 8.dp)
             .clickable { isExpanded = !isExpanded },
         colors = CardDefaults.cardColors(containerColor = colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         Column(
             modifier = Modifier.padding(16.dp)

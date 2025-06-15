@@ -52,6 +52,7 @@ fun ChatListScreen(
     modifier: Modifier = Modifier
 ) {
     BaseScreen<ChatsListViewModel>(
+        enableCustomBack = false,
         onPhysicalBack = { viewModel ->
             navigateBack()
         },

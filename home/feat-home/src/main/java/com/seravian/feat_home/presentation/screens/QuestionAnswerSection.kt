@@ -20,7 +20,7 @@ fun QuestionAnswerSection(
 ) {
     LazyColumn(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.Center
     ) {
         if (questionAnswers.isEmpty()) {
             item {

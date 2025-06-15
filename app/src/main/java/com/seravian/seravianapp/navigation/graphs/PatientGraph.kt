@@ -21,7 +21,9 @@ import com.seravian.feat_profile.presentation.screen.ProfileScreen
 fun NavGraphBuilder.patientGraph(navigate: (NavigationType) -> Unit) {
     navigation<SubGraph.Patient>(startDestination = SubGraph.AIChat) {
         composable<Screen.Home> {
-            HomeScreen()
+            HomeScreen(
+                navigateBack = { navigate(NavigationType.Back) }
+            )
         }
 
         navigation<SubGraph.AIChat>(startDestination = Screen.ChatsList) {
@@ -99,7 +101,9 @@ fun NavGraphBuilder.patientGraph(navigate: (NavigationType) -> Unit) {
         }
 
         composable<Screen.PatientProfile> {
-            ProfileScreen()
+            ProfileScreen(
+                navigateBack = { navigate(NavigationType.Back) }
+            )
         }
     }
 }
