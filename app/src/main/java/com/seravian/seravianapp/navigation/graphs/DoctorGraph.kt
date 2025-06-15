@@ -51,7 +51,8 @@ fun NavGraphBuilder.doctorGraph(navigate: (NavigationType) -> Unit) {
             ProfileScreen(
                 navigateToVerificationRequests = {
                     navigate(NavigationType.Standard(Screen.DoctorVerifications))
-                }
+                },
+                navigateBack = { navigate(NavigationType.Back) }
             )
         }
     }

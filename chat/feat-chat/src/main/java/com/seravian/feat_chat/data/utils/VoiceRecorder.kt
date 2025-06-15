@@ -16,6 +16,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
@@ -46,6 +48,10 @@ class VoiceRecorder(
     private var isRecording = false
     private var recordingJob: Job? = null
 
+    // Add synchronization for MediaCodec access
+    private val encoderLock = Mutex()
+    private var encoderReleased = false
+
     private val encodedFlac = ByteArrayOutputStream()
     private var recordingStartTime = 0L
 
@@ -55,6 +61,7 @@ class VoiceRecorder(
 
         recordingStartTime = System.currentTimeMillis()
         encodedFlac.reset()
+        encoderReleased = false
 
         recorder = AudioRecord(
             MediaRecorder.AudioSource.VOICE_COMMUNICATION,
@@ -114,7 +121,7 @@ class VoiceRecorder(
                         }
                     }
 
-                    // Feed PCM to FLAC encoder
+                    // Feed PCM to FLAC encoder with proper synchronization
                     feedFlacEncoder(processedChunk)
 
                     val recordingDuration = currentTime - recordingStartTime
@@ -139,12 +146,12 @@ class VoiceRecorder(
         if (!isRecording) return@runBlocking
         isRecording = false
 
-        scope.launch(Dispatchers.IO) {
-            recordingJob?.cancelAndJoin()
-            cleanupAudioResources()
-        }
-
+        // Wait for recording job to complete before cleanup
+        recordingJob?.cancelAndJoin()
         recordingJob = null
+
+        // Clean up resources synchronously
+        cleanupAudioResources()
     }
 
     private fun setupAudioEffects(audioSessionId: Int) {
@@ -164,15 +171,42 @@ class VoiceRecorder(
         }
     }
 
-    private fun cleanupAudioResources() {
-        try {
-            recorder.stop()
-            recorder.release()
-            flacEncoder.stop()
-            flacEncoder.release()
-            encodedFlac.reset()
-        } catch (e: Exception) {
-            Log.e("AudioStreamer", "Cleanup failed", e)
+    private suspend fun cleanupAudioResources() {
+        encoderLock.withLock {
+            try {
+                if (!encoderReleased) {
+                    if (::flacEncoder.isInitialized) {
+                        try {
+                            flacEncoder.stop()
+                        } catch (e: Exception) {
+                            Log.e("AudioStreamer", "Error stopping encoder", e)
+                        }
+                        try {
+                            flacEncoder.release()
+                        } catch (e: Exception) {
+                            Log.e("AudioStreamer", "Error releasing encoder", e)
+                        }
+                    }
+                    encoderReleased = true
+                }
+
+                if (::recorder.isInitialized) {
+                    try {
+                        recorder.stop()
+                    } catch (e: Exception) {
+                        Log.e("AudioStreamer", "Error stopping recorder", e)
+                    }
+                    try {
+                        recorder.release()
+                    } catch (e: Exception) {
+                        Log.e("AudioStreamer", "Error releasing recorder", e)
+                    }
+                }
+
+                encodedFlac.reset()
+            } catch (e: Exception) {
+                Log.e("AudioStreamer", "Cleanup failed", e)
+            }
         }
     }
 
@@ -188,39 +222,56 @@ class VoiceRecorder(
         flacEncoder.start()
     }
 
-    private fun feedFlacEncoder(pcm: ByteArray) {
-        val inputBufferIndex = flacEncoder.dequeueInputBuffer(10000)
-        if (inputBufferIndex >= 0) {
-            val inputBuffer = flacEncoder.getInputBuffer(inputBufferIndex)
-            inputBuffer?.let {
-                it.clear()
-                it.put(pcm)
+    private suspend fun feedFlacEncoder(pcm: ByteArray) {
+        encoderLock.withLock {
+            if (encoderReleased || !::flacEncoder.isInitialized) return@withLock
+
+            try {
+                val inputBufferIndex = flacEncoder.dequeueInputBuffer(10000)
+                if (inputBufferIndex >= 0) {
+                    val inputBuffer = flacEncoder.getInputBuffer(inputBufferIndex)
+                    inputBuffer?.let {
+                        it.clear()
+                        it.put(pcm)
+                    }
+                    flacEncoder.queueInputBuffer(inputBufferIndex, 0, pcm.size, System.nanoTime() / 1000, 0)
+                }
+            } catch (e: Exception) {
+                Log.e("AudioStreamer", "Error feeding encoder", e)
             }
-            flacEncoder.queueInputBuffer(inputBufferIndex, 0, pcm.size, System.nanoTime() / 1000, 0)
         }
+        // Call drainFlacEncoder outside the lock to avoid nested suspend calls
         drainFlacEncoder(false)
     }
 
-    private fun drainFlacEncoder(endOfStream: Boolean) {
-        if (endOfStream) {
-            val inputBufferIndex = flacEncoder.dequeueInputBuffer(10000)
-            if (inputBufferIndex >= 0) {
-                flacEncoder.queueInputBuffer(inputBufferIndex, 0, 0, System.nanoTime() / 1000, MediaCodec.BUFFER_FLAG_END_OF_STREAM)
-            }
-        }
+    private suspend fun drainFlacEncoder(endOfStream: Boolean) {
+        encoderLock.withLock {
+            if (encoderReleased || !::flacEncoder.isInitialized) return
 
-        val bufferInfo = MediaCodec.BufferInfo()
-        while (true) {
-            val outputBufferIndex = flacEncoder.dequeueOutputBuffer(bufferInfo, 10000)
-            if (outputBufferIndex >= 0) {
-                val outputBuffer = flacEncoder.getOutputBuffer(outputBufferIndex)!!
-                val data = ByteArray(bufferInfo.size)
-                outputBuffer.get(data)
-                encodedFlac.write(data)
-                flacEncoder.releaseOutputBuffer(outputBufferIndex, false)
-                if (bufferInfo.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM != 0) break
-            } else {
-                break
+            try {
+                if (endOfStream) {
+                    val inputBufferIndex = flacEncoder.dequeueInputBuffer(10000)
+                    if (inputBufferIndex >= 0) {
+                        flacEncoder.queueInputBuffer(inputBufferIndex, 0, 0, System.nanoTime() / 1000, MediaCodec.BUFFER_FLAG_END_OF_STREAM)
+                    }
+                }
+
+                val bufferInfo = MediaCodec.BufferInfo()
+                while (true) {
+                    val outputBufferIndex = flacEncoder.dequeueOutputBuffer(bufferInfo, 10000)
+                    if (outputBufferIndex >= 0) {
+                        val outputBuffer = flacEncoder.getOutputBuffer(outputBufferIndex)!!
+                        val data = ByteArray(bufferInfo.size)
+                        outputBuffer.get(data)
+                        encodedFlac.write(data)
+                        flacEncoder.releaseOutputBuffer(outputBufferIndex, false)
+                        if (bufferInfo.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM != 0) break
+                    } else {
+                        break
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("AudioStreamer", "Error draining encoder", e)
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.seravian.feat_chat.data
 
+import android.util.Log
 import com.greenvenom.core_network.api.utils.constructUrl
 import com.greenvenom.core_network.api.utils.safeCall
 import com.greenvenom.core_network.data.ConnectionStatus
@@ -290,6 +291,7 @@ class SeravianChatBotDataSource(
         signalRConnection.connection.on(
             target = "receive-client-request",
         ) { response: ClientResponse ->
+            Log.d("Voice", "Client Received")
             callback(response)
         }
     }
@@ -298,6 +300,7 @@ class SeravianChatBotDataSource(
         signalRConnection.connection.on(
             target = "receive-ai-response",
         ) { response: AIResponse ->
+            Log.d("Voice", "AI Received")
             callback(response)
         }
     }

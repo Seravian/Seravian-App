@@ -69,8 +69,12 @@ import com.seravian.feat_profile.presentation.viewModel.ProfileViewModel
 @Composable
 fun ProfileScreen(
     navigateToVerificationRequests: () -> Unit = {},
+    navigateBack: () -> Unit
 ) {
     BaseScreen<ProfileViewModel>(
+        onPhysicalBack = {
+            navigateBack()
+        },
         enableLifecycleObservation = true,
         onCreateAction = { viewModel ->
             viewModel.profileAction(ProfileAction.LoadInfo)
