@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -20,7 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.greenvenom.core_ui.presentation.BaseScreen
+import com.seravian.core_ui.presentation.BaseScreen
 import com.seravian.feat_chat.presentation.viewModel.diagnosis.list.DiagnosesListAction
 import com.seravian.feat_chat.presentation.viewModel.diagnosis.list.DiagnosesListViewModel
 import androidx.compose.runtime.getValue
@@ -32,11 +31,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.greenvenom.core_network.data.onError
-import com.greenvenom.core_network.data.onSuccess
-import com.greenvenom.core_ui.components.TopAppBar
-import com.greenvenom.core_ui.presentation.BaseAction
-import com.greenvenom.core_ui.theme.AppTheme
+import com.seravian.core_network.data.onError
+import com.seravian.core_network.data.onSuccess
+import com.seravian.core_ui.components.TopAppBar
+import com.seravian.core_ui.presentation.BaseAction
+import com.seravian.core_ui.theme.AppTheme
 import com.seravian.core_chat.domain.models.Diagnosis
 import com.seravian.feat_chat.R
 import com.seravian.feat_chat.presentation.components.diagnosis.DeleteCompletedDiagnosesDialog

@@ -1,17 +1,15 @@
 package com.seravian.seravianapp.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.greenvenom.core_navigation.data.repository.NavigationStateRepository
-import com.greenvenom.core_navigation.utils.AppNavigator
-import com.greenvenom.feat_auth.presentation.splash.SplashScreen
-import com.greenvenom.feat_onboarding.presentation.screens.OnBoardingScreen
+import com.seravian.core_navigation.data.repository.NavigationStateRepository
+import com.seravian.core_navigation.utils.AppNavigator
+import com.seravian.feat_auth.presentation.splash.SplashScreen
+import com.seravian.feat_onboarding.presentation.screens.OnBoardingScreen
 import com.seravian.feat_navigation.routes.Screen
 import com.seravian.feat_navigation.routes.SubGraph
 import com.seravian.seravianapp.navigation.graphs.authGraph

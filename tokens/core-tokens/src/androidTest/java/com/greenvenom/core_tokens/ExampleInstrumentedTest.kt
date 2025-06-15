@@ -1,4 +1,4 @@
-package com.greenvenom.core_tokens
+package com.seravian.core_tokens
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

@@ -23,9 +23,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import com.greenvenom.core_ui.components.CustomButton
-import com.greenvenom.core_ui.components.CustomTextField
-import com.greenvenom.core_ui.theme.AppTheme
+import com.seravian.core_ui.components.CustomButton
+import com.seravian.core_ui.components.CustomTextField
+import com.seravian.core_ui.theme.AppTheme
 import com.seravian.feat_chat.R
 
 @OptIn(ExperimentalMaterial3Api::class)

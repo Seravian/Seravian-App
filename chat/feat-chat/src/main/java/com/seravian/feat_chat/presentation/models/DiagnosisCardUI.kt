@@ -1,6 +1,6 @@
 package com.seravian.feat_chat.presentation.models
 
-import com.greenvenom.core_ui.utils.formatDateTime
+import com.seravian.core_ui.utils.formatDateTime
 import com.seravian.core_chat.domain.models.Diagnosis
 
 data class DiagnosisCardUI(

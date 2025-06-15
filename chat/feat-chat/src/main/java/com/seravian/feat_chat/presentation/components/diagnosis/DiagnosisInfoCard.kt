@@ -23,7 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.greenvenom.core_ui.theme.AppTheme
+import com.seravian.core_ui.theme.AppTheme
 import com.seravian.feat_chat.R
 
 @Composable

@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.greenvenom.core_navigation"
+    namespace = "com.seravian.core_navigation"
     compileSdk = 35
 
     defaultConfig {
@@ -17,7 +17,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

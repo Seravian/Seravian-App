@@ -1,11 +1,11 @@
 package com.seravian.feat_chat.data.repository
 
-import com.greenvenom.core_network.data.EmptyResult
-import com.greenvenom.core_network.data.NetworkError
-import com.greenvenom.core_network.data.NetworkResult
-import com.greenvenom.core_network.data.map
-import com.greenvenom.core_network.data.onError
-import com.greenvenom.core_network.data.onSuccess
+import com.seravian.core_network.data.EmptyResult
+import com.seravian.core_network.data.NetworkError
+import com.seravian.core_network.data.NetworkResult
+import com.seravian.core_network.data.map
+import com.seravian.core_network.data.onError
+import com.seravian.core_network.data.onSuccess
 import com.seravian.core_chat.data.dto.request.diagnosis.ChatDiagnosesRequest
 import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosesDeletionRequest
 import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisDeletionRequest

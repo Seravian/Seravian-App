@@ -12,7 +12,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Seravian"
-        tools:replace="android:allowBackup, android:theme"
         tools:targetApi="31">
         <service
             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"

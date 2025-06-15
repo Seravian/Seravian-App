@@ -1,14 +1,14 @@
 package com.seravian.feat_chat.data
 
 import android.util.Log
-import com.greenvenom.core_network.api.utils.constructUrl
-import com.greenvenom.core_network.api.utils.safeCall
-import com.greenvenom.core_network.data.ConnectionStatus
-import com.greenvenom.core_network.data.EmptyResult
-import com.greenvenom.core_network.data.NetworkError
-import com.greenvenom.core_network.data.NetworkResult
-import com.greenvenom.core_network.data.map
-import com.greenvenom.core_network.domain.RealtimeConnection
+import com.seravian.core_network.api.utils.constructUrl
+import com.seravian.core_network.api.utils.safeCall
+import com.seravian.core_network.data.ConnectionStatus
+import com.seravian.core_network.data.EmptyResult
+import com.seravian.core_network.data.NetworkError
+import com.seravian.core_network.data.NetworkResult
+import com.seravian.core_network.data.map
+import com.seravian.core_network.domain.RealtimeConnection
 import com.seravian.core_chat.data.dto.request.chat.CreateChatRequest
 import com.seravian.core_chat.data.dto.request.chat.DeleteChatRequest
 import com.seravian.core_chat.data.dto.request.chat.EditChatRequest
@@ -291,7 +291,6 @@ class SeravianChatBotDataSource(
         signalRConnection.connection.on(
             target = "receive-client-request",
         ) { response: ClientResponse ->
-            Log.d("Voice", "Client Received")
             callback(response)
         }
     }
@@ -300,7 +299,6 @@ class SeravianChatBotDataSource(
         signalRConnection.connection.on(
             target = "receive-ai-response",
         ) { response: AIResponse ->
-            Log.d("Voice", "AI Received")
             callback(response)
         }
     }

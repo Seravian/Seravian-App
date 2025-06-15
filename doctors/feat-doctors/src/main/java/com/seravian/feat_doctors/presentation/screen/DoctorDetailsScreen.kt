@@ -24,11 +24,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import com.greenvenom.core_ui.components.TopAppBar
-import com.greenvenom.core_ui.R
-import com.greenvenom.core_ui.presentation.BaseAction
-import com.greenvenom.core_ui.presentation.BaseScreen
-import com.seravian.core_doctors.domain.models.Doctor
+import com.seravian.core_ui.components.TopAppBar
+import com.seravian.core_ui.presentation.BaseAction
+import com.seravian.core_ui.presentation.BaseScreen
 import com.seravian.feat_doctors.presentation.viewModel.detailsDoctor.DoctorDetailsAction
 import com.seravian.feat_doctors.presentation.viewModel.detailsDoctor.DoctorDetailsState
 import com.seravian.feat_doctors.presentation.viewModel.detailsDoctor.DoctorDetailsViewModel

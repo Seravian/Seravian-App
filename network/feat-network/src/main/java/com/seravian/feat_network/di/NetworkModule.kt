@@ -1,6 +1,6 @@
 package com.seravian.feat_network.di
 
-import com.greenvenom.core_network.domain.RealtimeConnection
+import com.seravian.core_network.domain.RealtimeConnection
 import com.seravian.feat_network.util.SignalRConnection
 import com.seravian.feat_network.util.ClientFactory
 import io.ktor.client.HttpClient
