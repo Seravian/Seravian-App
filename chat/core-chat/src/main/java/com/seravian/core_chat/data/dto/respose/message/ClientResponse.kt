@@ -10,7 +10,7 @@ data class ClientResponse(
     val chatId: String,
     val message: String,
     val timestampUtc: String,
-    val messageType: Int = MessageType.TEXT.ordinal
+    val messageType: Int
 ) {
     fun extractMessage() = Message(
         id = Pair(id, null),

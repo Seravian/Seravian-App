@@ -46,9 +46,13 @@ import com.seravian.feat_home.presentation.viewmodel.HomeState
 import com.seravian.feat_home.presentation.viewmodel.HomeViewModel
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    navigateBack: () -> Unit
+) {
     BaseScreen<HomeViewModel>(
-        enableCustomBack = false
+        onPhysicalBack = {
+            navigateBack()
+        }
     ) { viewModel ->
         val state by viewModel.homeState.collectAsStateWithLifecycle()
 

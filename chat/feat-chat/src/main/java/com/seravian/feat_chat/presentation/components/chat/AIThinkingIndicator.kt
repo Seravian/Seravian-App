@@ -51,7 +51,7 @@ fun AITypingIndicator(
             Image(
                 painter = painterResource(R.drawable.logo),
                 contentDescription = stringResource(R.string.chatbot_ic),
-                modifier = Modifier.size(36.dp)
+                modifier = Modifier.size(40.dp)
             )
         }
 

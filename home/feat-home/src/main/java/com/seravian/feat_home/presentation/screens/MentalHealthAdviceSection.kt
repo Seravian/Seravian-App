@@ -20,7 +20,7 @@ fun MentalHealthAdviceSection(
 ) {
     LazyColumn(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.Center
     ) {
         if (advices.isEmpty()) {
             item {

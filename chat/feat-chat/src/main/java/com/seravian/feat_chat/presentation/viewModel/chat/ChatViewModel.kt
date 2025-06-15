@@ -1,5 +1,6 @@
 package com.seravian.feat_chat.presentation.viewModel.chat
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.greenvenom.core_network.data.NetworkResult
 import com.greenvenom.core_network.data.map
@@ -48,8 +49,11 @@ class ChatViewModel(
             is ChatAction.StopMessageCollections -> stopMessageCollections()
             is ChatAction.NavigateToVoiceMode -> {
                 chatBotStateRepository.updateLastMessage(_chatState.value.messagesList.last())
+                stopMessageCollections()
             }
-            ChatAction.NavigateToDiagnosesList -> {}
+            ChatAction.NavigateToDiagnosesList -> {
+                stopMessageCollections()
+            }
             ChatAction.ClearDiagnosisRequestResult -> clearDiagnosisRequestResult()
         }
     }
@@ -85,8 +89,12 @@ class ChatViewModel(
     }
 
     private fun collectMessageResponses() {
+        Log.d("Voice", "Trying to collect message responses")
         if (jobMessageResponsesCollection != null) return
-        jobMessageResponsesCollection = viewModelScope.launch {
+
+        Log.d("Voice", "Collecting message responses")
+
+        jobMessageResponsesCollection = viewModelScope.launch(Dispatchers.IO) {
             chatRepository.receiveClientResponse()
 
             chatRepository.receiveAIResponse()

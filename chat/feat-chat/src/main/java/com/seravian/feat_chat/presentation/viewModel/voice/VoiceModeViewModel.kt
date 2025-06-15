@@ -30,6 +30,7 @@ class VoiceModeViewModel(
     private val voiceRecorder: VoiceRecorder = buildVoiceRecorder()
     private val audioPlayer: AudioPlayer = buildAudioPlayer()
 
+    private var jobConnectionStatusCollection: Job ?= null
     private var jobAudioResponseCollection: Job ?= null
 
     init {
@@ -55,16 +56,13 @@ class VoiceModeViewModel(
             is VoiceAction.LeaveVoiceMode -> {
                 stopAudioResponseCollection(true)
                 stopStreaming()
-                viewModelScope.launch(Dispatchers.IO) {
-                    chatBotStateRepository.stopConnection()
-                }
-                chatBotStateRepository.updateLastMessage(null)
+                stopConnection()
             }
         }
     }
 
     private fun collectConnectionStatus() {
-        viewModelScope.launch {
+        jobConnectionStatusCollection = viewModelScope.launch {
             chatBotStateRepository.chatBotState.collect { newState ->
                 _voiceState.update {
                     it.copy(
@@ -258,6 +256,16 @@ class VoiceModeViewModel(
         }
 
         voiceRecorder.stop()
+    }
+
+    private fun stopConnection() {
+        jobConnectionStatusCollection?.cancel()
+        jobConnectionStatusCollection = null
+
+        viewModelScope.launch(Dispatchers.IO) {
+            chatBotStateRepository.stopConnection()
+            chatBotStateRepository.updateLastMessage(null)
+        }
     }
 
     private fun stopAudioResponseCollection(stopAudioPlayer: Boolean = false) {
