@@ -9,5 +9,5 @@
     <string name="navigation_icon">%1$s Navigation Icon</string>
     <string name="appointments">Appointments</string>
     <string name="requests">Requests</string>
-
+    <string name="support">Support</string>
 </resources>

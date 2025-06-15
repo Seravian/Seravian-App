@@ -11,26 +11,26 @@ enum class PatientDestination(
     @StringRes val label: Int,
     val target: Destination,
 ) {
-    Home(
-        icon = R.drawable.home_ic,
-        label = R.string.home,
-        target = Screen.Home
-    ),
     AIChat(
-        icon = R.drawable.chat_ic,
+        icon = R.drawable.chatbot_ic,
         label = R.string.ai_chat,
         target = Screen.ChatsList
     ),
-    Sessions(
-        icon = R.drawable.sessions_ic,
-        label = R.string.sessions,
-        target = Screen.Sessions
+    Home(
+        icon = R.drawable.ic_support,
+        label = R.string.support,
+        target = Screen.Home
     ),
-    Doctors(
-        icon = R.drawable.person_circle_ic,
-        label = R.string.doctors,
-        target = Screen.Doctors
-    ),
+//    Sessions(
+//        icon = R.drawable.sessions_ic,
+//        label = R.string.sessions,
+//        target = Screen.Sessions
+//    ),
+//    Doctors(
+//        icon = R.drawable.person_circle_ic,
+//        label = R.string.doctors,
+//        target = Screen.Doctors
+//    ),
     Profile(
         icon = R.drawable.person_ic,
         label = R.string.profile,
