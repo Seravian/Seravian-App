@@ -3,15 +3,18 @@ package com.seravian.feat_navigation.components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.dp
 import com.greenvenom.core_navigation.data.NavigationType
 import com.greenvenom.core_navigation.domain.Destination
 import com.seravian.feat_navigation.R
@@ -64,7 +67,8 @@ private fun BottomBarContent(
                             contentDescription = stringResource(
                                 R.string.navigation_icon,
                                 destination.label
-                            )
+                            ),
+                            modifier = Modifier.size(28.dp)
                         )
                     },
                     label = {

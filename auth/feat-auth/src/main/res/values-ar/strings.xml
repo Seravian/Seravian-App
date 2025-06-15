@@ -24,4 +24,6 @@
     <string name="back_button">زر الرجوع</string>
     <string name="something_went_wrong">حدث شيء غير متوقع</string>
     <string name="stars">نجوم</string>
+    <string name="i_accept_the">أوافق على </string>
+    <string name="privacy_policy">سياسة الخصوصية</string>
 </resources>

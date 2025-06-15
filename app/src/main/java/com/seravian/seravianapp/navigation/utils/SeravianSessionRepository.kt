@@ -47,13 +47,14 @@ class SeravianSessionRepository(
                                     }
                                 }
                         } else {
-                            val currentProfile = roomDataSource.getProfile().extractProfile()
+                            _sessionDestination.update { SessionDestinations.PATIENT }
+//                            val currentProfile = roomDataSource.getProfile().extractProfile()
 
-                            if (currentProfile.role == Role.PATIENT) {
-                                _sessionDestination.update { SessionDestinations.PATIENT }
-                            } else {
-                                _sessionDestination.update { SessionDestinations.DOCTOR }
-                            }
+//                            if (currentProfile.role == Role.PATIENT) {
+//                                _sessionDestination.update { SessionDestinations.PATIENT }
+//                            } else {
+//                                _sessionDestination.update { SessionDestinations.DOCTOR }
+//                            }
                         }
                     }
                 }

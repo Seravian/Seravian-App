@@ -13,13 +13,13 @@ import com.seravian.feat_chat.presentation.screen.DiagnosisDetailsScreen
 import com.seravian.feat_chat.presentation.screen.VoiceModeScreen
 import com.seravian.feat_doctors.presentation.screen.DoctorDetailsScreen
 import com.seravian.feat_doctors.presentation.screen.DoctorsScreen
-import com.seravian.feat_home.presentation.HomeScreen
+import com.seravian.feat_home.presentation.screens.HomeScreen
 import com.seravian.feat_navigation.routes.Screen
 import com.seravian.feat_navigation.routes.SubGraph
 import com.seravian.feat_profile.presentation.screen.ProfileScreen
 
 fun NavGraphBuilder.patientGraph(navigate: (NavigationType) -> Unit) {
-    navigation<SubGraph.Patient>(startDestination = Screen.Home) {
+    navigation<SubGraph.Patient>(startDestination = SubGraph.AIChat) {
         composable<Screen.Home> {
             HomeScreen()
         }

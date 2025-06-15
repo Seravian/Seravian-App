@@ -37,4 +37,6 @@
     <string name="index">%1$s</string>
     <string name="delete_diagnosis">حذف التشخيص</string>
     <string name="microphone_access_is_needed">الوصول إلى الميكروفون مطلوب لتسجيل الصوت والبث المباشر. يرجى منح هذا الإذن.</string>
+    <string name="no_chats_yet">لا توجد محادثات بعد</string>
+    <string name="your_chats_will_appear_here">ستظهر محادثاتك هنا</string>
 </resources>

@@ -25,4 +25,6 @@
     <string name="back_button">Back Button</string>
     <string name="something_went_wrong">Something went wrong</string>
     <string name="stars">Stars</string>
+    <string name="i_accept_the">"I accept the "</string>
+    <string name="privacy_policy">Privacy Policy</string>
 </resources>

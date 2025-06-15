@@ -159,15 +159,15 @@ private fun LoginContent(
                     isPasswordField = true
                 )
                 //forgot field
-                Text(
-                    stringResource(R.string.forgot_password),
-                    color = bluePrimary,
-                    modifier = Modifier
-                        .align(Alignment.End)
-                        .clickable(enabled = true) {
-                            navigateToEmailVerificationScreen()
-                        }
-                )
+//                Text(
+//                    stringResource(R.string.forgot_password),
+//                    color = bluePrimary,
+//                    modifier = Modifier
+//                        .align(Alignment.End)
+//                        .clickable(enabled = true) {
+//                            navigateToEmailVerificationScreen()
+//                        }
+//                )
                 Spacer(modifier = Modifier.height(20.dp))
                 CustomButton(
                     text = stringResource(R.string.log_in),
@@ -182,7 +182,7 @@ private fun LoginContent(
     }
 }
 
-@Preview(showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun LoginContentsPreview() {
     AppTheme {

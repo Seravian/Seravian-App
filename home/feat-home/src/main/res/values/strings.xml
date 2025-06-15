@@ -3,4 +3,12 @@
     <string name="app_name" translatable="false">Seravian</string>
     <string name="famous_doctors">Famous Doctors</string>
     <string name="chat_history">Chat History</string>
+    <string name="support_center">Support Center</string>
+    <string name="mental_health_advice">Mental Health</string>
+    <string name="qa_section">Q&amp;A</string>
+    <string name="no_advice_available">No Advice Available</string>
+    <string name="advice_coming_soon">Mental health advice will be available soon</string>
+    <string name="no_qa_available">No Q&amp;A Available</string>
+    <string name="qa_coming_soon">Questions and answers will be available soon</string>
+    <string name="support">Support</string>
 </resources>
