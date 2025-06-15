@@ -12,7 +12,7 @@ val localProperties = Properties().apply {
 }
 
 android {
-    namespace = "com.greenvenom.core_network"
+    namespace = "com.seravian.core_network"
     compileSdk = 35
 
     defaultConfig {
@@ -29,7 +29,7 @@ android {
             buildConfigField("String", "API_KEY", "\"${localProperties.getProperty("DEV_KEY")}\"")
         }
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

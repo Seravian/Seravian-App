@@ -2,7 +2,7 @@ package com.seravian.feat_navigation.components
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.greenvenom.core_navigation.domain.Destination
+import com.seravian.core_navigation.domain.Destination
 import com.seravian.feat_navigation.R
 import com.seravian.feat_navigation.routes.Screen
 

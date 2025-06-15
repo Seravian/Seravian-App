@@ -1,9 +1,9 @@
 package com.seravian.seravianapp.navigation.utils
 
-import com.greenvenom.core_navigation.data.NavigationType.ClearBackStack
-import com.greenvenom.core_navigation.data.repository.NavigationStateRepository
-import com.greenvenom.core_network.data.SessionDestinations
-import com.greenvenom.core_network.domain.repository.SessionRepository
+import com.seravian.core_navigation.data.NavigationType.ClearBackStack
+import com.seravian.core_navigation.data.repository.NavigationStateRepository
+import com.seravian.core_network.data.SessionDestinations
+import com.seravian.core_network.domain.repository.SessionRepository
 import com.seravian.core_profile.domain.utils.Role
 import com.seravian.feat_navigation.routes.SubGraph
 import kotlinx.coroutines.CoroutineScope

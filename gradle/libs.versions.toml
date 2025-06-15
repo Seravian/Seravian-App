@@ -3,7 +3,6 @@ agp = "8.7.3"
 coreSplashscreen = "1.0.1"
 countryPicker = "2.1.3"
 jetpack_compose_country_code_picker_emoji = "2.2.7"
-kmpSearchableDropdown = "1.1.0"
 kotlin = "2.1.0"
 coreKtx = "1.16.0"
 junit = "4.13.2"
@@ -31,7 +30,6 @@ permissionsCompose = "0.0.1+4"
 androidx-appcompat-resources = { module = "androidx.appcompat:appcompat-resources", version.ref = "appcompatVersion" }
 country-picker = { module = "com.github.arpitkatiyar1999:Country-Picker", version.ref = "countryPicker" }
 jetpack_compose_country_code_picker_emoji = { module = "com.github.jump-sdk:jetpack_compose_country_code_picker_emoji", version.ref = "jetpack_compose_country_code_picker_emoji" }
-kmp-searchable-dropdown = { module = "io.github.mejdi14:KMP-Searchable-Dropdown", version.ref = "kmpSearchableDropdown" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }

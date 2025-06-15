@@ -1,12 +1,12 @@
 package com.seravian.feat_chat.data.repository
 
 import android.util.Log
-import com.greenvenom.core_network.data.ConnectionStatus
-import com.greenvenom.core_network.data.ErrorType
-import com.greenvenom.core_network.data.NetworkError
-import com.greenvenom.core_network.data.NetworkResult
-import com.greenvenom.core_network.data.onError
-import com.greenvenom.core_network.data.onSuccess
+import com.seravian.core_network.data.ConnectionStatus
+import com.seravian.core_network.data.ErrorType
+import com.seravian.core_network.data.NetworkError
+import com.seravian.core_network.data.NetworkResult
+import com.seravian.core_network.data.onError
+import com.seravian.core_network.data.onSuccess
 import com.seravian.core_chat.data.dto.request.chat.IsProcessingRequest
 import com.seravian.core_chat.data.dto.request.chat.JoinChatRequest
 import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisCheckRequest

@@ -1,11 +1,9 @@
 package com.seravian.feat_doctors.presentation.viewModel.doctor
 
 import androidx.lifecycle.viewModelScope
-import com.greenvenom.core_network.data.onSuccess
-import com.greenvenom.core_ui.R
-import com.greenvenom.core_ui.presentation.BaseAction
-import com.greenvenom.core_ui.presentation.BaseViewModel
-import com.seravian.core_doctors.domain.models.Doctor
+import com.seravian.core_network.data.onSuccess
+import com.seravian.core_ui.presentation.BaseAction
+import com.seravian.core_ui.presentation.BaseViewModel
 import com.seravian.feat_doctors.data.repository.DoctorsStateRepository
 import com.seravian.feat_doctors.domain.repository.DoctorRepository
 import kotlinx.coroutines.flow.MutableStateFlow

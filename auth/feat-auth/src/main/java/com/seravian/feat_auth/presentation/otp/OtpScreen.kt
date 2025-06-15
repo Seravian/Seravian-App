@@ -1,0 +1,177 @@
+package com.seravian.feat_auth.presentation.otp
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.seravian.feat_auth.R
+import com.seravian.feat_auth.presentation.component.AuthHeader
+import com.seravian.feat_auth.presentation.otp.components.OtpInputField
+import com.seravian.core_network.data.onError
+import com.seravian.core_network.data.onSuccess
+import com.seravian.core_network.utils.toString
+import com.seravian.core_ui.presentation.BaseAction
+import com.seravian.core_ui.presentation.BaseScreen
+import com.seravian.core_ui.theme.AppTheme
+
+@Composable
+fun OtpScreen(
+    navigateToNextScreen: () -> Unit,
+    navigateBack: () -> Unit
+) {
+    BaseScreen<OtpViewModel>(
+        onPhysicalBack = {
+            navigateBack()
+        }
+    ) { viewModel ->
+        val otpState by viewModel.otpState.collectAsStateWithLifecycle()
+        val focusRequesters = remember {
+            List(8) { FocusRequester() }
+        }
+        val focusManager = LocalFocusManager.current
+        val keyboardManager = LocalSoftwareKeyboardController.current
+
+        LaunchedEffect(otpState.focusedIndex) {
+            otpState.focusedIndex?.let { index ->
+                focusRequesters.getOrNull(index)?.requestFocus()
+            }
+        }
+
+        LaunchedEffect(otpState.code, keyboardManager) {
+            val allNumbersEntered = otpState.code.none { it == null }
+            if(allNumbersEntered) {
+                focusRequesters.forEach {
+                    it.freeFocus()
+                }
+                focusManager.clearFocus()
+                keyboardManager?.hide()
+            }
+        }
+
+        OtpContent(
+            state = otpState,
+            otpActions = { action ->
+                when(action) {
+                    is OtpAction.OnEnterNumber -> {
+                        if(action.number != null) {
+                            focusRequesters[action.index].freeFocus()
+                        }
+                    }
+                    else -> Unit
+                }
+                viewModel.otpAction(action)
+            },
+            baseActions = viewModel::baseAction,
+            focusRequesters = focusRequesters,
+            navigateToNextScreen = navigateToNextScreen,
+            navigateBack = navigateBack,
+        )
+    }
+}
+
+@Composable
+private fun OtpContent(
+    state: OtpState,
+    otpActions: (OtpAction) -> Unit,
+    baseActions: (BaseAction) -> Unit,
+    focusRequesters: List<FocusRequester>,
+    navigateToNextScreen: () -> Unit,
+    navigateBack: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+
+    state.otpNetworkResult
+        ?.onSuccess {
+            baseActions(BaseAction.HideLoading)
+            navigateToNextScreen()
+            otpActions(OtpAction.ResetState)
+        }
+        ?.onError {
+            baseActions(
+                BaseAction.ShowErrorMessage(
+                    it.errorType?.toString(context)?: context.getString(R.string.something_went_wrong)
+                ))
+            otpActions(OtpAction.ResetNetworkResult)
+        }
+
+    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            AuthHeader(
+                title = stringResource(R.string.enter_the_sent_otp),
+                isLoginScreen = false,
+                navigateBack = navigateBack,
+                modifier = Modifier
+                    .align(Alignment.Start)
+            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
+                modifier = Modifier
+                    .fillMaxHeight(0.7f)
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            ) {
+                state.code.forEachIndexed { index, number ->
+                    OtpInputField(
+                        number = number,
+                        focusRequester = focusRequesters[index],
+                        onFocusChanged = { isFocused ->
+                            if (isFocused) {
+                                otpActions(OtpAction.OnChangeFieldFocused(index))
+                            }
+                        },
+                        onNumberChanged = { newNumber ->
+                            otpActions(OtpAction.OnEnterNumber(newNumber, index))
+                        },
+                        onKeyboardBack = {
+                            otpActions(OtpAction.OnKeyboardBack)
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                            .aspectRatio(1f)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Preview(showSystemUi = true)
+@Composable
+private fun OtpScreenPreview() {
+    AppTheme {
+        OtpContent(
+            state = OtpState(),
+            otpActions = {},
+            baseActions = {},
+            focusRequesters = List(8) { FocusRequester() },
+            navigateToNextScreen = {},
+            navigateBack = {}
+        )
+    }
+}

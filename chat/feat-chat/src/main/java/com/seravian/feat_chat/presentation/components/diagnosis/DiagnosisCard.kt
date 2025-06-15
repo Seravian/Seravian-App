@@ -28,7 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.greenvenom.core_ui.theme.AppTheme
+import com.seravian.core_ui.theme.AppTheme
 import com.seravian.feat_chat.R
 import com.seravian.feat_chat.presentation.models.DiagnosisCardUI
 
@@ -77,7 +77,7 @@ fun DiagnosisCard(
                 Text(
                     text = diagnosis.requestedAtUtc,
                     style = MaterialTheme.typography.titleLarge.copy(
-                        fontSize = 14.sp,
+                        fontSize = 13.sp,
                         fontWeight = FontWeight.SemiBold
                     )
                 )

@@ -1,9 +1,9 @@
 package com.seravian.feat_home.data
 
-import com.greenvenom.core_network.api.utils.constructUrl
-import com.greenvenom.core_network.api.utils.safeCall
-import com.greenvenom.core_network.data.NetworkError
-import com.greenvenom.core_network.data.NetworkResult
+import com.seravian.core_network.api.utils.constructUrl
+import com.seravian.core_network.api.utils.safeCall
+import com.seravian.core_network.data.NetworkError
+import com.seravian.core_network.data.NetworkResult
 import com.seravian.core_home.data.dto.response.DisordersAdvicesResponse
 import com.seravian.core_home.data.dto.response.QuestionAnswerResponse
 import com.seravian.feat_home.domain.HomeDataSource

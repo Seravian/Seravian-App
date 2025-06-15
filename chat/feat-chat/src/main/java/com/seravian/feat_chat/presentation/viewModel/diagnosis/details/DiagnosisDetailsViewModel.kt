@@ -1,9 +1,9 @@
 package com.seravian.feat_chat.presentation.viewModel.diagnosis.details
 
 import androidx.lifecycle.viewModelScope
-import com.greenvenom.core_network.data.map
-import com.greenvenom.core_network.data.onSuccess
-import com.greenvenom.core_ui.presentation.BaseViewModel
+import com.seravian.core_network.data.map
+import com.seravian.core_network.data.onSuccess
+import com.seravian.core_ui.presentation.BaseViewModel
 import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisDeletionRequest
 import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisDetailsRequest
 import com.seravian.feat_chat.data.repository.ChatBotStateRepository

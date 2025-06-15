@@ -1,9 +1,9 @@
 package com.seravian.feat_chat.domain
 
-import com.greenvenom.core_network.data.ConnectionStatus
-import com.greenvenom.core_network.data.EmptyResult
-import com.greenvenom.core_network.data.NetworkError
-import com.greenvenom.core_network.data.NetworkResult
+import com.seravian.core_network.data.ConnectionStatus
+import com.seravian.core_network.data.EmptyResult
+import com.seravian.core_network.data.NetworkError
+import com.seravian.core_network.data.NetworkResult
 import com.seravian.core_chat.data.dto.request.chat.CreateChatRequest
 import com.seravian.core_chat.data.dto.request.chat.DeleteChatRequest
 import com.seravian.core_chat.data.dto.request.chat.EditChatRequest

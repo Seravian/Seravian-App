@@ -13,8 +13,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.greenvenom.core_navigation.data.repository.NavigationStateRepository
-import com.greenvenom.core_ui.theme.AppTheme
+import com.seravian.core_navigation.data.repository.NavigationStateRepository
+import com.seravian.core_ui.theme.AppTheme
 import com.seravian.core_local.domain.PrefsDataSource
 import com.seravian.feat_navigation.components.BottomNavigationBar
 import com.seravian.feat_navigation.routes.Screen

@@ -9,9 +9,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.greenvenom.core_ui.components.TopAppBar
-import com.greenvenom.core_ui.presentation.BaseAction
-import com.greenvenom.core_ui.presentation.BaseScreen
+import com.seravian.core_ui.components.TopAppBar
+import com.seravian.core_ui.presentation.BaseAction
+import com.seravian.core_ui.presentation.BaseScreen
 import com.seravian.feat_doctors.presentation.components.DoctorCard
 import com.seravian.feat_doctors.presentation.model.toDoctorUI
 import com.seravian.feat_doctors.presentation.viewModel.doctor.DoctorAction

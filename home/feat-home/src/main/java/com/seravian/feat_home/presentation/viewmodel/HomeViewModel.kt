@@ -1,8 +1,8 @@
 package com.seravian.feat_home.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
-import com.greenvenom.core_network.data.onSuccess
-import com.greenvenom.core_ui.presentation.BaseViewModel
+import com.seravian.core_network.data.onSuccess
+import com.seravian.core_ui.presentation.BaseViewModel
 import com.seravian.feat_home.domain.HomeRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

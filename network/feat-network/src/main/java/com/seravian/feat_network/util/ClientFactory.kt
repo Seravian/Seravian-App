@@ -1,21 +1,15 @@
 package com.seravian.feat_network.util
 
-import com.greenvenom.core_network.api.utils.applyBaseConfig
-import com.greenvenom.core_network.api.utils.constructUrl
-import com.greenvenom.core_network.api.utils.safeCall
-import com.greenvenom.core_network.data.ErrorType
-import com.greenvenom.core_network.data.map
-import com.greenvenom.core_network.data.onError
-import com.greenvenom.core_network.data.onSuccess
-import com.greenvenom.core_tokens.data.dto.response.TokensResponse
-import com.greenvenom.core_tokens.domain.repo.TokensDataSource
+import com.seravian.core_network.api.utils.applyBaseConfig
+import com.seravian.core_network.data.ErrorType
+import com.seravian.core_network.data.onError
+import com.seravian.core_network.data.onSuccess
+import com.seravian.core_tokens.domain.repo.TokensDataSource
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
 
 object ClientFactory {
     fun publicClient(engine: HttpClientEngine): HttpClient {
