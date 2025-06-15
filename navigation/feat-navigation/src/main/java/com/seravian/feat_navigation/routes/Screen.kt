@@ -66,7 +66,7 @@ sealed class Screen: Destination {
     }
 
     @Serializable
-    data object DiagnosisDetails: Screen() {
+    data class DiagnosisDetails(val id:Long = 1): Screen() {
         override val destinationType: DestinationType = DestinationType.SIDE
     }
 
