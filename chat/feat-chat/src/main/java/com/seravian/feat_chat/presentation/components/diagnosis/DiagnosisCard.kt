@@ -77,7 +77,7 @@ fun DiagnosisCard(
                 Text(
                     text = diagnosis.requestedAtUtc,
                     style = MaterialTheme.typography.titleLarge.copy(
-                        fontSize = 12.sp,
+                        fontSize = 13.sp,
                         fontWeight = FontWeight.SemiBold
                     )
                 )

@@ -111,6 +111,8 @@ class DiagnosesListViewModel(
     }
 
     private fun stopDiagnosisCollections() {
+        jobConnectionStatusCollection?.cancel()
+        jobConnectionStatusCollection = null
         jobDiagnosesCollection?.cancel()
         jobDiagnosesCollection = null
     }
