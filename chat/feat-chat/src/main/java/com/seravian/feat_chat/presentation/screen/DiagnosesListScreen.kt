@@ -45,7 +45,7 @@ import com.seravian.feat_chat.presentation.viewModel.diagnosis.list.DiagnosesLis
 
 @Composable
 fun DiagnosesListScreen(
-    navigateToDiagnosisDetails: () -> Unit,
+    navigateToDiagnosisDetails: (Long) -> Unit,
     navigateBack: () -> Unit
 ) {
     BaseScreen<DiagnosesListViewModel>(
@@ -60,7 +60,7 @@ fun DiagnosesListScreen(
             state = diagnosesListState,
             listAction = {
                 when (it) {
-                    is DiagnosesListAction.NavigateToDiagnosisDetails -> navigateToDiagnosisDetails()
+                    is DiagnosesListAction.NavigateToDiagnosisDetails -> navigateToDiagnosisDetails(it.diagnosis.id)
                     DiagnosesListAction.NavigateBack -> navigateBack()
                     else -> {}
                 }

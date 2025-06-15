@@ -49,13 +49,6 @@ class ChatBotStateRepository(
         }
     }
 
-    fun updateCurrentDiagnosis(diagnosis: Diagnosis?) {
-        _chatBotState.update {
-            it.copy(
-                currentDiagnosis = diagnosis
-            )
-        }
-    }
 
     suspend fun checkResponseProcessing() {
         val isWaitingForResponse = seravianChatBotDataSource.isProcessing(

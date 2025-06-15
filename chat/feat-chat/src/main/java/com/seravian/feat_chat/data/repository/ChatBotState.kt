@@ -9,7 +9,6 @@ import com.seravian.core_chat.domain.models.Message
 data class ChatBotState(
     val currentChat: Chat ?= null,
     val lastMessage: Message ?= null,
-    val currentDiagnosis: Diagnosis ?= null,
     val lastNotifiedDiagnosisId: Long ?= null,
     val isWaitingForResponse: Boolean = false,
     val isWaitingForDiagnosis: Boolean = false,
