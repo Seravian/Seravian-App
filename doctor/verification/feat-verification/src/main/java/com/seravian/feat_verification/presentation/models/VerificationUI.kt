@@ -1,6 +1,6 @@
 package com.seravian.feat_verification.presentation.models
 
-import com.greenvenom.core_ui.utils.formatDateTime
+import com.seravian.core_ui.utils.formatDateTime
 import com.seravian.core_verification.domain.Attachment
 import com.seravian.core_verification.domain.Verification
 import com.seravian.core_verification.domain.WorkingTimeSlot

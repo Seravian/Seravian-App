@@ -47,7 +47,6 @@ dependencies {
     implementation(libs.bundles.dependency.injection)
     implementation(libs.ktor.client.core)
     implementation(libs.permissions.compose)
-    implementation(libs.kmp.searchable.dropdown)
     implementation(libs.country.picker)
     implementation(libs.jetpack.compose.country.code.picker.emoji)
 

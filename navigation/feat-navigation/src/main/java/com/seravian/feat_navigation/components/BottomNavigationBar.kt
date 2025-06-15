@@ -15,8 +15,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import com.greenvenom.core_navigation.data.NavigationType
-import com.greenvenom.core_navigation.domain.Destination
+import com.seravian.core_navigation.data.NavigationType
+import com.seravian.core_navigation.domain.Destination
 import com.seravian.feat_navigation.R
 import com.seravian.feat_navigation.routes.Screen
 

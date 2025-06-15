@@ -1,37 +1,28 @@
 package com.seravian.feat_network.util
 
 import android.util.Log
-import com.greenvenom.core_network.api.utils.constructUrl
-import com.greenvenom.core_network.api.utils.safeCall
-import com.greenvenom.core_network.data.map
-import com.greenvenom.core_network.data.ConnectionStatus
-import com.greenvenom.core_network.data.ErrorType
-import com.greenvenom.core_network.data.onError
-import com.greenvenom.core_network.data.onSuccess
-import com.greenvenom.core_network.domain.RealtimeConnection
-import com.greenvenom.core_tokens.data.dto.response.TokensResponse
-import com.greenvenom.core_tokens.domain.Tokens
-import com.greenvenom.core_tokens.domain.repo.TokensDataSource
+import com.seravian.core_network.api.utils.constructUrl
+import com.seravian.core_network.data.ConnectionStatus
+import com.seravian.core_network.data.ErrorType
+import com.seravian.core_network.data.onError
+import com.seravian.core_network.data.onSuccess
+import com.seravian.core_network.domain.RealtimeConnection
+import com.seravian.core_tokens.domain.Tokens
+import com.seravian.core_tokens.domain.repo.TokensDataSource
 import eu.lepicekmichal.signalrkore.AutomaticReconnect
 import eu.lepicekmichal.signalrkore.HubConnection
 import eu.lepicekmichal.signalrkore.HubConnectionBuilder
 import eu.lepicekmichal.signalrkore.HubConnectionState
-import io.ktor.client.HttpClient
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 
 class SignalRConnection(
     private val tokensDataSource: TokensDataSource,

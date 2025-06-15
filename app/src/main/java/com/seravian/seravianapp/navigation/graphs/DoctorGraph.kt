@@ -4,7 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.toRoute
-import com.greenvenom.core_navigation.data.NavigationType
+import com.seravian.core_navigation.data.NavigationType
 import com.seravian.feat_navigation.routes.Screen
 import com.seravian.feat_navigation.routes.SubGraph
 import com.seravian.feat_profile.presentation.screen.ProfileScreen

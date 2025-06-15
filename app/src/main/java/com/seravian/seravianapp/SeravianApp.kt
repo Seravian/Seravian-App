@@ -1,13 +1,13 @@
 package com.seravian.seravianapp
 
 import android.app.Application
-import com.greenvenom.core_network.api.di.apiModule
+import com.seravian.core_network.api.di.apiModule
 import com.seravian.seravianapp.di.appModule
-import com.greenvenom.feat_auth.di.authModule
-import com.greenvenom.core_navigation.di.navigationCoreModule
+import com.seravian.feat_auth.di.authModule
+import com.seravian.core_navigation.di.navigationCoreModule
 import com.seravian.feat_home.di.homeModule
-import com.greenvenom.feat_onboarding.di.onBoardingModule
-import com.greenvenom.feat_tokens.di.tokensModule
+import com.seravian.feat_onboarding.di.onBoardingModule
+import com.seravian.feat_tokens.di.tokensModule
 import com.seravian.feat_chat.di.chatModule
 import com.seravian.feat_doctors.di.doctorModule
 import com.seravian.feat_local.di.localModule

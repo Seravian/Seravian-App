@@ -23,7 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.greenvenom.core_ui.theme.AppTheme
+import com.seravian.core_ui.theme.AppTheme
 import com.seravian.core_chat.domain.MessageType
 import com.seravian.feat_chat.R
 import com.seravian.feat_chat.presentation.models.MessageUI

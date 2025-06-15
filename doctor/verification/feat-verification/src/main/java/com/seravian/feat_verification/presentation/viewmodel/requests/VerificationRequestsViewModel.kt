@@ -1,9 +1,8 @@
 package com.seravian.feat_verification.presentation.viewmodel.requests
 
 import androidx.lifecycle.viewModelScope
-import com.greenvenom.core_network.data.map
-import com.greenvenom.core_network.data.onSuccess
-import com.greenvenom.core_ui.presentation.BaseViewModel
+import com.seravian.core_network.data.onSuccess
+import com.seravian.core_ui.presentation.BaseViewModel
 import com.seravian.core_verification.data.dto.request.VerificationRequest
 import com.seravian.feat_verification.domain.repo.VerificationRepository
 import kotlinx.coroutines.Dispatchers

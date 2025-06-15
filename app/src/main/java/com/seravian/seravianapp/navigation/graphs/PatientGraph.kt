@@ -5,7 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import com.greenvenom.core_navigation.data.NavigationType
+import com.seravian.core_navigation.data.NavigationType
 import com.seravian.feat_chat.presentation.screen.ChatListScreen
 import com.seravian.feat_chat.presentation.screen.ChatScreen
 import com.seravian.feat_chat.presentation.screen.DiagnosesListScreen

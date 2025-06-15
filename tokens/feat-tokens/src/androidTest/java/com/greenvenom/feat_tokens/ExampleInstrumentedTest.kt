@@ -1,4 +1,4 @@
-package com.greenvenom.feat_tokens
+package com.seravian.feat_tokens
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

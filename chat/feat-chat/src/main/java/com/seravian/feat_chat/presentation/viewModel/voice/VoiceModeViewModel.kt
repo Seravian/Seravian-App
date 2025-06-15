@@ -1,9 +1,9 @@
 package com.seravian.feat_chat.presentation.viewModel.voice
 
 import androidx.lifecycle.viewModelScope
-import com.greenvenom.core_network.data.NetworkResult
-import com.greenvenom.core_network.data.onSuccess
-import com.greenvenom.core_ui.presentation.BaseViewModel
+import com.seravian.core_network.data.NetworkResult
+import com.seravian.core_network.data.onSuccess
+import com.seravian.core_ui.presentation.BaseViewModel
 import com.seravian.core_chat.data.dto.request.voice.FetchAIAudioRequest
 import com.seravian.core_chat.domain.MessageType
 import com.seravian.core_chat.domain.models.Message

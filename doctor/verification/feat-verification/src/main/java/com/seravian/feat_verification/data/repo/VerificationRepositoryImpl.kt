@@ -1,14 +1,12 @@
 package com.seravian.feat_verification.data.repo
 
-import com.greenvenom.core_network.data.EmptyResult
-import com.greenvenom.core_network.data.NetworkError
-import com.greenvenom.core_network.data.NetworkResult
-import com.greenvenom.core_network.data.map
+import com.seravian.core_network.data.EmptyResult
+import com.seravian.core_network.data.NetworkError
+import com.seravian.core_network.data.NetworkResult
+import com.seravian.core_network.data.map
 import com.seravian.core_verification.data.dto.request.DeleteVerificationRequest
 import com.seravian.core_verification.data.dto.request.GetVerificationsRequest
 import com.seravian.core_verification.data.dto.request.VerificationRequest
-import com.seravian.core_verification.data.dto.response.VerificationDetailsResponse
-import com.seravian.core_verification.data.dto.response.VerificationRequestResponse
 import com.seravian.core_verification.domain.Verification
 import com.seravian.feat_verification.domain.repo.VerificationRepository
 import com.seravian.feat_verification.domain.source.VerificationDataSource

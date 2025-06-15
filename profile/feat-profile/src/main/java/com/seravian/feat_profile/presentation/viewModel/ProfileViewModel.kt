@@ -1,7 +1,7 @@
 package com.seravian.feat_profile.presentation.viewModel
 
 import androidx.lifecycle.viewModelScope
-import com.greenvenom.core_ui.presentation.BaseViewModel
+import com.seravian.core_ui.presentation.BaseViewModel
 import com.seravian.feat_profile.domain.repository.ProfileRepository
 import com.seravian.feat_profile.presentation.ProfileAction
 import com.seravian.feat_profile.presentation.ProfileState

@@ -1,7 +1,7 @@
 package com.seravian.feat_navigation.routes
 
-import com.greenvenom.core_navigation.domain.Destination
-import com.greenvenom.core_navigation.domain.DestinationType
+import com.seravian.core_navigation.domain.Destination
+import com.seravian.core_navigation.domain.DestinationType
 import kotlinx.serialization.Serializable
 
 sealed class Screen: Destination {

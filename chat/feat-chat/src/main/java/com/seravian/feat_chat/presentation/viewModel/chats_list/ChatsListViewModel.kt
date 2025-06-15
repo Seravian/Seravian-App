@@ -1,9 +1,9 @@
 package com.seravian.feat_chat.presentation.viewModel.chats_list
 
 import androidx.lifecycle.viewModelScope
-import com.greenvenom.core_network.data.onError
-import com.greenvenom.core_network.data.onSuccess
-import com.greenvenom.core_ui.presentation.BaseViewModel
+import com.seravian.core_network.data.onError
+import com.seravian.core_network.data.onSuccess
+import com.seravian.core_ui.presentation.BaseViewModel
 import com.seravian.core_chat.data.dto.request.chat.CreateChatRequest
 import com.seravian.core_chat.data.dto.request.chat.DeleteChatRequest
 import com.seravian.core_chat.data.dto.request.chat.EditChatRequest
