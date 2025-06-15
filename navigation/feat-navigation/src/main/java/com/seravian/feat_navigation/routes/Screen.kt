@@ -74,6 +74,7 @@ sealed class Screen: Destination {
     data object Doctors: Screen() {
         override val destinationType: DestinationType = DestinationType.MAIN
     }
+
     @Serializable
     data class DoctorDetails(val doctorId: String = ""): Screen() {
         override val destinationType: DestinationType = DestinationType.SIDE
@@ -95,7 +96,7 @@ sealed class Screen: Destination {
     }
 
     @Serializable
-    data class DoctorVerificationDetails(val requestId: Int = 0): Screen() {
+    data class DoctorVerificationDetails(val requestId: Long = 0): Screen() {
         override val destinationType: DestinationType = DestinationType.OTHER
     }
 

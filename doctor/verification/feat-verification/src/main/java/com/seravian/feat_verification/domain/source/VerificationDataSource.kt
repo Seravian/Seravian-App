@@ -6,18 +6,19 @@ import com.greenvenom.core_network.data.NetworkResult
 import com.seravian.core_verification.data.dto.request.DeleteVerificationRequest
 import com.seravian.core_verification.data.dto.request.GetVerificationsRequest
 import com.seravian.core_verification.data.dto.request.VerificationRequest
-import com.seravian.core_verification.data.dto.response.VerificationResponse
+import com.seravian.core_verification.data.dto.response.VerificationDetailsResponse
+import com.seravian.core_verification.data.dto.response.VerificationRequestResponse
 
 interface VerificationDataSource {
-    suspend fun getVerificationRequests(): NetworkResult<List<VerificationResponse>, NetworkError>
+    suspend fun getVerificationRequests(): NetworkResult<List<VerificationDetailsResponse>, NetworkError>
 
     suspend fun getVerificationRequest(
         request: GetVerificationsRequest
-    ): NetworkResult<VerificationResponse, NetworkError>
+    ): NetworkResult<VerificationDetailsResponse, NetworkError>
 
     suspend fun sendVerificationRequest(
         request: VerificationRequest
-    ): EmptyResult<NetworkError>
+    ): NetworkResult<VerificationRequestResponse, NetworkError>
 
     suspend fun deleteVerificationRequest(
         request: DeleteVerificationRequest

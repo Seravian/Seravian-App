@@ -13,6 +13,7 @@ data class ChatState(
     val messagesList: List<Message> = listOf(),
     val isWaitingForResponse: Boolean = false,
     val isWaitingForDiagnosis: Boolean = false,
+    val sendClientRequestResult: EmptyResult<NetworkError>? = null,
     val getChatMessagesResult: EmptyResult<NetworkError> ?= null,
     val joinChatResult: EmptyResult<NetworkError> ?= null,
     val diagnosisRequestResult: EmptyResult<NetworkError> ?= null

@@ -7,7 +7,7 @@
     <string name="please_fill_in_all_required_fields">Please fill in all required fields</string>
     <string name="add_attachment_field">Add Attachment Field</string>
     <string name="attachments_pdf_png_jpeg_only">Attachments (PDF, PNG, JPEG only)</string>
-    <string name="session_price">Session Price</string>
+    <string name="session_price">Session Price in EGP</string>
     <string name="description">Description</string>
     <string name="doctor_title">Doctor Title</string>
     <string name="close">Close</string>
@@ -17,4 +17,7 @@
     <string name="create_new_verification_request">Create new verification request</string>
     <string name="verification_request">Verification Request #%1$s</string>
     <string name="logout">Logout Button</string>
+    <string name="view_details">View details</string>
+    <string name="tap_to_view_details">Tap to view details</string>
+    <string name="fill_in_your_professional_details">Fill in your professional details</string>
 </resources>

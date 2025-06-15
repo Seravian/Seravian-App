@@ -9,7 +9,8 @@ import com.greenvenom.core_network.data.NetworkResult
 import com.seravian.core_verification.data.dto.request.DeleteVerificationRequest
 import com.seravian.core_verification.data.dto.request.GetVerificationsRequest
 import com.seravian.core_verification.data.dto.request.VerificationRequest
-import com.seravian.core_verification.data.dto.response.VerificationResponse
+import com.seravian.core_verification.data.dto.response.VerificationDetailsResponse
+import com.seravian.core_verification.data.dto.response.VerificationRequestResponse
 import com.seravian.feat_verification.domain.source.VerificationDataSource
 import io.ktor.client.HttpClient
 import io.ktor.client.request.delete
@@ -19,7 +20,7 @@ import io.ktor.client.request.get
 class SeravianVerificationDataSource(
     private val authorizedHttpClient: HttpClient
 ): VerificationDataSource {
-    override suspend fun getVerificationRequests(): NetworkResult<List<VerificationResponse>, NetworkError> {
+    override suspend fun getVerificationRequests(): NetworkResult<List<VerificationDetailsResponse>, NetworkError> {
         return safeCall {
             authorizedHttpClient.get(constructUrl("doctor/get-doctor-verification-requests"))
         }
@@ -27,7 +28,7 @@ class SeravianVerificationDataSource(
 
     override suspend fun getVerificationRequest(
         request: GetVerificationsRequest
-    ): NetworkResult<VerificationResponse, NetworkError> {
+    ): NetworkResult<VerificationDetailsResponse, NetworkError> {
         return safeCall {
             authorizedHttpClient.get(constructUrl("doctor/get-doctor-verification-request")) {
                 url {
@@ -39,7 +40,7 @@ class SeravianVerificationDataSource(
 
     override suspend fun sendVerificationRequest(
         request: VerificationRequest
-    ): EmptyResult<NetworkError> {
+    ): NetworkResult<VerificationRequestResponse, NetworkError> {
         val formData = try {
             request.toMultiPartFormData()
         } catch (_: IllegalArgumentException) {

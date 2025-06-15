@@ -4,7 +4,6 @@ import com.greenvenom.core_network.data.ConnectionStatus
 import com.greenvenom.core_network.data.EmptyResult
 import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
-import com.seravian.core_chat.data.dto.request.message.ClientRequest
 import com.seravian.core_chat.data.dto.request.chat.CreateChatRequest
 import com.seravian.core_chat.data.dto.request.chat.DeleteChatRequest
 import com.seravian.core_chat.data.dto.request.chat.EditChatRequest
@@ -18,6 +17,7 @@ import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisCheckRequest
 import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisCreationRequest
 import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisDeletionRequest
 import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisDetailsRequest
+import com.seravian.core_chat.data.dto.request.message.SendClientRequest
 import com.seravian.core_chat.data.dto.request.message.SyncMessagesRequest
 import com.seravian.core_chat.data.dto.request.voice.UploadVoiceRequest
 import com.seravian.core_chat.data.dto.respose.voice.AIAudioReadyResponse
@@ -50,6 +50,10 @@ interface ChatBotRemoteDataSource {
     suspend fun deleteChat(deleteChatRequest: DeleteChatRequest):EmptyResult<NetworkError>
 
     suspend fun getChats(): NetworkResult<List<ChatResponse>, NetworkError>
+
+    suspend fun sendClientRequest(
+        clientRequest: SendClientRequest
+    ): NetworkResult<ConfirmedMessageResponse, NetworkError>
 
     suspend fun getChatMessages(
         getChatMessagesRequest: GetChatMessagesRequest
@@ -107,13 +111,9 @@ interface ChatBotRemoteDataSource {
 
     suspend fun joinChat(joinChatRequest: JoinChatRequest)
 
-    suspend fun sendRequest(clientRequest: ClientRequest)
-
     fun receiveClientResponse(callback: suspend (ClientResponse) -> Unit)
 
     fun receiveAIResponse(callback: suspend (AIResponse) -> Unit)
-
-    fun receiveMessageConfirmation(callback: suspend (ConfirmedMessageResponse) -> Unit)
 
     suspend fun receiveAIAudioReadyResponse(
         callback: suspend (AIAudioReadyResponse) -> Unit

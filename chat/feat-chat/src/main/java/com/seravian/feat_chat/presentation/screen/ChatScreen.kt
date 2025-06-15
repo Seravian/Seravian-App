@@ -126,6 +126,12 @@ private fun ChatScreenContent(
             ))
         }
 
+    chatState.sendClientRequestResult?.onError {
+        baseAction(BaseAction.ShowErrorMessage(
+            errorMessage = it.errorType?.toString(context) ?: ""
+        ))
+    }
+
     chatState.diagnosisRequestResult
         ?.onSuccess {
             baseAction(BaseAction.HideLoading)

@@ -6,9 +6,9 @@ import com.greenvenom.core_network.data.NetworkResult
 import com.greenvenom.core_network.data.map
 import com.greenvenom.core_network.data.onError
 import com.greenvenom.core_network.data.onSuccess
-import com.seravian.core_chat.data.dto.request.message.ClientRequest
 import com.seravian.core_chat.data.dto.request.chat.GetChatMessagesRequest
 import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisCreationRequest
+import com.seravian.core_chat.data.dto.request.message.SendClientRequest
 import com.seravian.core_chat.data.dto.request.message.SyncMessagesRequest
 import com.seravian.core_chat.data.dto.respose.diagnosis.DiagnosisCreationResponse
 import com.seravian.core_chat.data.dto.respose.message.ConfirmedMessageResponse
@@ -34,6 +34,14 @@ class ChatRepositoryImpl(
     //////////////////////////////////
     /////////// CHAT METHODS
     /////////////////////////////////
+
+    override suspend fun sendClientRequest(
+        clientRequest: SendClientRequest
+    ): EmptyResult<NetworkError> {
+        return seravianChatBotDataSource.sendClientRequest(clientRequest).map { message ->
+            insertConfirmedMessage(message.buildMessage(clientRequest.message))
+        }
+    }
 
     override fun getChatMessages(
         getChatMessagesRequest: GetChatMessagesRequest
@@ -96,10 +104,6 @@ class ChatRepositoryImpl(
     ///////// REALTIME CHAT METHODS
     /////////////////////////////////
 
-    override suspend fun sendRequest(clientRequest: ClientRequest) {
-        seravianChatBotDataSource.sendRequest(clientRequest)
-    }
-
     override fun receiveClientResponse() {
         seravianChatBotDataSource.receiveClientResponse { response ->
             chatBotStateRepository.checkResponseProcessing()
@@ -112,9 +116,5 @@ class ChatRepositoryImpl(
             chatBotStateRepository.checkResponseProcessing()
             roomDataSource.insertMessage(response.extractMessage().toEntity(currentChatId))
         }
-    }
-
-    override fun receiveMessageConfirmation(callback: suspend (ConfirmedMessageResponse) -> Unit) {
-        seravianChatBotDataSource.receiveMessageConfirmation { callback(it) }
     }
 }

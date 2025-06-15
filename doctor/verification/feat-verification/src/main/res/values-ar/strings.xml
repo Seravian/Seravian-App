@@ -7,7 +7,7 @@
     <string name="please_fill_in_all_required_fields">يرجى ملء جميع الحقول المطلوبة</string>
     <string name="add_attachment_field">إضافة حقل مرفق</string>
     <string name="attachments_pdf_png_jpeg_only">المرفقات (PDF، PNG، JPEG فقط)</string>
-    <string name="session_price">سعر الجلسة</string>
+    <string name="session_price">سعر الجلسة بالجنيه المصري</string>
     <string name="description">الوصف</string>
     <string name="doctor_title">لقب الطبيب</string>
     <string name="close">إغلاق</string>

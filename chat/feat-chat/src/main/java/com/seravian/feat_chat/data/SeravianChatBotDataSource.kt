@@ -8,7 +8,6 @@ import com.greenvenom.core_network.data.NetworkError
 import com.greenvenom.core_network.data.NetworkResult
 import com.greenvenom.core_network.data.map
 import com.greenvenom.core_network.domain.RealtimeConnection
-import com.seravian.core_chat.data.dto.request.message.ClientRequest
 import com.seravian.core_chat.data.dto.request.chat.CreateChatRequest
 import com.seravian.core_chat.data.dto.request.chat.DeleteChatRequest
 import com.seravian.core_chat.data.dto.request.chat.EditChatRequest
@@ -22,6 +21,7 @@ import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisCheckRequest
 import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisCreationRequest
 import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisDeletionRequest
 import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisDetailsRequest
+import com.seravian.core_chat.data.dto.request.message.SendClientRequest
 import com.seravian.core_chat.data.dto.request.message.SyncMessagesRequest
 import com.seravian.core_chat.data.dto.request.voice.UploadVoiceRequest
 import com.seravian.core_chat.data.dto.respose.voice.AIAudioReadyResponse
@@ -92,6 +92,16 @@ class SeravianChatBotDataSource(
     override suspend fun getChats(): NetworkResult<List<ChatResponse>, NetworkError> {
         return safeCall {
             authorizedHttpClient.get(constructUrl("chat/get-chats"))
+        }
+    }
+
+    override suspend fun sendClientRequest(
+        clientRequest: SendClientRequest
+    ): NetworkResult<ConfirmedMessageResponse, NetworkError> {
+        return safeCall {
+            authorizedHttpClient.post(constructUrl("chat/send-client-request")) {
+                setBody(clientRequest)
+            }
         }
     }
 
@@ -276,10 +286,6 @@ class SeravianChatBotDataSource(
         signalRConnection.connection.invoke("join-chat", joinChatRequest)
     }
 
-    override suspend fun sendRequest(clientRequest: ClientRequest) {
-        signalRConnection.connection.invoke("send-client-request", clientRequest)
-    }
-
     override fun receiveClientResponse(callback: suspend (ClientResponse) -> Unit) {
         signalRConnection.connection.on(
             target = "receive-client-request",
@@ -293,14 +299,6 @@ class SeravianChatBotDataSource(
             target = "receive-ai-response",
         ) { response: AIResponse ->
             callback(response)
-        }
-    }
-
-    override fun receiveMessageConfirmation(callback: suspend (ConfirmedMessageResponse) -> Unit) {
-        signalRConnection.connection.on(
-            target = "confirm-client-request"
-        ) { confirmation: ConfirmedMessageResponse ->
-            callback(confirmation)
         }
     }
 

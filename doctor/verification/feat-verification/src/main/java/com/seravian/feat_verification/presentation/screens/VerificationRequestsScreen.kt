@@ -44,7 +44,7 @@ import com.seravian.feat_verification.presentation.viewmodel.requests.Verificati
 @Composable
 fun VerificationRequestsScreen(
     navigateBack: () -> Unit,
-    navigateToRequestDetails: (Int) -> Unit,
+    navigateToRequestDetails: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     BaseScreen<VerificationRequestsViewModel>(
@@ -80,7 +80,7 @@ private fun VerificationRequestsContent(
 ) {
     val context = LocalContext.current
     var showBottomSheet by remember { mutableStateOf(false) }
-    val bottomSheetState = rememberModalBottomSheetState()
+    val bottomSheetState = rememberModalBottomSheetState(true)
 
     state.requestsFetchingResult
         ?.onSuccess {

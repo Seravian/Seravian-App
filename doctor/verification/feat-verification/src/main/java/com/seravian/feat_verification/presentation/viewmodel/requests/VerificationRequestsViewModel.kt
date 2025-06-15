@@ -34,7 +34,7 @@ class VerificationRequestsViewModel(
             }
             _verificationRequestsState.update {
                 it.copy(
-                    requestsFetchingResult = result.map {  }
+                    requestsFetchingResult = result
                 )
             }
         }
@@ -48,7 +48,12 @@ class VerificationRequestsViewModel(
                         doctorTitle = action.doctorTitle,
                         description = action.description,
                         sessionPrice = action.sessionPrice,
-                        attachments = action.attachments
+                        attachments = action.attachments,
+                        doctorTimeZone = action.doctorTimeZone,
+                        nationality = action.nationality,
+                        languages = action.languages,
+                        workingSchedule = action.workingSchedule,
+                        attachmentsNote = action.attachmentsNote
                     )
                 )
             }
@@ -65,7 +70,7 @@ class VerificationRequestsViewModel(
 
             _verificationRequestsState.update {
                 it.copy(
-                    requestsFetchingResult = result
+                    requestSendingResult = result
                 )
             }
         }
