@@ -57,6 +57,7 @@ import com.seravian.feat_chat.presentation.viewModel.diagnosis.details.Diagnosis
 
 @Composable
 fun DiagnosisDetailsScreen(
+    diagnosisId: Long,
     navigateBack: () -> Unit
 ) {
     BaseScreen<DiagnosisDetailsViewModel>(
@@ -66,7 +67,7 @@ fun DiagnosisDetailsScreen(
         },
     ) { viewModel ->
         val state by viewModel.diagnosisDetailsState.collectAsStateWithLifecycle()
-
+        viewModel.diagnosisDetailsAction(DiagnosisDetailsAction.GetDiagnosis(diagnosisId))
         DiagnosisDetailsContent(
             state = state,
             detailsAction = {
@@ -76,7 +77,8 @@ fun DiagnosisDetailsScreen(
                 }
                 viewModel.diagnosisDetailsAction(it)
             },
-            baseAction = viewModel::baseAction
+            baseAction = viewModel::baseAction,
+            diagnosisId = diagnosisId
         )
     }
 }
@@ -85,7 +87,8 @@ fun DiagnosisDetailsScreen(
 private fun DiagnosisDetailsContent(
     state: DiagnosisDetailsState,
     detailsAction: (DiagnosisDetailsAction) -> Unit,
-    baseAction: (BaseAction) -> Unit
+    baseAction: (BaseAction) -> Unit,
+    diagnosisId:Long
 ) {
     val context = LocalContext.current
 
@@ -94,7 +97,8 @@ private fun DiagnosisDetailsContent(
             baseAction(BaseAction.HideLoading)
         }
         ?.onError {
-            baseAction(BaseAction.ShowErrorMessage(
+            baseAction(
+                BaseAction.ShowErrorMessage(
                 it.errorType?.toString(context) ?: "",
                 dismissAction = { detailsAction(DiagnosisDetailsAction.NavigateBack) }
             ))
@@ -106,9 +110,11 @@ private fun DiagnosisDetailsContent(
             detailsAction(DiagnosisDetailsAction.NavigateBack)
         }
         ?.onError {
-            baseAction(BaseAction.ShowErrorMessage(
-                it.errorType?.toString(context) ?: ""
-            ))
+            baseAction(
+                BaseAction.ShowErrorMessage(
+                    it.errorType?.toString(context) ?: ""
+                )
+            )
         }
 
     Scaffold(
@@ -162,7 +168,10 @@ private fun DiagnosisDetailsContent(
                                 ) {
                                     Text(
                                         text = stringResource(R.string.number_of, id),
-                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                                        modifier = Modifier.padding(
+                                            horizontal = 12.dp,
+                                            vertical = 6.dp
+                                        ),
                                         style = MaterialTheme.typography.labelMedium,
                                         color = MaterialTheme.colorScheme.onPrimary,
                                         fontWeight = FontWeight.Medium
@@ -383,7 +392,7 @@ private fun DiagnosisDetailsContent(
                 OutlinedButton(
                     onClick = {
                         baseAction(BaseAction.ShowLoading)
-                        detailsAction(DiagnosisDetailsAction.DeleteDiagnosis)
+                        detailsAction(DiagnosisDetailsAction.DeleteDiagnosis(diagnosisId))
                     },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.outlinedButtonColors(
@@ -429,7 +438,8 @@ private fun PreviewDiagnosisDetailsContent() {
                 )
             ),
             detailsAction = {},
-            baseAction = {}
+            baseAction = {},
+            diagnosisId = 2
         )
     }
 }

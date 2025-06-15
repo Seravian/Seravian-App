@@ -22,28 +22,26 @@ class DiagnosisDetailsViewModel(
     private val _diagnosisDetailsState = MutableStateFlow(DiagnosisDetailsState())
     val diagnosisDetailsState = _diagnosisDetailsState.asStateFlow()
 
-    init {
-        getDiagnosis()
-    }
+
 
     fun diagnosisDetailsAction(action: DiagnosisDetailsAction) {
         when(action) {
-            DiagnosisDetailsAction.DeleteDiagnosis -> {
-                deleteDiagnosis()
-            }
 
             DiagnosisDetailsAction.NavigateBack -> {
-                chatBotStateRepository.updateCurrentDiagnosis(null)
+
             }
+            is DiagnosisDetailsAction.GetDiagnosis -> getDiagnosis(action.id)
+            is DiagnosisDetailsAction.DeleteDiagnosis -> deleteDiagnosis(action.id)
+
         }
     }
 
-    private fun getDiagnosis() {
+    private fun getDiagnosis(id :Long) {
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) {
                 diagnosisRepository.getDiagnosis(
                     DiagnosisDetailsRequest(
-                        chatBotStateRepository.chatBotState.value.currentDiagnosis?.id ?: 0
+                        id
                     )
                 )
             }
@@ -63,12 +61,12 @@ class DiagnosisDetailsViewModel(
         }
     }
 
-    private fun deleteDiagnosis() {
+    private fun deleteDiagnosis(id :Long) {
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) {
                 diagnosisRepository.deleteDiagnosis(
                     DiagnosisDeletionRequest(
-                        chatBotStateRepository.chatBotState.value.currentDiagnosis?.id ?: 0
+                        id
                     )
                 )
             }

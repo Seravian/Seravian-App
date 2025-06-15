@@ -62,9 +62,9 @@ fun NavGraphBuilder.patientGraph(navigate: (NavigationType) -> Unit) {
 
             composable<Screen.DiagnosesList> {
                 DiagnosesListScreen(
-                    navigateToDiagnosisDetails = {
+                    navigateToDiagnosisDetails = {id->
                         navigate(
-                            NavigationType.Standard(Screen.DiagnosisDetails)
+                            NavigationType.Standard(Screen.DiagnosisDetails(id))
                         )
                     },
                     navigateBack = { navigate(NavigationType.Back) }
@@ -72,8 +72,10 @@ fun NavGraphBuilder.patientGraph(navigate: (NavigationType) -> Unit) {
             }
 
             composable<Screen.DiagnosisDetails> {
+                val args = it.toRoute<Screen.DiagnosisDetails>()
                 DiagnosisDetailsScreen(
-                    navigateBack = { navigate(NavigationType.Back) }
+                    navigateBack = { navigate(NavigationType.Back) },
+                    diagnosisId = args.id
                 )
             }
         }

@@ -36,7 +36,7 @@ class DiagnosesListViewModel(
     fun diagnosesListAction(action: DiagnosesListAction) {
         when (action) {
             is DiagnosesListAction.NavigateToDiagnosisDetails -> {
-                chatBotStateRepository.updateCurrentDiagnosis(action.diagnosis)
+
             }
             DiagnosesListAction.NavigateBack -> {
                 stopDiagnosisCollections()
