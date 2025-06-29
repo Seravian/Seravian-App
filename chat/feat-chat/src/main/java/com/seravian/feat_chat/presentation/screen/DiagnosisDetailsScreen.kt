@@ -23,13 +23,13 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.runtime.getValue
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -40,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.seravian.core_chat.domain.models.Diagnosis
 import com.seravian.core_network.data.onError
 import com.seravian.core_network.data.onSuccess
 import com.seravian.core_network.utils.toString
@@ -47,7 +48,6 @@ import com.seravian.core_ui.components.TopAppBar
 import com.seravian.core_ui.presentation.BaseAction
 import com.seravian.core_ui.presentation.BaseScreen
 import com.seravian.core_ui.theme.AppTheme
-import com.seravian.core_chat.domain.models.Diagnosis
 import com.seravian.feat_chat.R
 import com.seravian.feat_chat.presentation.components.diagnosis.DiagnosisInfoCard
 import com.seravian.feat_chat.presentation.models.toDetailsUI
@@ -67,7 +67,7 @@ fun DiagnosisDetailsScreen(
         },
     ) { viewModel ->
         val state by viewModel.diagnosisDetailsState.collectAsStateWithLifecycle()
-        viewModel.diagnosisDetailsAction(DiagnosisDetailsAction.GetDiagnosis(diagnosisId))
+
         DiagnosisDetailsContent(
             state = state,
             detailsAction = {
@@ -270,8 +270,6 @@ private fun DiagnosisDetailsContent(
                         }
                     }
                 } else {
-                    // Show successful diagnosis details
-
                     // Diagnosed Problem
                     diagnosisUI.diagnosedProblem?.let { problem ->
                         item {

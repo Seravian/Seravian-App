@@ -17,6 +17,7 @@ import com.seravian.feat_chat.presentation.viewModel.diagnosis.details.Diagnosis
 import com.seravian.feat_chat.presentation.viewModel.diagnosis.list.DiagnosesListViewModel
 import com.seravian.feat_chat.presentation.viewModel.voice.VoiceModeViewModel
 import org.koin.core.module.dsl.viewModel
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
@@ -92,10 +93,5 @@ val chatModule = module {
         )
     }
 
-    viewModel {
-        DiagnosisDetailsViewModel(
-            diagnosisRepository = get(),
-            chatBotStateRepository = get()
-        )
-    }
+    viewModelOf(::DiagnosisDetailsViewModel)
 }

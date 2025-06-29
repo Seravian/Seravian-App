@@ -1,17 +1,17 @@
 package com.seravian.feat_chat.data.repository
 
-import com.seravian.core_network.data.EmptyResult
-import com.seravian.core_network.data.NetworkError
-import com.seravian.core_network.data.NetworkResult
-import com.seravian.core_network.data.map
-import com.seravian.core_network.data.onError
-import com.seravian.core_network.data.onSuccess
 import com.seravian.core_chat.data.dto.request.diagnosis.ChatDiagnosesRequest
 import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosesDeletionRequest
 import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisDeletionRequest
 import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisDetailsRequest
 import com.seravian.core_chat.domain.models.Diagnosis
 import com.seravian.core_local.domain.LocalDataSource
+import com.seravian.core_network.data.EmptyResult
+import com.seravian.core_network.data.NetworkError
+import com.seravian.core_network.data.NetworkResult
+import com.seravian.core_network.data.map
+import com.seravian.core_network.data.onError
+import com.seravian.core_network.data.onSuccess
 import com.seravian.feat_chat.domain.ChatBotRemoteDataSource
 import com.seravian.feat_chat.domain.repository.DiagnosisRepository
 import kotlinx.coroutines.flow.Flow
@@ -55,26 +55,25 @@ class DiagnosisRepositoryImpl(
             .map { response -> response.map { it.extractDiagnosis() } }
             .onSuccess { remoteDiagnoses ->
                 // Create sets of IDs for comparison
-                val remoteIds = remoteDiagnoses.map { it.id }.toSet()
-                val localIds = diagnosesList.map { it.id }.toSet()
+                val localDiagnoses = diagnosesList
 
                 // Find diagnoses to delete (in local but not in remote)
-                val diagnosesToDelete = localIds - remoteIds
+                val diagnosesToDelete = localDiagnoses - remoteDiagnoses
 
-                // Find diagnoses to insert/update (in remote but not in local, or different)
+                // Find diagnoses to insert (in remote but not in local)
                 val diagnosesToInsertOrUpdate = remoteDiagnoses.filter { remoteDiagnosis ->
                     val localDiagnosis = diagnosesList.find { it.id == remoteDiagnosis.id }
-                    localDiagnosis == null || localDiagnosis.id != remoteDiagnosis.id
+                    localDiagnosis == null || localDiagnosis != remoteDiagnosis
                 }
 
                 // Delete obsolete diagnoses
                 if (diagnosesToDelete.isNotEmpty()) {
                     diagnosesToDelete.forEach {
-                        localDataSource.deleteDiagnosis(it)
+                        localDataSource.deleteDiagnosis(it.id)
                     }
                 }
 
-                // Insert/update new or changed diagnoses
+                // Insert new diagnoses
                 if (diagnosesToInsertOrUpdate.isNotEmpty()) {
                     localDataSource.insertDiagnoses(
                         diagnosesToInsertOrUpdate.map { it.toEntity(currentChatId) }
@@ -113,7 +112,6 @@ class DiagnosisRepositoryImpl(
                 NetworkResult.Success(localDiagnosis)
             }
             // Return remote if diagnosedProblem is not null but reasoning is null
-            // (or any other case not covered above)
             else -> {
                 remoteDataSource.getDiagnosisDetails(diagnosisDetailsRequest)
                     .map { it.extractDiagnosis() }
