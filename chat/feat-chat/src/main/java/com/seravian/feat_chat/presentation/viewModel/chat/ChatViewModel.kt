@@ -1,14 +1,13 @@
 package com.seravian.feat_chat.presentation.viewModel.chat
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.seravian.core_chat.data.dto.request.chat.GetChatMessagesRequest
+import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisCreationRequest
+import com.seravian.core_chat.data.dto.request.message.SendClientRequest
 import com.seravian.core_network.data.NetworkResult
 import com.seravian.core_network.data.map
 import com.seravian.core_network.data.onSuccess
 import com.seravian.core_ui.presentation.BaseViewModel
-import com.seravian.core_chat.data.dto.request.chat.GetChatMessagesRequest
-import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisCreationRequest
-import com.seravian.core_chat.data.dto.request.message.SendClientRequest
 import com.seravian.feat_chat.data.repository.ChatBotStateRepository
 import com.seravian.feat_chat.domain.repository.ChatRepository
 import kotlinx.coroutines.Dispatchers
@@ -48,10 +47,8 @@ class ChatViewModel(
             is ChatAction.StopMessageCollections -> stopMessageCollections()
             is ChatAction.NavigateToVoiceMode -> {
                 chatBotStateRepository.updateLastMessage(_chatState.value.messagesList.last())
-                stopMessageCollections()
             }
             ChatAction.NavigateToDiagnosesList -> {
-                stopMessageCollections()
             }
             ChatAction.ClearDiagnosisRequestResult -> clearDiagnosisRequestResult()
         }
@@ -80,6 +77,7 @@ class ChatViewModel(
                     }
 
                     null -> {
+                        stopMessageCollections()
                         chatBotStateRepository.startConnection()
                     }
                 }

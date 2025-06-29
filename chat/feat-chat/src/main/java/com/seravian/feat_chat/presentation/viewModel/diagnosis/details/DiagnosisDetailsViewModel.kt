@@ -1,11 +1,12 @@
 package com.seravian.feat_chat.presentation.viewModel.diagnosis.details
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisDeletionRequest
+import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisDetailsRequest
 import com.seravian.core_network.data.map
 import com.seravian.core_network.data.onSuccess
 import com.seravian.core_ui.presentation.BaseViewModel
-import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisDeletionRequest
-import com.seravian.core_chat.data.dto.request.diagnosis.DiagnosisDetailsRequest
 import com.seravian.feat_chat.data.repository.ChatBotStateRepository
 import com.seravian.feat_chat.domain.repository.DiagnosisRepository
 import kotlinx.coroutines.Dispatchers
@@ -17,26 +18,27 @@ import kotlinx.coroutines.withContext
 
 class DiagnosisDetailsViewModel(
     private val diagnosisRepository: DiagnosisRepository,
-    private val chatBotStateRepository: ChatBotStateRepository
+    private val chatBotStateRepository: ChatBotStateRepository,
+    private val savedStateHandle: SavedStateHandle
 ): BaseViewModel() {
     private val _diagnosisDetailsState = MutableStateFlow(DiagnosisDetailsState())
     val diagnosisDetailsState = _diagnosisDetailsState.asStateFlow()
 
-
-
-    fun diagnosisDetailsAction(action: DiagnosisDetailsAction) {
-        when(action) {
-
-            DiagnosisDetailsAction.NavigateBack -> {
-
-            }
-            is DiagnosisDetailsAction.GetDiagnosis -> getDiagnosis(action.id)
-            is DiagnosisDetailsAction.DeleteDiagnosis -> deleteDiagnosis(action.id)
-
+    init {
+        savedStateHandle.get<Long>("id")?.let { diagnosisId ->
+            getDiagnosis(diagnosisId)
         }
     }
 
-    private fun getDiagnosis(id :Long) {
+    fun diagnosisDetailsAction(action: DiagnosisDetailsAction) {
+        when(action) {
+            DiagnosisDetailsAction.NavigateBack -> {}
+            is DiagnosisDetailsAction.GetDiagnosis -> getDiagnosis(action.id)
+            is DiagnosisDetailsAction.DeleteDiagnosis -> deleteDiagnosis(action.id)
+        }
+    }
+
+    private fun getDiagnosis(id: Long) {
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) {
                 diagnosisRepository.getDiagnosis(
@@ -65,9 +67,7 @@ class DiagnosisDetailsViewModel(
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) {
                 diagnosisRepository.deleteDiagnosis(
-                    DiagnosisDeletionRequest(
-                        id
-                    )
+                    DiagnosisDeletionRequest(id)
                 )
             }
 
