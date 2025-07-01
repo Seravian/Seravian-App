@@ -57,7 +57,7 @@ To build and run this project, make sure to have the following dependencies:
 
 - ✅ [Android Studio](https://developer.android.com/studio) (Latest stable version)
 - ✅ Android SDK (API Level 26+ / Android 8.0+)
-- ✅ Gradle 8.7.2+
+- ✅ Gradle 8.11.1+
 
 ## 🧪 Running Locally
 
