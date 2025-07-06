@@ -146,7 +146,7 @@ private fun OnBoardingContent(
     }
 }
 
-@Preview(showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun ContentPreview() {
     AppTheme {
